@@ -117,6 +117,21 @@ class Environment:
         return EnvironmentDeviceList(self.client, self._id)
 
     @property
+    def admins(self):
+        from .user import EnvironmentAdminList
+        return EnvironmentAdminList(self.client, self._id)
+
+    @property
+    def editors(self):
+        from .user import EnvironmentEditorList
+        return EnvironmentEditorList(self.client, self._id)
+
+    @property
+    def spectators(self):
+        from .user import EnvironmentSpectatorList
+        return EnvironmentSpectatorList(self.client, self._id)
+
+    @property
     def pendingEnvironmentShares(self):
         from .pending_environment_share import EnvironmentPendingEnvironmentShareList
         return EnvironmentPendingEnvironmentShareList(self.client, self._id)
