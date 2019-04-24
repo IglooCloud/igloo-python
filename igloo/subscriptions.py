@@ -40,12 +40,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{environmentCreated(){id}}' % ()).replace('()', '')):
             yield Environment(self.client, data["environmentCreated"]["id"])
 
-    async def valueCreated(self, deviceId=None, visibility=None):
+    async def valueCreated(self, deviceId=None, hidden=None):
 
         deviceId_arg = 'deviceId:"%s",' % deviceId if deviceId is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
 
-        async for data in self.client.subscribe(('subscription{valueCreated(%s%s){id __typename}}' % (deviceId_arg, visibility_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueCreated(%s%s){id __typename}}' % (deviceId_arg, hidden_arg)).replace('()', '')):
             yield Value(self.client, data["valueCreated"]["id"])
 
     async def floatSeriesNodeCreated(self, seriesId=None):
@@ -157,13 +157,13 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{environmentUpdated(%s){id}}' % (id_arg)).replace('()', '')):
             yield Environment(self.client, data["environmentUpdated"]["id"])
 
-    async def valueUpdated(self, deviceId=None, id=None, visibility=None):
+    async def valueUpdated(self, deviceId=None, id=None, hidden=None):
 
         deviceId_arg = 'deviceId:"%s",' % deviceId if deviceId is not None else ''
         id_arg = 'id:"%s",' % id if id is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
 
-        async for data in self.client.subscribe(('subscription{valueUpdated(%s%s%s){id __typename}}' % (deviceId_arg, id_arg, visibility_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueUpdated(%s%s%s){id __typename}}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
             yield Value(self.client, data["valueUpdated"]["id"])
 
     async def floatSeriesNodeUpdated(self, seriesId=None, id=None):
@@ -190,13 +190,13 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{notificationUpdated(%s%s){id}}' % (deviceId_arg, id_arg)).replace('()', '')):
             yield Notification(self.client, data["notificationUpdated"]["id"])
 
-    async def valueDeleted(self, deviceId=None, id=None, visibility=None):
+    async def valueDeleted(self, deviceId=None, id=None, hidden=None):
 
         deviceId_arg = 'deviceId:"%s",' % deviceId if deviceId is not None else ''
         id_arg = 'id:"%s",' % id if id is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
 
-        async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (deviceId_arg, id_arg, visibility_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
             yield data["valueDeleted"]
 
     async def floatSeriesNodeDeleted(self, seriesId=None, id=None):

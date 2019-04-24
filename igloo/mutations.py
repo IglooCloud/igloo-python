@@ -357,11 +357,12 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createFloatValue(self, deviceId, permission, name, visibility=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, cardSize=None, index=None):
+    def createFloatValue(self, deviceId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, cardSize=None, index=None):
         deviceId_arg = 'deviceId:"%s",' % deviceId
         permission_arg = 'permission:%s,' % permission
         name_arg = 'name:"%s",' % name
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         unitOfMeasurement_arg = 'unitOfMeasurement:"%s",' % unitOfMeasurement if unitOfMeasurement is not None else ''
         value_arg = 'value:%s,' % value if value is not None else ''
         precision_arg = 'precision:%s,' % precision if precision is not None else ''
@@ -369,52 +370,55 @@ class MutationRoot:
         max_arg = 'max:%s,' % max if max is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (deviceId_arg, permission_arg, visibility_arg,
-                                                                                               unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatValue"]
+        res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (deviceId_arg, permission_arg, private_arg, hidden_arg,
+                                                                                                 unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatValue"]
 
         def wrapper(id):
             return FloatValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createStringValue(self, deviceId, permission, name, visibility=None, value=None, maxChars=None, cardSize=None, allowedValues=None, index=None):
+    def createStringValue(self, deviceId, permission, name, private=None, hidden=None, value=None, maxChars=None, cardSize=None, allowedValues=None, index=None):
         deviceId_arg = 'deviceId:"%s",' % deviceId
         permission_arg = 'permission:%s,' % permission
         name_arg = 'name:"%s",' % name
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         value_arg = 'value:"%s",' % value if value is not None else ''
         maxChars_arg = 'maxChars:%s,' % maxChars if maxChars is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         allowedValues_arg = 'allowedValues:%s,' % allowedValues if allowedValues is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, permission_arg, visibility_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createStringValue"]
+        res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            deviceId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createStringValue"]
 
         def wrapper(id):
             return StringValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createBooleanValue(self, deviceId, permission, name, visibility=None, value=None, cardSize=None, index=None):
+    def createBooleanValue(self, deviceId, permission, name, private=None, hidden=None, value=None, cardSize=None, index=None):
         deviceId_arg = 'deviceId:"%s",' % deviceId
         permission_arg = 'permission:%s,' % permission
         name_arg = 'name:"%s",' % name
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         value_arg = 'value:%s,' % value if value is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, permission_arg, visibility_arg, value_arg, name_arg, cardSize_arg, index_arg))["createBooleanValue"]
+        res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s%s){id}}' % (
+            deviceId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["createBooleanValue"]
 
         def wrapper(id):
             return BooleanValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesValue(self, deviceId, name, visibility=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None, threshold=None, index=None):
+    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None, threshold=None, index=None):
         deviceId_arg = 'deviceId:"%s",' % deviceId
         name_arg = 'name:"%s",' % name
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         unitOfMeasurement_arg = 'unitOfMeasurement:"%s",' % unitOfMeasurement if unitOfMeasurement is not None else ''
         precision_arg = 'precision:%s,' % precision if precision is not None else ''
         min_arg = 'min:%s,' % min if min is not None else ''
@@ -422,8 +426,8 @@ class MutationRoot:
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         threshold_arg = 'threshold:%s,' % threshold if threshold is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, visibility_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["createFloatSeriesValue"]
+        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            deviceId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["createFloatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)
@@ -442,15 +446,16 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createCategorySeriesValue(self, deviceId, name, visibility=None, cardSize=None, allowedValues=None, index=None):
+    def createCategorySeriesValue(self, deviceId, name, private=None, hidden=None, cardSize=None, allowedValues=None, index=None):
         deviceId_arg = 'deviceId:"%s",' % deviceId
         name_arg = 'name:"%s",' % name
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         allowedValues_arg = 'allowedValues:%s,' % allowedValues if allowedValues is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, visibility_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createCategorySeriesValue"]
+        res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
+            deviceId_arg, private_arg, hidden_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createCategorySeriesValue"]
 
         def wrapper(id):
             return CategorySeriesValue(self.client, id)
@@ -543,14 +548,15 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def value(self, id, visibility=None, cardSize=None, name=None, index=None):
+    def value(self, id, private=None, hidden=None, cardSize=None, name=None, index=None):
         id_arg = 'id:"%s",' % id
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         name_arg = 'name:"%s",' % name if name is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{value(%s%s%s%s%s){id __typename}}' % (
-            id_arg, visibility_arg, cardSize_arg, name_arg, index_arg))["value"]
+        res = self.client.mutation('mutation{value(%s%s%s%s%s%s){id __typename}}' % (
+            id_arg, private_arg, hidden_arg, cardSize_arg, name_arg, index_arg))["value"]
 
         def wrapper(res):
             if res["__typename"] == "FloatValue":
@@ -593,10 +599,11 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def floatValue(self, id, permission=None, visibility=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
+    def floatValue(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
         id_arg = 'id:"%s",' % id
         permission_arg = 'permission:%s,' % permission if permission is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         unitOfMeasurement_arg = 'unitOfMeasurement:"%s",' % unitOfMeasurement if unitOfMeasurement is not None else ''
         value_arg = 'value:%s,' % value if value is not None else ''
         precision_arg = 'precision:%s,' % precision if precision is not None else ''
@@ -605,8 +612,8 @@ class MutationRoot:
         name_arg = 'name:"%s",' % name if name is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, visibility_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatValue"]
+        res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatValue"]
 
         def wrapper(id):
             return FloatValue(self.client, id)
@@ -625,43 +632,46 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def stringValue(self, id, permission=None, visibility=None, value=None, maxChars=None, name=None, cardSize=None, allowedValues=None, index=None):
+    def stringValue(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, cardSize=None, allowedValues=None, index=None):
         id_arg = 'id:"%s",' % id
         permission_arg = 'permission:%s,' % permission if permission is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         value_arg = 'value:"%s",' % value if value is not None else ''
         maxChars_arg = 'maxChars:%s,' % maxChars if maxChars is not None else ''
         name_arg = 'name:"%s",' % name if name is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         allowedValues_arg = 'allowedValues:%s,' % allowedValues if allowedValues is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, visibility_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["stringValue"]
+        res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["stringValue"]
 
         def wrapper(id):
             return StringValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def booleanValue(self, id, permission=None, visibility=None, value=None, name=None, cardSize=None, index=None):
+    def booleanValue(self, id, permission=None, private=None, hidden=None, value=None, name=None, cardSize=None, index=None):
         id_arg = 'id:"%s",' % id
         permission_arg = 'permission:%s,' % permission if permission is not None else ''
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         value_arg = 'value:%s,' % value if value is not None else ''
         name_arg = 'name:"%s",' % name if name is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, visibility_arg, value_arg, name_arg, cardSize_arg, index_arg))["booleanValue"]
+        res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["booleanValue"]
 
         def wrapper(id):
             return BooleanValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def floatSeriesValue(self, id, visibility=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, cardSize=None, threshold=None, index=None):
+    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, cardSize=None, threshold=None, index=None):
         id_arg = 'id:"%s",' % id
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         unitOfMeasurement_arg = 'unitOfMeasurement:"%s",' % unitOfMeasurement if unitOfMeasurement is not None else ''
         precision_arg = 'precision:%s,' % precision if precision is not None else ''
         min_arg = 'min:%s,' % min if min is not None else ''
@@ -670,8 +680,8 @@ class MutationRoot:
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         threshold_arg = 'threshold:%s,' % threshold if threshold is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, visibility_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["floatSeriesValue"]
+        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["floatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)
@@ -690,15 +700,16 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def categorySeriesValue(self, id, visibility=None, name=None, cardSize=None, allowedValues=None, index=None):
+    def categorySeriesValue(self, id, private=None, hidden=None, name=None, cardSize=None, allowedValues=None, index=None):
         id_arg = 'id:"%s",' % id
-        visibility_arg = 'visibility:%s,' % visibility if visibility is not None else ''
+        private_arg = 'private:%s,' % private if private is not None else ''
+        hidden_arg = 'hidden:%s,' % hidden if hidden is not None else ''
         name_arg = 'name:"%s",' % name if name is not None else ''
         cardSize_arg = 'cardSize:%s,' % cardSize if cardSize is not None else ''
         allowedValues_arg = 'allowedValues:%s,' % allowedValues if allowedValues is not None else ''
         index_arg = 'index:%s,' % index if index is not None else ''
-        res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s){id}}' % (
-            id_arg, visibility_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["categorySeriesValue"]
+        res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["categorySeriesValue"]
 
         def wrapper(id):
             return CategorySeriesValue(self.client, id)

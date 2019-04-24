@@ -43,17 +43,30 @@ class StringValue:
             'mutation{stringValue(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
-    def visibility(self):
+    def private(self):
         if self.client.asyncio:
-            return self.loader.load("visibility")
+            return self.loader.load("private")
         else:
-            return self.client.query('{stringValue(id:"%s"){visibility}}' % self._id, keys=[
-                "stringValue", "visibility"])
+            return self.client.query('{stringValue(id:"%s"){private}}' % self._id, keys=[
+                "stringValue", "private"])
 
-    @visibility.setter
-    def visibility(self, newValue):
+    @private.setter
+    def private(self, newValue):
         self.client.mutation(
-            'mutation{stringValue(id:"%s", visibility:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{stringValue(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
+
+    @property
+    def hidden(self):
+        if self.client.asyncio:
+            return self.loader.load("hidden")
+        else:
+            return self.client.query('{stringValue(id:"%s"){hidden}}' % self._id, keys=[
+                "stringValue", "hidden"])
+
+    @hidden.setter
+    def hidden(self, newValue):
+        self.client.mutation(
+            'mutation{stringValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def cardSize(self):

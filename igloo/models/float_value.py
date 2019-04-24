@@ -43,17 +43,30 @@ class FloatValue:
             'mutation{floatValue(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
-    def visibility(self):
+    def private(self):
         if self.client.asyncio:
-            return self.loader.load("visibility")
+            return self.loader.load("private")
         else:
-            return self.client.query('{floatValue(id:"%s"){visibility}}' % self._id, keys=[
-                "floatValue", "visibility"])
+            return self.client.query('{floatValue(id:"%s"){private}}' % self._id, keys=[
+                "floatValue", "private"])
 
-    @visibility.setter
-    def visibility(self, newValue):
+    @private.setter
+    def private(self, newValue):
         self.client.mutation(
-            'mutation{floatValue(id:"%s", visibility:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{floatValue(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
+
+    @property
+    def hidden(self):
+        if self.client.asyncio:
+            return self.loader.load("hidden")
+        else:
+            return self.client.query('{floatValue(id:"%s"){hidden}}' % self._id, keys=[
+                "floatValue", "hidden"])
+
+    @hidden.setter
+    def hidden(self, newValue):
+        self.client.mutation(
+            'mutation{floatValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def cardSize(self):

@@ -43,17 +43,30 @@ class BooleanValue:
             'mutation{booleanValue(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
-    def visibility(self):
+    def private(self):
         if self.client.asyncio:
-            return self.loader.load("visibility")
+            return self.loader.load("private")
         else:
-            return self.client.query('{booleanValue(id:"%s"){visibility}}' % self._id, keys=[
-                "booleanValue", "visibility"])
+            return self.client.query('{booleanValue(id:"%s"){private}}' % self._id, keys=[
+                "booleanValue", "private"])
 
-    @visibility.setter
-    def visibility(self, newValue):
+    @private.setter
+    def private(self, newValue):
         self.client.mutation(
-            'mutation{booleanValue(id:"%s", visibility:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{booleanValue(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
+
+    @property
+    def hidden(self):
+        if self.client.asyncio:
+            return self.loader.load("hidden")
+        else:
+            return self.client.query('{booleanValue(id:"%s"){hidden}}' % self._id, keys=[
+                "booleanValue", "hidden"])
+
+    @hidden.setter
+    def hidden(self, newValue):
+        self.client.mutation(
+            'mutation{booleanValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def cardSize(self):

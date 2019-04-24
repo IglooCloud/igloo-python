@@ -63,17 +63,30 @@ class CategorySeriesValue:
             'mutation{categorySeriesValue(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
-    def visibility(self):
+    def private(self):
         if self.client.asyncio:
-            return self.loader.load("visibility")
+            return self.loader.load("private")
         else:
-            return self.client.query('{categorySeriesValue(id:"%s"){visibility}}' % self._id, keys=[
-                "categorySeriesValue", "visibility"])
+            return self.client.query('{categorySeriesValue(id:"%s"){private}}' % self._id, keys=[
+                "categorySeriesValue", "private"])
 
-    @visibility.setter
-    def visibility(self, newValue):
+    @private.setter
+    def private(self, newValue):
         self.client.mutation(
-            'mutation{categorySeriesValue(id:"%s", visibility:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{categorySeriesValue(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
+
+    @property
+    def hidden(self):
+        if self.client.asyncio:
+            return self.loader.load("hidden")
+        else:
+            return self.client.query('{categorySeriesValue(id:"%s"){hidden}}' % self._id, keys=[
+                "categorySeriesValue", "hidden"])
+
+    @hidden.setter
+    def hidden(self, newValue):
+        self.client.mutation(
+            'mutation{categorySeriesValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def cardSize(self):
