@@ -69,3 +69,47 @@ class Notification:
         else:
             return self.client.query('{notification(id:"%s"){read}}' %
                                      self._id, keys=["notification", "read"])
+
+
+class DeviceNotificationList:
+    def __init__(self, client, deviceId):
+        self.client = client
+        self.deviceId = deviceId
+        self.current = 0
+
+    def __len__(self):
+        res = self.client.query(
+            '{device(id:"%s"){notificationCount}}' % self.deviceId)
+        return res["device"]["notificationCount"]
+
+    def __getitem__(self, i):
+        if isinstance(i, int):
+            res = self.client.query(
+                '{device(id:"%s"){notifications(limit:1, offset:%d){id}}}' % (self.deviceId, i))
+            if len(res["device"]["notifications"]) != 1:
+                raise IndexError()
+            return Notification(self.client, res["device"]["notifications"][0]["id"])
+        elif isinstance(i, slice):
+            start, end, _ = i.indices(len(self))
+            res = self.client.query(
+                '{device(id:"%s"){notifications(offset:%d, limit:%d){id}}}' % (self.deviceId, start, end-start))
+            return [Notification(self.client, notification["id"]) for notification in res["device"]["notifications"]]
+        else:
+            print("i", type(i))
+            raise TypeError("Unexpected type {} passed as index".format(i))
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        res = self.client.query(
+            '{device(id:"%s"){notifications(limit:1, offset:%d){id}}}' % (self.deviceId, self.current))
+
+        if len(res["device", "notifications"]) != 1:
+            raise StopIteration
+
+        self.current += 1
+        return Notification(self.client, res["device"]["notifications"][0]["id"])
+
+    def next(self):
+        return self.__next__()

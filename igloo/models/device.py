@@ -1,5 +1,6 @@
 
 from aiodataloader import DataLoader
+from .utils import wrapWith
 
 
 class DeviceLoader(DataLoader):
@@ -12,7 +13,7 @@ class DeviceLoader(DataLoader):
         fields = " ".join(set(keys))
         res = await self.client.query('{device(id:"%s"){%s}}' % (self._id, fields), keys=["device"])
 
-        resolvedValues = [res[key] for key in keys]
+        resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
 
@@ -175,6 +176,41 @@ class Device:
         else:
             return self.client.query('{device(id:"%s"){qrCode}}' %
                                      self._id, keys=["device", "qrCode"])
+
+    @property
+    def environment(self):
+        from .environment import Environment
+
+        if self.client.asyncio:
+            res = self.loader.load("environment{id}")
+        else:
+            res = self.client.query('{device(id:"%s"){environment{id}}}' %
+                                    self._id, keys=["device", "environment"])
+
+        def wrapper(res):
+            return Environment(self.client, res["id"])
+
+        return wrapWith(res, wrapper)
+
+    @property
+    def notifications(self):
+        from .notification import DeviceNotificationList
+        return DeviceNotificationList(self.client, self.id)
+
+    @property
+    def lastNotification(self):
+        from .notification import Notification
+
+        if self.client.asyncio:
+            res = self.loader.load("lastNotification{id}")
+        else:
+            res = self.client.query('{device(id:"%s"){lastNotification{id}}}' %
+                                    self._id, keys=["device", "lastNotification"])
+
+        def wrapper(res):
+            return Notification(self.client, res["id"])
+
+        return wrapWith(res, wrapper)
 
 
 class EnvironmentDeviceList:
