@@ -30,6 +30,20 @@ host = "bering.igloo.ooo"
 url = "https://{}/graphql".format(host)
 
 
+class _Null:
+    def __str__(self):
+        return 'null'
+
+    def __unicode__(self):
+        return u'null'
+
+    def __repr__(self):
+        return 'null'
+
+
+NULL = null = _Null()
+
+
 class GraphQLException(Exception):
     pass
 
