@@ -1,6 +1,7 @@
 
 from aiodataloader import DataLoader
 from .utils import wrapWith
+from ..utils import get_representation
 
 
 class DeviceLoader(DataLoader):
@@ -218,23 +219,27 @@ class EnvironmentDeviceList:
         self.client = client
         self.environmentId = environmentId
         self.current = 0
+        self._filter = "{}"
+
+    def filter(self, _filter):
+        self._filter = get_representation(_filter)
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){deviceCount}}' % self.environmentId)
+            '{environment(id:"%s"){deviceCount(filter:%s)}}' % (self.environmentId, self._filter))
         return res["environment"]["deviceCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){devices(limit:1, offset:%d){id}}}' % (self.environmentId, i))
+                '{environment(id:"%s"){devices(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
             if len(res["environment"]["devices"]) != 1:
                 raise IndexError()
             return Device(self.client, res["environment"]["devices"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){devices(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
+                '{environment(id:"%s"){devices(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
             return [Device(self.client, device["id"]) for device in res["environment"]["devices"]]
         else:
             print("i", type(i))
@@ -245,7 +250,7 @@ class EnvironmentDeviceList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){devices(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
+            '{environment(id:"%s"){devices(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
 
         if len(res["environment", "devices"]) != 1:
             raise StopIteration

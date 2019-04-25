@@ -157,19 +157,19 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{categorySeriesNodeUpdated(%s%s){id}}' % (seriesId_arg, id_arg)).replace('()', '')):
             yield CategorySeriesNode(self.client, data["categorySeriesNodeUpdated"]["id"])
 
-    async def notificationUpdated(self, deviceId=None, id=None)
-    deviceId_arg = parse_arg("deviceId", deviceId)
-    id_arg = parse_arg("id", id)
+    async def notificationUpdated(self, deviceId=None, id=None):
+        deviceId_arg = parse_arg("deviceId", deviceId)
+        id_arg = parse_arg("id", id)
 
-    async for data in self.client.subscribe(('subscription{notificationUpdated(%s%s){id}}' % (deviceId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{notificationUpdated(%s%s){id}}' % (deviceId_arg, id_arg)).replace('()', '')):
             yield Notification(self.client, data["notificationUpdated"]["id"])
 
-    async def valueDeleted(self, deviceId=None, id=None, hidden=None)
-    deviceId_arg = parse_arg("deviceId", deviceId)
-    id_arg = parse_arg("id", id)
-    hidden_arg = parse_arg("hidden", hidden)
+    async def valueDeleted(self, deviceId=None, id=None, hidden=None):
+        deviceId_arg = parse_arg("deviceId", deviceId)
+        id_arg = parse_arg("id", id)
+        hidden_arg = parse_arg("hidden", hidden)
 
-    async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
             yield data["valueDeleted"]
 
     async def floatSeriesNodeDeleted(self, seriesId=None, id=None):
@@ -216,11 +216,11 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{permanentTokenDeleted()}' % ()).replace('()', '')):
             yield data["permanentTokenDeleted"]
 
-    async def notificationDeleted(self, deviceId=None, id=None)
-    deviceId_arg = parse_arg("deviceId", deviceId)
-    id_arg = parse_arg("id", id)
+    async def notificationDeleted(self, deviceId=None, id=None):
+        deviceId_arg = parse_arg("deviceId", deviceId)
+        id_arg = parse_arg("id", id)
 
-    async for data in self.client.subscribe(('subscription{notificationDeleted(%s%s)}' % (deviceId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{notificationDeleted(%s%s)}' % (deviceId_arg, id_arg)).replace('()', '')):
             yield data["notificationDeleted"]
 
     async def keepOnline(self, deviceId):
