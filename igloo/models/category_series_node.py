@@ -1,6 +1,6 @@
 
 from aiodataloader import DataLoader
-from .utils import wrapWith
+from igloo.models.utils import wrapWith
 
 
 class CategorySeriesNodeLoader(DataLoader):

@@ -1,7 +1,7 @@
 
 from aiodataloader import DataLoader
-from .utils import wrapWith
-from ..utils import get_representation
+from igloo.models.utils import wrapWith
+from igloo.utils import get_representation
 
 
 class DeviceLoader(DataLoader):
