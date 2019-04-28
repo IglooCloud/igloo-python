@@ -213,6 +213,10 @@ class Device:
 
         return wrapWith(res, wrapper)
 
+    async def keepOnline(self):
+        async for _ in self.client.subscription_root.keepOnline(self._id):
+            pass
+
 
 class EnvironmentDeviceList:
     def __init__(self, client, environmentId):
