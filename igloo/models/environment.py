@@ -155,31 +155,32 @@ class Environment:
 
 
 class EnvironmentList:
-    def __init__(self, client):
+    def __init__(self, client, userId):
         self.client = client
         self.current = 0
         self._filter = "{}"
+        self.userId = userId
 
     def filter(self, _filter):
         self._filter = get_representation(_filter)
         return self
 
     def __len__(self):
-        res = self.client.query('{user{environmentCount(filter:%s)}}' % self._filter, keys=[
+        res = self.client.query('{user(id:%s){environmentCount(filter:%s)}}' % (self.userId, self._filter), keys=[
                                 "user", "environmentCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{environments(limit:1, offset:%d, filter:%s){id}}}' % (i, self._filter))
+                '{user(id:%s){environments(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, i, self._filter))
             if len(res["user"]["environments"]) != 1:
                 raise IndexError()
             return Environment(self.client, res["user"]["environments"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{environments(offset:%d, limit:%d, filter:%s){id}}}' % (start, end-start, self._filter))
+                '{user(id:%s){environments(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
             return [Environment(self.client, environment["id"]) for environment in res["user"]["environments"]]
         else:
             print("i", type(i))
@@ -190,7 +191,7 @@ class EnvironmentList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{environments(limit:1, offset:%d, filter:%s){id}}}' % (self.current, self._filter))
+            '{user(id:%s){environments(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, self.current, self._filter))
 
         if len(res["user"]["environments"]) != 1:
             raise StopIteration

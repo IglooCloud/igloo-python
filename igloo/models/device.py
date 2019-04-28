@@ -268,10 +268,11 @@ class EnvironmentDeviceList:
 
 
 class DeveloperDeviceList:
-    def __init__(self, client):
+    def __init__(self, client, userId):
         self.client = client
         self.current = 0
         self._filter = "{}"
+        self.userId = userId
 
     def filter(self, _filter):
         self._filter = get_representation(_filter)
@@ -279,20 +280,20 @@ class DeveloperDeviceList:
 
     def __len__(self):
         res = self.client.query(
-            '{user{developerDeviceCount(filter:%s)}}' % self._filter)
+            '{user(id:%s){developerDeviceCount(filter:%s)}}' % (self.userId, self._filter))
         return res["user"]["developerDeviceCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (i, self._filter))
+                '{user(id:%s){developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, i, self._filter))
             if len(res["user"]["developerDevices"]) != 1:
                 raise IndexError()
             return Device(self.client, res["user"]["developerDevices"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{developerDevices(offset:%d, limit:%d, filter:%s){id}}}' % (start, end-start, self._filter))
+                '{user(id:%s){developerDevices(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
             return [Device(self.client, device["id"]) for device in res["user"]["developerDevices"]]
         else:
             print("i", type(i))
@@ -303,7 +304,7 @@ class DeveloperDeviceList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.current, self._filter))
+            '{user(id:%s){developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, self.current, self._filter))
 
         if len(res["user", "developerDevices"]) != 1:
             raise StopIteration

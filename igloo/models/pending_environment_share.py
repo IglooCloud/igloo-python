@@ -82,26 +82,27 @@ class PendingEnvironmentShare:
 
 
 class UserPendingEnvironmentShareList:
-    def __init__(self, client):
+    def __init__(self, client, userId):
         self.client = client
         self.current = 0
+        self.userId = userId
 
     def __len__(self):
-        res = self.client.query('{user{pendingEnvironmentShareCount}}', keys=[
+        res = self.client.query('{user(id:%s){pendingEnvironmentShareCount}}' % self.userId, keys=[
                                 "user", "pendingEnvironmentShareCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{pendingEnvironmentShares(limit:1, offset:%d){id}}}' % i)
+                '{user(id:%s){pendingEnvironmentShares(limit:1, offset:%d){id}}}' % (self.userId, i))
             if len(res["user"]["pendingEnvironmentShares"]) != 1:
                 raise IndexError()
             return PendingEnvironmentShare(self.client, res["user"]["pendingEnvironmentShares"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{pendingEnvironmentShares(offset:%d, limit:%d){id}}}' % (start, end-start))
+                '{user(id:%s){pendingEnvironmentShares(offset:%d, limit:%d){id}}}' % (self.userId, start, end-start))
             return [PendingEnvironmentShare(self.client, pendingShare["id"]) for pendingShare in res["user"]["pendingEnvironmentShares"]]
         else:
             print("i", type(i))
@@ -112,7 +113,7 @@ class UserPendingEnvironmentShareList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{pendingEnvironmentShares(limit:1, offset:%d){id}}}' % self.current)
+            '{user(id:%s){pendingEnvironmentShares(limit:1, offset:%d){id}}}' % (self.userId, self.current))
 
         if len(res["user"]["pendingEnvironmentShares"]) != 1:
             raise StopIteration

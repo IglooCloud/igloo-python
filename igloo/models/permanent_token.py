@@ -55,26 +55,27 @@ class PermanentToken:
 
 
 class PermanentTokenList:
-    def __init__(self, client):
+    def __init__(self, client, userId):
         self.client = client
         self.current = 0
+        self.userId = userId
 
     def __len__(self):
         res = self.client.query(
-            '{user{permanentTokenCount}}')
+            '{user(id:%s){permanentTokenCount}}' % self.userId)
         return res["user"]["permanentTokenCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{permanentTokens(limit:1, offset:%d){id}}}' % (i))
+                '{user(id:%s){permanentTokens(limit:1, offset:%d){id}}}' % (self.userId, i))
             if len(res["user"]["permanentTokens"]) != 1:
                 raise IndexError()
             return PermanentToken(self.client, res["user"]["permanentTokens"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{permanentTokens(offset:%d, limit:%d){id}}}' % (start, end-start))
+                '{user(id:%s){permanentTokens(offset:%d, limit:%d){id}}}' % (self.userId, start, end-start))
             return [PermanentToken(self.client, token["id"]) for token in res["user"]["permanentTokens"]]
         else:
             print("i", type(i))
@@ -85,7 +86,7 @@ class PermanentTokenList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{permanentTokens(limit:1, offset:%d){id}}}' % (self.current))
+            '{user(id:%s){permanentTokens(limit:1, offset:%d){id}}}' % (self.userId, self.current))
 
         if len(res["user", "permanentTokens"]) != 1:
             raise StopIteration

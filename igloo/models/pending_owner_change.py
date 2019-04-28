@@ -74,26 +74,27 @@ class PendingOwnerChange:
 
 
 class UserPendingOwnerChangeList:
-    def __init__(self, client):
+    def __init__(self, client, userId):
         self.client = client
         self.current = 0
+        self.userId = userId
 
     def __len__(self):
-        res = self.client.query('{user{pendingOwnerChangeCount}}', keys=[
+        res = self.client.query('{user(id:%s){pendingOwnerChangeCount}}' % (self.userId), keys=[
                                 "user", "pendingOwnerChangeCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{pendingOwnerChanges(limit:1, offset:%d){id}}}' % i)
+                '{user(id:%s){pendingOwnerChanges(limit:1, offset:%d){id}}}' % (self.userId, i))
             if len(res["user"]["pendingOwnerChanges"]) != 1:
                 raise IndexError()
             return PendingOwnerChange(self.client, res["user"]["pendingOwnerChanges"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{pendingOwnerChanges(offset:%d, limit:%d){id}}}' % (start, end-start))
+                '{user(id:%s){pendingOwnerChanges(offset:%d, limit:%d){id}}}' % (self.userId, start, end-start))
             return [PendingOwnerChange(self.client, ownerChange["id"]) for ownerChange in res["user"]["pendingOwnerChanges"]]
         else:
             print("i", type(i))
@@ -104,7 +105,7 @@ class UserPendingOwnerChangeList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{pendingOwnerChanges(limit:1, offset:%d){id}}}' % self.current)
+            '{user(id:%s){pendingOwnerChanges(limit:1, offset:%d){id}}}' % (self.userId, self.current))
 
         if len(res["user"]["pendingOwnerChanges"]) != 1:
             raise StopIteration

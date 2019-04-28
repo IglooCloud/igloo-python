@@ -111,27 +111,27 @@ class User:
     @property
     def environments(self):
         from .environment import EnvironmentList
-        return EnvironmentList(self.client)
+        return EnvironmentList(self.client, self.id)
 
     @property
     def pendingEnvironmentShares(self):
         from .pending_environment_share import UserPendingEnvironmentShareList
-        return UserPendingEnvironmentShareList(self.client)
+        return UserPendingEnvironmentShareList(self.client, self.id)
 
     @property
     def pendingOwnerChanges(self):
         from .pending_owner_change import UserPendingOwnerChangeList
-        return UserPendingOwnerChangeList(self.client)
+        return UserPendingOwnerChangeList(self.client, self.id)
 
     @property
     def developerDevices(self):
         from .device import DeveloperDeviceList
-        return DeveloperDeviceList(self.client)
+        return DeveloperDeviceList(self.client, self.id)
 
     @property
     def permanentTokens(self):
         from .permanent_token import PermanentTokenList
-        return PermanentTokenList(self.client)
+        return PermanentTokenList(self.client, self.id)
 
 
 class EnvironmentAdminList:
