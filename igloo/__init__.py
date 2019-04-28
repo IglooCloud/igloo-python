@@ -1,7 +1,6 @@
 import requests
 import asyncio
 import pathlib
-import ssl
 import websockets
 import json
 from .models.user import User
