@@ -65,7 +65,7 @@ class MutationRoot:
 
     def sendConfirmationEmail(self, email, operation):
         email_arg = parse_arg("email", email)
-        operation_arg = parse_arg("operation", operation)
+        operation_arg = parse_arg("operation", operation, is_enum=True)
 
         return self.client.mutation('mutation{sendConfirmationEmail(%s%s)}' % (email_arg, operation_arg))["sendConfirmationEmail"]
 
@@ -94,7 +94,7 @@ class MutationRoot:
             return self._wrapLogIn(res)
 
     def createToken(self, tokenType, passwordCertificate=None, webAuthnCertificate=None, totpCertificate=None, emailCertificate=None):
-        tokenType_arg = parse_arg("tokenType", tokenType)
+        tokenType_arg = parse_arg("tokenType", tokenType, is_enum=True)
         passwordCertificate_arg = parse_arg(
             "passwordCertificate", passwordCertificate)
         webAuthnCertificate_arg = parse_arg(
@@ -179,9 +179,9 @@ class MutationRoot:
 
     def changeAuthenticationSettings(self, primaryAuthenticationMethods, secondaryAuthenticationMethods):
         primaryAuthenticationMethods_arg = parse_arg(
-            "primaryAuthenticationMethods", primaryAuthenticationMethods)
+            "primaryAuthenticationMethods", primaryAuthenticationMethods, is_enum=True)
         secondaryAuthenticationMethods_arg = parse_arg(
-            "secondaryAuthenticationMethods", secondaryAuthenticationMethods)
+            "secondaryAuthenticationMethods", secondaryAuthenticationMethods, is_enum=True)
 
         res = self.client.mutation('mutation{changeAuthenticationSettings(%s%s){id}}' % (
             primaryAuthenticationMethods_arg, secondaryAuthenticationMethods_arg))["changeAuthenticationSettings"]
@@ -198,7 +198,7 @@ class MutationRoot:
 
     def shareEnvironment(self, environmentId, role, email=None, userId=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
-        role_arg = parse_arg("role", role)
+        role_arg = parse_arg("role", role, is_enum=True)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", userId)
         res = self.client.mutation('mutation{shareEnvironment(%s%s%s%s){id}}' % (
@@ -211,7 +211,7 @@ class MutationRoot:
 
     def pendingEnvironmentShare(self, id, role):
         id_arg = parse_arg("id", id)
-        role_arg = parse_arg("role", role)
+        role_arg = parse_arg("role", role, is_enum=True)
 
         res = self.client.mutation('mutation{pendingEnvironmentShare(%s%s){id}}' % (
             id_arg, role_arg))["pendingEnvironmentShare"]
@@ -323,7 +323,7 @@ class MutationRoot:
 
     def createEnvironment(self, name, picture=None, index=None, muted=None):
         name_arg = parse_arg("name", name)
-        picture_arg = parse_arg("picture", picture)
+        picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
         res = self.client.mutation('mutation{createEnvironment(%s%s%s%s){id}}' % (
@@ -373,7 +373,7 @@ class MutationRoot:
 
     def createFloatValue(self, deviceId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, cardSize=None, index=None):
         deviceId_arg = parse_arg("deviceId", deviceId)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -383,7 +383,7 @@ class MutationRoot:
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (deviceId_arg, permission_arg, private_arg, hidden_arg,
                                                                                                  unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatValue"]
@@ -395,13 +395,13 @@ class MutationRoot:
 
     def createStringValue(self, deviceId, permission, name, private=None, hidden=None, value=None, maxChars=None, cardSize=None, allowedValues=None, index=None):
         deviceId_arg = parse_arg("deviceId", deviceId)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
         maxChars_arg = parse_arg("maxChars", maxChars)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
@@ -414,12 +414,12 @@ class MutationRoot:
 
     def createBooleanValue(self, deviceId, permission, name, private=None, hidden=None, value=None, cardSize=None, index=None):
         deviceId_arg = parse_arg("deviceId", deviceId)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s%s){id}}' % (
             deviceId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["createBooleanValue"]
@@ -439,7 +439,7 @@ class MutationRoot:
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         threshold_arg = parse_arg("threshold", threshold)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
@@ -467,7 +467,7 @@ class MutationRoot:
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
@@ -513,10 +513,11 @@ class MutationRoot:
     def settings(self, language=None, lengthAndMass=None, temperature=None, dateFormat=None, timeFormat=None, passwordChangeEmail=None, pendingOwnerChangeReceivedEmail=None, pendingEnvironmentShareReceivedEmail=None, pendingOwnerChangeAcceptedEmail=None, pendingEnvironmentShareAcceptedEmail=None, permanentTokenCreatedEmail=None):
 
         language_arg = parse_arg("language", language)
-        lengthAndMass_arg = parse_arg("lengthAndMass", lengthAndMass)
-        temperature_arg = parse_arg("temperature", temperature)
-        dateFormat_arg = parse_arg("dateFormat", dateFormat)
-        timeFormat_arg = parse_arg("timeFormat", timeFormat)
+        lengthAndMass_arg = parse_arg(
+            "lengthAndMass", lengthAndMass, is_enum=True)
+        temperature_arg = parse_arg("temperature", temperature, is_enum=True)
+        dateFormat_arg = parse_arg("dateFormat", dateFormat, is_enum=True)
+        timeFormat_arg = parse_arg("timeFormat", timeFormat, is_enum=True)
         passwordChangeEmail_arg = parse_arg(
             "passwordChangeEmail", passwordChangeEmail)
         pendingOwnerChangeReceivedEmail_arg = parse_arg(
@@ -540,7 +541,7 @@ class MutationRoot:
     def environment(self, id, name=None, picture=None, index=None, muted=None):
         id_arg = parse_arg("id", id)
         name_arg = parse_arg("name", name)
-        picture_arg = parse_arg("picture", picture)
+        picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
         res = self.client.mutation('mutation{environment(%s%s%s%s%s){id}}' % (
@@ -574,7 +575,7 @@ class MutationRoot:
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{value(%s%s%s%s%s%s){id __typename}}' % (
@@ -623,7 +624,7 @@ class MutationRoot:
 
     def floatValue(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
         id_arg = parse_arg("id", id)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         unitOfMeasurement_arg = parse_arg(
@@ -633,7 +634,7 @@ class MutationRoot:
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
             id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatValue"]
@@ -657,13 +658,13 @@ class MutationRoot:
 
     def stringValue(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, cardSize=None, allowedValues=None, index=None):
         id_arg = parse_arg("id", id)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
         maxChars_arg = parse_arg("maxChars", maxChars)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
@@ -676,12 +677,12 @@ class MutationRoot:
 
     def booleanValue(self, id, permission=None, private=None, hidden=None, value=None, name=None, cardSize=None, index=None):
         id_arg = parse_arg("id", id)
-        permission_arg = parse_arg("permission", permission)
+        permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s%s){id}}' % (
             id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["booleanValue"]
@@ -701,7 +702,7 @@ class MutationRoot:
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         threshold_arg = parse_arg("threshold", threshold)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
@@ -729,7 +730,7 @@ class MutationRoot:
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize)
+        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
