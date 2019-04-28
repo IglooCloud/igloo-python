@@ -1,5 +1,6 @@
 from aiodataloader import DataLoader
 from .utils import wrapWith
+from ..utils import get_representation
 
 
 class PendingEnvironmentShareLoader(DataLoader):
@@ -128,23 +129,28 @@ class EnvironmentPendingEnvironmentShareList:
         self.client = client
         self.current = 0
         self.environmentId = environmentId
+        self._filter = "{}"
+
+    def filter(self, _filter):
+        self._filter = get_representation(_filter)
+        return self
 
     def __len__(self):
-        res = self.client.query('{environment(id:"%s"){pendingEnvironmentShareCount}}' % self.environmentId, keys=[
+        res = self.client.query('{environment(id:"%s"){pendingEnvironmentShareCount(filter:%s)}}' % (self.environmentId, self._filter), keys=[
                                 "environment", "pendingEnvironmentShareCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){pendingEnvironmentShares(limit:1, offset:%d){id}}}' % (self.environmentId, i))
+                '{environment(id:"%s"){pendingEnvironmentShares(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
             if len(res["environment"]["pendingEnvironmentShares"]) != 1:
                 raise IndexError()
             return PendingEnvironmentShare(self.client, res["environment"]["pendingEnvironmentShares"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){pendingEnvironmentShares(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
+                '{environment(id:"%s"){pendingEnvironmentShares(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
             return [PendingEnvironmentShare(self.client, pendingShare["id"]) for pendingShare in res["environment"]["pendingEnvironmentShares"]]
         else:
             print("i", type(i))
@@ -155,7 +161,7 @@ class EnvironmentPendingEnvironmentShareList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){pendingEnvironmentShares(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
+            '{environment(id:"%s"){pendingEnvironmentShares(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
 
         if len(res["environment"]["pendingEnvironmentShares"]) != 1:
             raise StopIteration

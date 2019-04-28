@@ -227,6 +227,7 @@ class EnvironmentDeviceList:
 
     def filter(self, _filter):
         self._filter = get_representation(_filter)
+        return self
 
     def __len__(self):
         res = self.client.query(
@@ -270,23 +271,28 @@ class DeveloperDeviceList:
     def __init__(self, client):
         self.client = client
         self.current = 0
+        self._filter = "{}"
+
+    def filter(self, _filter):
+        self._filter = get_representation(_filter)
+        return self
 
     def __len__(self):
         res = self.client.query(
-            '{user{developerDeviceCount}}')
+            '{user{developerDeviceCount(filter:%s)}}' % self._filter)
         return res["user"]["developerDeviceCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{developerDevices(limit:1, offset:%d){id}}}' % (i))
+                '{user{developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (i, self._filter))
             if len(res["user"]["developerDevices"]) != 1:
                 raise IndexError()
             return Device(self.client, res["user"]["developerDevices"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{developerDevices(offset:%d, limit:%d){id}}}' % (start, end-start))
+                '{user{developerDevices(offset:%d, limit:%d, filter:%s){id}}}' % (start, end-start, self._filter))
             return [Device(self.client, device["id"]) for device in res["user"]["developerDevices"]]
         else:
             print("i", type(i))
@@ -297,7 +303,7 @@ class DeveloperDeviceList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{developerDevices(limit:1, offset:%d){id}}}' % (self.current))
+            '{user{developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.current, self._filter))
 
         if len(res["user", "developerDevices"]) != 1:
             raise StopIteration

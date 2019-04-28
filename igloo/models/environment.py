@@ -1,4 +1,5 @@
 from .utils import wrapWith
+from ..utils import get_representation
 from aiodataloader import DataLoader
 
 
@@ -137,32 +138,48 @@ class Environment:
         return EnvironmentPendingEnvironmentShareList(self.client, self._id)
 
     @property
-    def pendingOwnerChanges(self):
-        from .pending_owner_change import EnvironmentPendingOwnerChangeList
-        return EnvironmentPendingOwnerChangeList(self.client, self._id)
+    def pendingOwnerChange(self):
+        if self.client.asyncio:
+            res = self.loader.load("pendingOwnerChange{id}")
+        else:
+            res = self.client.query('{environment(id:"%s"){pendingOwnerChange{id}}}' % self._id, keys=[
+                "environment", "pendingOwnerChange"])
+
+        def wrapper(res):
+            from .pending_owner_change import PendingOwnerChange
+            res = PendingOwnerChange(self.client, res["id"])
+
+            return res
+
+        return wrapWith(res, wrapper)
 
 
 class EnvironmentList:
     def __init__(self, client):
         self.client = client
         self.current = 0
+        self._filter = "{}"
+
+    def filter(self, _filter):
+        self._filter = get_representation(_filter)
+        return self
 
     def __len__(self):
-        res = self.client.query('{user{environmentCount}}', keys=[
+        res = self.client.query('{user{environmentCount(filter:%s)}}' % self._filter, keys=[
                                 "user", "environmentCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user{environments(limit:1, offset:%d){id}}}' % i)
+                '{user{environments(limit:1, offset:%d, filter:%s){id}}}' % (i, self._filter))
             if len(res["user"]["environments"]) != 1:
                 raise IndexError()
             return Environment(self.client, res["user"]["environments"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user{environments(offset:%d, limit:%d){id}}}' % (start, end-start))
+                '{user{environments(offset:%d, limit:%d, filter:%s){id}}}' % (start, end-start, self._filter))
             return [Environment(self.client, environment["id"]) for environment in res["user"]["environments"]]
         else:
             print("i", type(i))
@@ -173,7 +190,7 @@ class EnvironmentList:
 
     def __next__(self):
         res = self.client.query(
-            '{user{environments(limit:1, offset:%d){id}}}' % self.current)
+            '{user{environments(limit:1, offset:%d, filter:%s){id}}}' % (self.current, self._filter))
 
         if len(res["user"]["environments"]) != 1:
             raise StopIteration

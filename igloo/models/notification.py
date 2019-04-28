@@ -1,5 +1,6 @@
 from aiodataloader import DataLoader
 from .utils import wrapWith
+from ..utils import get_representation
 
 
 class NotificationLoader(DataLoader):
@@ -76,23 +77,28 @@ class DeviceNotificationList:
         self.client = client
         self.deviceId = deviceId
         self.current = 0
+        self._filter = "{}"
+
+    def filter(self, _filter):
+        self._filter = get_representation(_filter)
+        return self
 
     def __len__(self):
         res = self.client.query(
-            '{device(id:"%s"){notificationCount}}' % self.deviceId)
+            '{device(id:"%s"){notificationCount(filter:%s)}}' % (self.deviceId, self._filter))
         return res["device"]["notificationCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{device(id:"%s"){notifications(limit:1, offset:%d){id}}}' % (self.deviceId, i))
+                '{device(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.deviceId, i, self._filter))
             if len(res["device"]["notifications"]) != 1:
                 raise IndexError()
             return Notification(self.client, res["device"]["notifications"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{device(id:"%s"){notifications(offset:%d, limit:%d){id}}}' % (self.deviceId, start, end-start))
+                '{device(id:"%s"){notifications(offset:%d, limit:%d, filter:%s){id}}}' % (self.deviceId, start, end-start, self._filter))
             return [Notification(self.client, notification["id"]) for notification in res["device"]["notifications"]]
         else:
             print("i", type(i))
@@ -103,7 +109,7 @@ class DeviceNotificationList:
 
     def __next__(self):
         res = self.client.query(
-            '{device(id:"%s"){notifications(limit:1, offset:%d){id}}}' % (self.deviceId, self.current))
+            '{device(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.deviceId, self.current, self._filter))
 
         if len(res["device", "notifications"]) != 1:
             raise StopIteration
