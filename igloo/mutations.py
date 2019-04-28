@@ -52,7 +52,7 @@ class MutationRoot:
 
         return self.client.mutation('mutation{verifyWebAuthn(%s%s)}' % (challengeResponse_arg, jwtChallenge_arg))["verifyWebAuthn"]
 
-    def verifyTotp(self, email=None, code=None):
+    def verifyTotp(self, email, code):
         email_arg = parse_arg("email", email)
         code_arg = parse_arg("code", code)
 
@@ -156,13 +156,13 @@ class MutationRoot:
 
         return wrapWith(res, wrapper)
 
-    def setTotp(self, code=None, secret=None):
+    def setTotp(self, code, secret):
 
         code_arg = parse_arg("code", code)
         secret_arg = parse_arg("secret", secret)
         return self.client.mutation('mutation{setTotp(%s%s)}' % (code_arg, secret_arg))["setTotp"]
 
-    def setWebAuthn(self, challengeResponse=None, jwtChallenge=None):
+    def setWebAuthn(self, challengeResponse, jwtChallenge):
 
         challengeResponse_arg = parse_arg(
             "challengeResponse", challengeResponse)
