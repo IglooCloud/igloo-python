@@ -5,7 +5,6 @@ from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.device import Device
 from igloo.models.float_value import FloatValue
-from igloo.models.pending_owner_change import PendingOwnerChange
 from igloo.models.notification import Notification
 from igloo.models.boolean_value import BooleanValue
 from igloo.models.string_value import StringValue
@@ -92,29 +91,17 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{pendingEnvironmentShareRevoked()}' % ()).replace('()', '')):
             yield data["pendingEnvironmentShareRevoked"]
 
-    async def pendingOwnerChangeReceived(self, ):
-        async for data in self.client.subscribe(('subscription{pendingOwnerChangeReceived(){id}}' % ()).replace('()', '')):
-            yield PendingOwnerChange(self.client, data["pendingOwnerChangeReceived"]["id"])
+    async def environmentStoppedSharingWithUser(self, environmentId=None, userId=None):
+        environmentId_arg = parse_arg("environmentId", environmentId)
+        userId_arg = parse_arg("userId", userId)
+        async for data in self.client.subscribe(('subscription{environmentStoppedSharingWithUser(%s%s){environment{id} user{id}}}' % (environmentId_arg, userId_arg)).replace('()', '')):
+            res = data["environmentStoppedSharingWithUser"]
+            res["environment"] = Environment(
+                self.client, res["environment"]["id"])
+            res["user"] = User(
+                self.client, res["user"]["id"])
 
-    async def pendingOwnerChangeUpdated(self, ):
-        async for data in self.client.subscribe(('subscription{pendingOwnerChangeUpdated(){id}}' % ()).replace('()', '')):
-            yield PendingOwnerChange(self.client, data["pendingOwnerChangeUpdated"]["id"])
-
-    async def pendingOwnerChangeAccepted(self, ):
-        async for data in self.client.subscribe(('subscription{pendingOwnerChangeAccepted(){id sender receiver environment}}' % ()).replace('()', '')):
-            yield data["pendingOwnerChangeAccepted"]
-
-    async def pendingOwnerChangeDeclined(self, ):
-        async for data in self.client.subscribe(('subscription{pendingOwnerChangeDeclined()}' % ()).replace('()', '')):
-            yield data["pendingOwnerChangeDeclined"]
-
-    async def pendingOwnerChangeRevoked(self, ):
-        async for data in self.client.subscribe(('subscription{pendingOwnerChangeRevoked()}' % ()).replace('()', '')):
-            yield data["pendingOwnerChangeRevoked"]
-
-    async def environmentStoppedSharingWithYou(self, ):
-        async for data in self.client.subscribe(('subscription{environmentStoppedSharingWithYou()}' % ()).replace('()', '')):
-            yield data["environmentStoppedSharingWithYou"]
+            yield res
 
     async def userUpdated(self, id=None):
         id_arg = parse_arg("id", id)
