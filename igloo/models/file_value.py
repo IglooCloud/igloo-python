@@ -30,6 +30,22 @@ class FileValue:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{fileValue(id:"%s"){createdAt}}' % self._id, keys=[
+                "fileValue", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{fileValue(id:"%s"){updatedAt}}' % self._id, keys=[
+                "fileValue", "updatedAt"])
+
+    @property
     def name(self):
         if self.client.asyncio:
             return self.loader.load("name")
@@ -101,22 +117,6 @@ class FileValue:
         else:
             return self.client.query('{fileValue(id:"%s"){myRole}}' % self._id, keys=[
                 "fileValue", "myRole"])
-
-    @property
-    def createdAt(self):
-        if self.client.asyncio:
-            return self.loader.load("createdAt")
-        else:
-            return self.client.query('{fileValue(id:"%s"){createdAt}}' % self._id, keys=[
-                "fileValue", "createdAt"])
-
-    @property
-    def updatedAt(self):
-        if self.client.asyncio:
-            return self.loader.load("updatedAt")
-        else:
-            return self.client.query('{fileValue(id:"%s"){updatedAt}}' % self._id, keys=[
-                "fileValue", "updatedAt"])
 
     async def _async_load_device(self):
         id = await self.loader.load("device{id}")["id"]

@@ -30,6 +30,22 @@ class FloatSeriesNode:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{floatSeriesNode(id:"%s"){createdAt}}' % self._id, keys=[
+                "floatSeriesNode", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{floatSeriesNode(id:"%s"){updatedAt}}' % self._id, keys=[
+                "floatSeriesNode", "updatedAt"])
+
+    @property
     def device(self):
         if self.client.asyncio:
             res = self.loader.load("device{id}")

@@ -29,6 +29,22 @@ class Notification:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{notification(id:"%s"){createdAt}}' % self._id, keys=[
+                "notification", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{notification(id:"%s"){updatedAt}}' % self._id, keys=[
+                "notification", "updatedAt"])
+
+    @property
     def device(self):
         if self.client.asyncio:
             res = self.loader.load("device{id}")

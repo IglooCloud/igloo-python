@@ -31,12 +31,28 @@ class CategorySeriesNode:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{categorySeriesNode(id:"%s"){createdAt}}' % self._id, keys=[
+                "categorySeriesNode", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{categorySeriesNode(id:"%s"){updatedAt}}' % self._id, keys=[
+                "categorySeriesNode", "updatedAt"])
+
+    @property
     def device(self):
         if self.client.asyncio:
             res = self.loader.load("device{id}")
         else:
-            res = self.client.query('{categorySeriesValue(id:"%s"){device{id}}}' % self._id, keys=[
-                "categorySeriesValue", "device"])
+            res = self.client.query('{categorySeriesNode(id:"%s"){device{id}}}' % self._id, keys=[
+                "categorySeriesNode", "device"])
 
         def wrapper(res):
             from .device import Device
@@ -49,8 +65,8 @@ class CategorySeriesNode:
         if self.client.asyncio:
             res = self.loader.load("series{id}")
         else:
-            res = self.client.query('{categorySeriesValue(id:"%s"){series{id}}}' % self._id, keys=[
-                "categorySeriesValue", "series"])
+            res = self.client.query('{categorySeriesNode(id:"%s"){series{id}}}' % self._id, keys=[
+                "categorySeriesNode", "series"])
 
         def wrapper(res):
             from .category_series_value import CategorySeriesValue

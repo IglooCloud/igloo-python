@@ -30,6 +30,22 @@ class Device:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{device(id:"%s"){createdAt}}' % self._id, keys=[
+                "device", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{device(id:"%s"){updatedAt}}' % self._id, keys=[
+                "device", "updatedAt"])
+
+    @property
     def deviceType(self):
         if self.client.asyncio:
             return self.loader.load("deviceType")

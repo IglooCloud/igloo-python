@@ -29,6 +29,22 @@ class Environment:
         return self._id
 
     @property
+    def createdAt(self):
+        if self.client.asyncio:
+            return self.loader.load("createdAt")
+        else:
+            return self.client.query('{environment(id:"%s"){createdAt}}' % self._id, keys=[
+                "environment", "createdAt"])
+
+    @property
+    def updatedAt(self):
+        if self.client.asyncio:
+            return self.loader.load("updatedAt")
+        else:
+            return self.client.query('{environment(id:"%s"){updatedAt}}' % self._id, keys=[
+                "environment", "updatedAt"])
+
+    @property
     def name(self):
         if self.client.asyncio:
             return self.loader.load("name")
