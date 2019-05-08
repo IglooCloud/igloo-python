@@ -213,6 +213,11 @@ class Device:
 
         return wrapWith(res, wrapper)
 
+    @property
+    def values(self):
+        from .value import DeviceValuesList
+        return DeviceValuesList(self.client, self.id)
+
     async def keepOnline(self):
         async for _ in self.client.subscription_root.keepOnline(self._id):
             pass

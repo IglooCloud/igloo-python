@@ -3,6 +3,7 @@ from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.device import Device
+from igloo.models.value import Value
 from igloo.models.float_value import FloatValue
 from igloo.models.pending_owner_change import PendingOwnerChange
 from igloo.models.notification import Notification
@@ -582,20 +583,7 @@ class MutationRoot:
             id_arg, private_arg, hidden_arg, cardSize_arg, name_arg, index_arg))["value"]
 
         def wrapper(res):
-            if res["__typename"] == "FloatValue":
-                return FloatValue(self.client, res["id"])
-            elif res["__typename"] == "StringValue":
-                return StringValue(self.client, res["id"])
-            elif res["__typename"] == "BooleanValue":
-                return BooleanValue(self.client, res["id"])
-            elif res["__typename"] == "FloatSeriesValue":
-                return FloatSeriesValue(self.client, res["id"])
-            elif res["__typename"] == "CategorySeriesValue":
-                return CategorySeriesValue(self.client, res["id"])
-            elif res["__typename"] == "FileValue":
-                return FileValue(self.client, res["id"])
-            else:
-                return res
+            return Value(self.client, res["id"], res["__typename"])
 
         return wrapWith(res, wrapper)
 

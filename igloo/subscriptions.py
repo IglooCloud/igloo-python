@@ -4,6 +4,7 @@ from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.device import Device
+from igloo.models.value import Value
 from igloo.models.float_value import FloatValue
 from igloo.models.notification import Notification
 from igloo.models.boolean_value import BooleanValue
@@ -42,7 +43,7 @@ class SubscriptionRoot:
         hidden_arg = parse_arg("hidden", hidden)
 
         async for data in self.client.subscribe(('subscription{valueCreated(%s%s){id __typename}}' % (deviceId_arg, hidden_arg)).replace('()', '')):
-            yield Value(self.client, data["valueCreated"]["id"])
+            yield Value(self.client, data["valueCreated"]["id"], data["valueCreated"]["__typename"])
 
     async def floatSeriesNodeCreated(self, seriesId=None):
         seriesId_arg = parse_arg("seriesId", seriesId)
@@ -128,7 +129,7 @@ class SubscriptionRoot:
         hidden_arg = parse_arg("hidden", hidden)
 
         async for data in self.client.subscribe(('subscription{valueUpdated(%s%s%s){id __typename}}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
-            yield Value(self.client, data["valueUpdated"]["id"])
+            yield Value(self.client, data["valueUpdated"]["id"], data["valueUpdated"]["__typename"])
 
     async def floatSeriesNodeUpdated(self, seriesId=None, id=None):
         seriesId_arg = parse_arg("seriesId", seriesId)

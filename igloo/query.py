@@ -4,6 +4,7 @@ from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.device import Device
 from igloo.models.float_value import FloatValue
+from igloo.models.value import Value
 from igloo.models.pending_owner_change import PendingOwnerChange
 from igloo.models.notification import Notification
 from igloo.models.boolean_value import BooleanValue
@@ -28,6 +29,9 @@ class QueryRoot:
 
     def device(self, id):
         return Device(self.client, id)
+
+    def value(self, id):
+        return Value(self.client, id)
 
     def floatValue(self, id):
         return FloatValue(self.client, id)
