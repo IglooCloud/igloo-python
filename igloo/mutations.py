@@ -430,7 +430,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None, threshold=None, index=None):
+    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None,index=None):
         deviceId_arg = parse_arg("deviceId", deviceId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
@@ -441,10 +441,9 @@ class MutationRoot:
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
         cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
-        threshold_arg = parse_arg("threshold", threshold)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["createFloatSeriesValue"]
+        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            deviceId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)
@@ -680,7 +679,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, cardSize=None, threshold=None, index=None):
+    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -691,10 +690,9 @@ class MutationRoot:
         max_arg = parse_arg("max", max)
         name_arg = parse_arg("name", name)
         cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
-        threshold_arg = parse_arg("threshold", threshold)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, threshold_arg, index_arg))["floatSeriesValue"]
+        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)

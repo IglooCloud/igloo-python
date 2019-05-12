@@ -205,16 +205,3 @@ class FloatSeriesValue:
     def max(self, newValue):
         self.client.mutation(
             'mutation{floatSeriesValue(id:"%s", max:%s){id}}' % (self._id, newValue), asyncio=False)
-
-    @property
-    def threshold(self):
-        if self.client.asyncio:
-            return self.loader.load("threshold")
-        else:
-            return self.client.query('{floatSeriesValue(id:"%s"){threshold}}' % self._id, keys=[
-                "floatSeriesValue", "threshold"])
-
-    @threshold.setter
-    def threshold(self, newValue):
-        self.client.mutation(
-            'mutation{floatSeriesValue(id:"%s", threshold:%s){id}}' % (self._id, newValue), asyncio=False)
