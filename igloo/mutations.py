@@ -430,7 +430,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None,index=None):
+    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None, index=None):
         deviceId_arg = parse_arg("deviceId", deviceId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
@@ -510,7 +510,7 @@ class MutationRoot:
 
         return self.client.mutation('mutation{changeEmail(%s)}' % (newEmail_arg))["changeEmail"]
 
-    def settings(self, language=None, lengthAndMass=None, temperature=None, dateFormat=None, timeFormat=None, passwordChangeEmail=None, pendingOwnerChangeReceivedEmail=None, pendingEnvironmentShareReceivedEmail=None, pendingOwnerChangeAcceptedEmail=None, pendingEnvironmentShareAcceptedEmail=None, permanentTokenCreatedEmail=None):
+    def settings(self, language=None, lengthAndMass=None, temperature=None, dateFormat=None, timeFormat=None, passwordChangeEmail=None, environmentSharesEmail=None, permanentTokenCreatedEmail=None):
 
         language_arg = parse_arg("language", language)
         lengthAndMass_arg = parse_arg(
@@ -520,18 +520,12 @@ class MutationRoot:
         timeFormat_arg = parse_arg("timeFormat", timeFormat, is_enum=True)
         passwordChangeEmail_arg = parse_arg(
             "passwordChangeEmail", passwordChangeEmail)
-        pendingOwnerChangeReceivedEmail_arg = parse_arg(
-            "pendingOwnerChangeReceivedEmail", pendingOwnerChangeReceivedEmail)
-        pendingEnvironmentShareReceivedEmail_arg = parse_arg(
-            "pendingEnvironmentShareReceivedEmail", pendingEnvironmentShareReceivedEmail)
-        pendingOwnerChangeAcceptedEmail_arg = parse_arg(
-            "pendingOwnerChangeAcceptedEmail", pendingOwnerChangeAcceptedEmail)
-        pendingEnvironmentShareAcceptedEmail_arg = parse_arg(
-            "pendingEnvironmentShareAcceptedEmail", pendingEnvironmentShareAcceptedEmail)
+        environmentSharesEmail_arg = parse_arg(
+            "environmentSharesEmail", environmentSharesEmail)
         permanentTokenCreatedEmail_arg = parse_arg(
             "permanentTokenCreatedEmail", permanentTokenCreatedEmail)
 
-        return self.client.mutation('mutation{settings(%s%s%s%s%s%s%s%s%s%s%s){id lengthAndMass temperature timeFormat dateFormat language passwordChangeEmail pendingOwnerChangeReceivedEmail pendingEnvironmentShareReceivedEmail pendingOwnerChangeAcceptedEmail pendingEnvironmentShareAcceptedEmail permanentTokenCreatedEmail}}' % (language_arg, lengthAndMass_arg, temperature_arg, dateFormat_arg, timeFormat_arg, passwordChangeEmail_arg, pendingOwnerChangeReceivedEmail_arg, pendingEnvironmentShareReceivedEmail_arg, pendingOwnerChangeAcceptedEmail_arg, pendingEnvironmentShareAcceptedEmail_arg, permanentTokenCreatedEmail_arg))["settings"]
+        return self.client.mutation('mutation{settings(%s%s%s%s%s%s%s%s){id lengthAndMass temperature timeFormat dateFormat language passwordChangeEmail environmentSharesEmail permanentTokenCreatedEmail}}' % (language_arg, lengthAndMass_arg, temperature_arg, dateFormat_arg, timeFormat_arg, passwordChangeEmail_arg, environmentSharesEmail_arg, permanentTokenCreatedEmail_arg))["settings"]
 
     def updatePaymentInfo(self, stripeToken):
         stripeToken_arg = parse_arg("stripeToken", stripeToken)
