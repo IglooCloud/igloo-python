@@ -14,7 +14,7 @@ class PermanentTokenLoader(DataLoader):
         res = await self.client.query('{permanentToken(id:"%s"){%s}}' % (self._id, fields), keys=["permanentToken"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues

@@ -14,7 +14,7 @@ class CategorySeriesNodeLoader(DataLoader):
         res = await self.client.query('{categorySeriesNode(id:"%s"){%s}}' % (self._id, fields), keys=["categorySeriesNode"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
@@ -47,16 +47,16 @@ class CategorySeriesNode:
                 "categorySeriesNode", "updatedAt"])
 
     @property
-    def device(self):
+    def thing(self):
         if self.client.asyncio:
-            res = self.loader.load("device{id}")
+            res = self.loader.load("thing{id}")
         else:
-            res = self.client.query('{categorySeriesNode(id:"%s"){device{id}}}' % self._id, keys=[
-                "categorySeriesNode", "device"])
+            res = self.client.query('{categorySeriesNode(id:"%s"){thing{id}}}' % self._id, keys=[
+                "categorySeriesNode", "thing"])
 
         def wrapper(res):
-            from .device import Device
-            return Device(self.client, res["id"])
+            from .thing import Thing
+            return Thing(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 

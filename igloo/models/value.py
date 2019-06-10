@@ -22,10 +22,10 @@ def Value(client, id, resolveType):
         return CategorySeriesValue(client, id)
 
 
-class DeviceValuesList:
-    def __init__(self, client, deviceId):
+class ThingValuesList:
+    def __init__(self, client, thingId):
         self.client = client
-        self.deviceId = deviceId
+        self.thingId = thingId
         self.current = 0
         self._filter = "{}"
 
@@ -35,21 +35,21 @@ class DeviceValuesList:
 
     def __len__(self):
         res = self.client.query(
-            '{device(id:"%s"){valueCount(filter:%s)}}' % (self.deviceId, self._filter))
-        return res["device"]["valueCount"]
+            '{thing(id:"%s"){valueCount(filter:%s)}}' % (self.thingId, self._filter))
+        return res["thing"]["valueCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{device(id:"%s"){values(limit:1, offset:%d, filter:%s){id __typename}}}' % (self.deviceId, i, self._filter))
-            if len(res["device"]["values"]) != 1:
+                '{thing(id:"%s"){values(limit:1, offset:%d, filter:%s){id __typename}}}' % (self.thingId, i, self._filter))
+            if len(res["thing"]["values"]) != 1:
                 raise IndexError()
-            return Value(self.client, res["device"]["values"][0]["id"], res["device"]["values"][0]["__typename"])
+            return Value(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{device(id:"%s"){values(offset:%d, limit:%d, filter:%s){id __typename}}}' % (self.deviceId, start, end-start, self._filter))
-            return [Value(self.client, value["id"], value["__typename"]) for value in res["device"]["values"]]
+                '{thing(id:"%s"){values(offset:%d, limit:%d, filter:%s){id __typename}}}' % (self.thingId, start, end-start, self._filter))
+            return [Value(self.client, value["id"], value["__typename"]) for value in res["thing"]["values"]]
         else:
             print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
@@ -59,13 +59,13 @@ class DeviceValuesList:
 
     def __next__(self):
         res = self.client.query(
-            '{device(id:"%s"){values(limit:1, offset:%d, filter:%s){id __typename}}}' % (self.deviceId, self.current, self._filter))
+            '{thing(id:"%s"){values(limit:1, offset:%d, filter:%s){id __typename}}}' % (self.thingId, self.current, self._filter))
 
-        if len(res["device", "values"]) != 1:
+        if len(res["thing", "values"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return Value(self.client, res["device"]["values"][0]["id"], res["device"]["values"][0]["__typename"])
+        return Value(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
 
     def next(self):
         return self.__next__()

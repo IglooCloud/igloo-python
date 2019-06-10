@@ -104,7 +104,7 @@ from .models.user import User
 from .models.permanent_token import PermanentToken
 from .models.pending_environment_share import PendingEnvironmentShare
 from .models.environment import Environment
-from .models.device import Device
+from .models.thing import Thing
 from .models.float_value import FloatValue
 from .models.pending_owner_change import PendingOwnerChange
 from .models.notification import Notification

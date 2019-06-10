@@ -11,7 +11,7 @@ class NotificationLoader(DataLoader):
 
     async def batch_load_fn(self, keys):
         fields = " ".join(set(keys))
-        res = await self.client.query('{notification(id:"%s"){%s}}' % (self._id, fields), keys=["device"])
+        res = await self.client.query('{notification(id:"%s"){%s}}' % (self._id, fields), keys=["thing"])
 
         resolvedValues = [res[key] for key in keys]
 
@@ -45,16 +45,16 @@ class Notification:
                 "notification", "updatedAt"])
 
     @property
-    def device(self):
+    def thing(self):
         if self.client.asyncio:
-            res = self.loader.load("device{id}")
+            res = self.loader.load("thing{id}")
         else:
-            res = self.client.query('{notification(id:"%s"){device{id}}}' % self._id, keys=[
-                "notification", "device"])
+            res = self.client.query('{notification(id:"%s"){thing{id}}}' % self._id, keys=[
+                "notification", "thing"])
 
         def wrapper(res):
-            from .device import Device
-            return Device(self.client, res["id"])
+            from .thing import Thing
+            return Thing(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 
@@ -88,10 +88,10 @@ class Notification:
                                      self._id, keys=["notification", "read"])
 
 
-class DeviceNotificationList:
-    def __init__(self, client, deviceId):
+class ThingNotificationList:
+    def __init__(self, client, thingId):
         self.client = client
-        self.deviceId = deviceId
+        self.thingId = thingId
         self.current = 0
         self._filter = "{}"
 
@@ -101,21 +101,21 @@ class DeviceNotificationList:
 
     def __len__(self):
         res = self.client.query(
-            '{device(id:"%s"){notificationCount(filter:%s)}}' % (self.deviceId, self._filter))
-        return res["device"]["notificationCount"]
+            '{thing(id:"%s"){notificationCount(filter:%s)}}' % (self.thingId, self._filter))
+        return res["thing"]["notificationCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{device(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.deviceId, i, self._filter))
-            if len(res["device"]["notifications"]) != 1:
+                '{thing(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.thingId, i, self._filter))
+            if len(res["thing"]["notifications"]) != 1:
                 raise IndexError()
-            return Notification(self.client, res["device"]["notifications"][0]["id"])
+            return Notification(self.client, res["thing"]["notifications"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{device(id:"%s"){notifications(offset:%d, limit:%d, filter:%s){id}}}' % (self.deviceId, start, end-start, self._filter))
-            return [Notification(self.client, notification["id"]) for notification in res["device"]["notifications"]]
+                '{thing(id:"%s"){notifications(offset:%d, limit:%d, filter:%s){id}}}' % (self.thingId, start, end-start, self._filter))
+            return [Notification(self.client, notification["id"]) for notification in res["thing"]["notifications"]]
         else:
             print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
@@ -125,13 +125,13 @@ class DeviceNotificationList:
 
     def __next__(self):
         res = self.client.query(
-            '{device(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.deviceId, self.current, self._filter))
+            '{thing(id:"%s"){notifications(limit:1, offset:%d, filter:%s){id}}}' % (self.thingId, self.current, self._filter))
 
-        if len(res["device", "notifications"]) != 1:
+        if len(res["thing", "notifications"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return Notification(self.client, res["device"]["notifications"][0]["id"])
+        return Notification(self.client, res["thing"]["notifications"][0]["id"])
 
     def next(self):
         return self.__next__()

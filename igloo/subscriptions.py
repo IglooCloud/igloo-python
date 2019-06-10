@@ -3,7 +3,7 @@ from igloo.models.user import User
 from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
-from igloo.models.device import Device
+from igloo.models.thing import Thing
 from igloo.models.value import Value
 from igloo.models.float_value import FloatValue
 from igloo.models.notification import Notification
@@ -21,28 +21,28 @@ class SubscriptionRoot:
     def __init__(self, client):
         self.client = client
 
-    async def deviceCreated(self, environmentId=None):
+    async def thingCreated(self, environmentId=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
 
-        async for data in self.client.subscribe(('subscription{deviceCreated(%s){id}}' % (environmentId_arg)).replace('()', '')):
-            yield Device(self.client, data["deviceCreated"]["id"])
+        async for data in self.client.subscribe(('subscription{thingCreated(%s){id}}' % (environmentId_arg)).replace('()', '')):
+            yield Thing(self.client, data["thingCreated"]["id"])
 
-    async def deviceClaimed(self, environmentId=None, id=None):
+    async def thingClaimed(self, environmentId=None, id=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{deviceClaimed(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield Device(self.client, data["deviceClaimed"]["id"])
+        async for data in self.client.subscribe(('subscription{thingClaimed(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield Thing(self.client, data["thingClaimed"]["id"])
 
     async def environmentCreated(self, ):
         async for data in self.client.subscribe(('subscription{environmentCreated(){id}}' % ()).replace('()', '')):
             yield Environment(self.client, data["environmentCreated"]["id"])
 
-    async def valueCreated(self, deviceId=None, hidden=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def valueCreated(self, thingId=None, hidden=None):
+        thingId_arg = parse_arg("thingId", thingId)
         hidden_arg = parse_arg("hidden", hidden)
 
-        async for data in self.client.subscribe(('subscription{valueCreated(%s%s){id __typename}}' % (deviceId_arg, hidden_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueCreated(%s%s){id __typename}}' % (thingId_arg, hidden_arg)).replace('()', '')):
             yield Value(self.client, data["valueCreated"]["id"], data["valueCreated"]["__typename"])
 
     async def floatSeriesNodeCreated(self, seriesId=None):
@@ -65,12 +65,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{notificationCreated(){id}}' % ()).replace('()', '')):
             yield Notification(self.client, data["notificationCreated"]["id"])
 
-    async def deviceMoved(self, environmentId=None, id=None):
+    async def thingMoved(self, environmentId=None, id=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{deviceMoved(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield Device(self.client, data["deviceMoved"]["id"])
+        async for data in self.client.subscribe(('subscription{thingMoved(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield Thing(self.client, data["thingMoved"]["id"])
 
     async def pendingEnvironmentShareReceived(self, ):
         async for data in self.client.subscribe(('subscription{pendingEnvironmentShareReceived(){id}}' % ()).replace('()', '')):
@@ -92,11 +92,23 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{pendingEnvironmentShareRevoked()}' % ()).replace('()', '')):
             yield data["pendingEnvironmentShareRevoked"]
 
-    async def environmentStoppedSharingWithUser(self, environmentId=None, userId=None):
+    async def environmentShareDeleted(self, environmentId=None, userId=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         userId_arg = parse_arg("userId", userId)
-        async for data in self.client.subscribe(('subscription{environmentStoppedSharingWithUser(%s%s){environment{id} user{id}}}' % (environmentId_arg, userId_arg)).replace('()', '')):
-            res = data["environmentStoppedSharingWithUser"]
+        async for data in self.client.subscribe(('subscription{environmentShareDeleted(%s%s){environment{id} user{id}}}' % (environmentId_arg, userId_arg)).replace('()', '')):
+            res = data["environmentShareDeleted"]
+            res["environment"] = Environment(
+                self.client, res["environment"]["id"])
+            res["user"] = User(
+                self.client, res["user"]["id"])
+
+            yield res
+
+    async def environmentShareUpdated(self, environmentId=None, userId=None):
+        environmentId_arg = parse_arg("environmentId", environmentId)
+        userId_arg = parse_arg("userId", userId)
+        async for data in self.client.subscribe(('subscription{environmentShareUpdated(%s%s){environment{id} user{id} newRole}}' % (environmentId_arg, userId_arg)).replace('()', '')):
+            res = data["environmentShareUpdated"]
             res["environment"] = Environment(
                 self.client, res["environment"]["id"])
             res["user"] = User(
@@ -110,12 +122,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{userUpdated(%s){id}}' % (id_arg)).replace('()', '')):
             yield User(self.client, data["userUpdated"]["id"])
 
-    async def deviceUpdated(self, environmentId=None, id=None):
+    async def thingUpdated(self, environmentId=None, id=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{deviceUpdated(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield Device(self.client, data["deviceUpdated"]["id"])
+        async for data in self.client.subscribe(('subscription{thingUpdated(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield Thing(self.client, data["thingUpdated"]["id"])
 
     async def environmentUpdated(self, id=None):
         id_arg = parse_arg("id", id)
@@ -123,12 +135,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{environmentUpdated(%s){id}}' % (id_arg)).replace('()', '')):
             yield Environment(self.client, data["environmentUpdated"]["id"])
 
-    async def valueUpdated(self, deviceId=None, id=None, hidden=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def valueUpdated(self, thingId=None, id=None, hidden=None):
+        thingId_arg = parse_arg("thingId", thingId)
         id_arg = parse_arg("id", id)
         hidden_arg = parse_arg("hidden", hidden)
 
-        async for data in self.client.subscribe(('subscription{valueUpdated(%s%s%s){id __typename}}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueUpdated(%s%s%s){id __typename}}' % (thingId_arg, id_arg, hidden_arg)).replace('()', '')):
             yield Value(self.client, data["valueUpdated"]["id"], data["valueUpdated"]["__typename"])
 
     async def floatSeriesNodeUpdated(self, seriesId=None, id=None):
@@ -145,19 +157,19 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{categorySeriesNodeUpdated(%s%s){id}}' % (seriesId_arg, id_arg)).replace('()', '')):
             yield CategorySeriesNode(self.client, data["categorySeriesNodeUpdated"]["id"])
 
-    async def notificationUpdated(self, deviceId=None, id=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def notificationUpdated(self, thingId=None, id=None):
+        thingId_arg = parse_arg("thingId", thingId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{notificationUpdated(%s%s){id}}' % (deviceId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{notificationUpdated(%s%s){id}}' % (thingId_arg, id_arg)).replace('()', '')):
             yield Notification(self.client, data["notificationUpdated"]["id"])
 
-    async def valueDeleted(self, deviceId=None, id=None, hidden=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def valueDeleted(self, thingId=None, id=None, hidden=None):
+        thingId_arg = parse_arg("thingId", thingId)
         id_arg = parse_arg("id", id)
         hidden_arg = parse_arg("hidden", hidden)
 
-        async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (deviceId_arg, id_arg, hidden_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{valueDeleted(%s%s%s)}' % (thingId_arg, id_arg, hidden_arg)).replace('()', '')):
             yield data["valueDeleted"]
 
     async def floatSeriesNodeDeleted(self, seriesId=None, id=None):
@@ -174,19 +186,19 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{categorySeriesNodeDeleted(%s%s)}' % (seriesId_arg, id_arg)).replace('()', '')):
             yield data["categorySeriesNodeDeleted"]
 
-    async def deviceDeleted(self, environmentId=None, id=None):
+    async def thingDeleted(self, environmentId=None, id=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{deviceDeleted(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield data["deviceDeleted"]
+        async for data in self.client.subscribe(('subscription{thingDeleted(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield data["thingDeleted"]
 
-    async def deviceUnclaimed(self, environmentId=None, id=None):
+    async def thingUnclaimed(self, environmentId=None, id=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{deviceUnclaimed(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield data["deviceUnclaimed"]
+        async for data in self.client.subscribe(('subscription{thingUnclaimed(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield data["thingUnclaimed"]
 
     async def environmentDeleted(self, id=None):
         id_arg = parse_arg("id", id)
@@ -204,15 +216,15 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{permanentTokenDeleted()}' % ()).replace('()', '')):
             yield data["permanentTokenDeleted"]
 
-    async def notificationDeleted(self, deviceId=None, id=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def notificationDeleted(self, thingId=None, id=None):
+        thingId_arg = parse_arg("thingId", thingId)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{notificationDeleted(%s%s)}' % (deviceId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{notificationDeleted(%s%s)}' % (thingId_arg, id_arg)).replace('()', '')):
             yield data["notificationDeleted"]
 
-    async def keepOnline(self, deviceId):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    async def keepOnline(self, thingId):
+        thingId_arg = parse_arg("thingId", thingId)
 
-        async for data in self.client.subscribe(('subscription{keepOnline(%s)}' % (deviceId_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{keepOnline(%s)}' % (thingId_arg)).replace('()', '')):
             yield data["keepOnline"]

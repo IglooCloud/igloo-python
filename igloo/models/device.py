@@ -4,7 +4,7 @@ from igloo.models.utils import wrapWith
 from igloo.utils import get_representation
 
 
-class DeviceLoader(DataLoader):
+class ThingLoader(DataLoader):
     def __init__(self, client, id):
         super().__init__()
         self.client = client
@@ -12,18 +12,18 @@ class DeviceLoader(DataLoader):
 
     async def batch_load_fn(self, keys):
         fields = " ".join(set(keys))
-        res = await self.client.query('{device(id:"%s"){%s}}' % (self._id, fields), keys=["device"])
+        res = await self.client.query('{thing(id:"%s"){%s}}' % (self._id, fields), keys=["thing"])
 
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
 
 
-class Device:
+class Thing:
     def __init__(self, client, id):
         self.client = client
         self._id = id
-        self.loader = DeviceLoader(client, id)
+        self.loader = ThingLoader(client, id)
 
     @property
     def id(self):
@@ -34,165 +34,181 @@ class Device:
         if self.client.asyncio:
             return self.loader.load("createdAt")
         else:
-            return self.client.query('{device(id:"%s"){createdAt}}' % self._id, keys=[
-                "device", "createdAt"])
+            return self.client.query('{thing(id:"%s"){createdAt}}' % self._id, keys=[
+                "thing", "createdAt"])
 
     @property
     def updatedAt(self):
         if self.client.asyncio:
             return self.loader.load("updatedAt")
         else:
-            return self.client.query('{device(id:"%s"){updatedAt}}' % self._id, keys=[
-                "device", "updatedAt"])
+            return self.client.query('{thing(id:"%s"){updatedAt}}' % self._id, keys=[
+                "thing", "updatedAt"])
 
     @property
-    def deviceType(self):
+    def thingType(self):
         if self.client.asyncio:
-            return self.loader.load("deviceType")
+            return self.loader.load("thingType")
         else:
-            return self.client.query('{device(id:"%s"){deviceType}}' %
-                                     self._id, keys=["device", "deviceType"])
+            return self.client.query('{thing(id:"%s"){thingType}}' %
+                                     self._id, keys=["thing", "thingType"])
 
-    @deviceType.setter
-    def deviceType(self, newDeviceType):
+    @thingType.setter
+    def thingType(self, newThingType):
         self.client.mutation(
-            'mutation{device(id:"%s", deviceType:"%s"){id}}' % (self._id, newDeviceType), asyncio=False)
+            'mutation{thing(id:"%s", thingType:"%s"){id}}' % (self._id, newThingType), asyncio=False)
 
     @property
     def myRole(self):
         if self.client.asyncio:
             return self.loader.load("myRole")
         else:
-            return self.client.query('{device(id:"%s"){myRole}}' %
-                                     self._id, keys=["device", "myRole"])
+            return self.client.query('{thing(id:"%s"){myRole}}' %
+                                     self._id, keys=["thing", "myRole"])
 
     @property
     def starred(self):
         if self.client.asyncio:
             return self.loader.load("starred")
         else:
-            return self.client.query('{device(id:"%s"){starred}}' %
-                                     self._id, keys=["device", "starred"])
+            return self.client.query('{thing(id:"%s"){starred}}' %
+                                     self._id, keys=["thing", "starred"])
 
     @starred.setter
     def starred(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", starred:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{thing(id:"%s", starred:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def name(self):
         if self.client.asyncio:
             return self.loader.load("name")
         else:
-            return self.client.query('{device(id:"%s"){name}}' %
-                                     self._id, keys=["device", "name"])
+            return self.client.query('{thing(id:"%s"){name}}' %
+                                     self._id, keys=["thing", "name"])
 
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{device(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{thing(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def index(self):
         if self.client.asyncio:
             return self.loader.load("index")
         else:
-            return self.client.query('{device(id:"%s"){index}}' %
-                                     self._id, keys=["device", "index"])
+            return self.client.query('{thing(id:"%s"){index}}' %
+                                     self._id, keys=["thing", "index"])
 
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{thing(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def online(self):
         if self.client.asyncio:
             return self.loader.load("online")
         else:
-            return self.client.query('{device(id:"%s"){online}}' %
-                                     self._id, keys=["device", "online"])
+            return self.client.query('{thing(id:"%s"){online}}' %
+                                     self._id, keys=["thing", "online"])
 
     @property
     def storageUsed(self):
         if self.client.asyncio:
             return self.loader.load("storageUsed")
         else:
-            return self.client.query('{device(id:"%s"){storageUsed}}' %
-                                     self._id, keys=["device", "storageUsed"])
+            return self.client.query('{thing(id:"%s"){storageUsed}}' %
+                                     self._id, keys=["thing", "storageUsed"])
 
     @property
     def signalStatus(self):
         if self.client.asyncio:
             return self.loader.load("signalStatus")
         else:
-            return self.client.query('{device(id:"%s"){signalStatus}}' %
-                                     self._id, keys=["device", "signalStatus"])
+            return self.client.query('{thing(id:"%s"){signalStatus}}' %
+                                     self._id, keys=["thing", "signalStatus"])
 
     @signalStatus.setter
     def signalStatus(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", signalStatus:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{thing(id:"%s", signalStatus:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def batteryStatus(self):
         if self.client.asyncio:
             return self.loader.load("batteryStatus")
         else:
-            return self.client.query('{device(id:"%s"){batteryStatus}}' %
-                                     self._id, keys=["device", "batteryStatus"])
+            return self.client.query('{thing(id:"%s"){batteryStatus}}' %
+                                     self._id, keys=["thing", "batteryStatus"])
 
     @batteryStatus.setter
     def batteryStatus(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", batteryStatus:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{thing(id:"%s", batteryStatus:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def batteryCharging(self):
         if self.client.asyncio:
             return self.loader.load("batteryCharging")
         else:
-            return self.client.query('{device(id:"%s"){batteryCharging}}' %
-                                     self._id, keys=["device", "batteryCharging"])
+            return self.client.query('{thing(id:"%s"){batteryCharging}}' %
+                                     self._id, keys=["thing", "batteryCharging"])
 
     @batteryCharging.setter
     def batteryCharging(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{thing(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def firmware(self):
         if self.client.asyncio:
             return self.loader.load("firmware")
         else:
-            return self.client.query('{device(id:"%s"){firmware}}' %
-                                     self._id, keys=["device", "firmware"])
+            return self.client.query('{thing(id:"%s"){firmware}}' %
+                                     self._id, keys=["thing", "firmware"])
 
     @firmware.setter
     def firmware(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", firmware:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{thing(id:"%s", firmware:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def muted(self):
         if self.client.asyncio:
             return self.loader.load("muted")
         else:
-            return self.client.query('{device(id:"%s"){muted}}' %
-                                     self._id, keys=["device", "muted"])
+            return self.client.query('{thing(id:"%s"){muted}}' %
+                                     self._id, keys=["thing", "muted"])
 
     @muted.setter
     def muted(self, newValue):
         self.client.mutation(
-            'mutation{device(id:"%s", muted:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{thing(id:"%s", muted:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def qrCode(self):
         if self.client.asyncio:
             return self.loader.load("qrCode")
         else:
-            return self.client.query('{device(id:"%s"){qrCode}}' %
-                                     self._id, keys=["device", "qrCode"])
+            return self.client.query('{thing(id:"%s"){qrCode}}' %
+                                     self._id, keys=["thing", "qrCode"])
+
+    @property
+    def claimCode(self):
+        if self.client.asyncio:
+            return self.loader.load("claimCode")
+        else:
+            return self.client.query('{thing(id:"%s"){claimCode}}' %
+                                     self._id, keys=["thing", "claimCode"])
+
+    @property
+    def claimed(self):
+        if self.client.asyncio:
+            return self.loader.load("claimed")
+        else:
+            return self.client.query('{thing(id:"%s"){claimed}}' %
+                                     self._id, keys=["thing", "claimed"])
 
     @property
     def environment(self):
@@ -201,8 +217,8 @@ class Device:
         if self.client.asyncio:
             res = self.loader.load("environment{id}")
         else:
-            res = self.client.query('{device(id:"%s"){environment{id}}}' %
-                                    self._id, keys=["device", "environment"])
+            res = self.client.query('{thing(id:"%s"){environment{id}}}' %
+                                    self._id, keys=["thing", "environment"])
 
         def wrapper(res):
             return Environment(self.client, res["id"])
@@ -211,8 +227,8 @@ class Device:
 
     @property
     def notifications(self):
-        from .notification import DeviceNotificationList
-        return DeviceNotificationList(self.client, self.id)
+        from .notification import ThingNotificationList
+        return ThingNotificationList(self.client, self.id)
 
     @property
     def lastNotification(self):
@@ -221,8 +237,8 @@ class Device:
         if self.client.asyncio:
             res = self.loader.load("lastNotification{id}")
         else:
-            res = self.client.query('{device(id:"%s"){lastNotification{id}}}' %
-                                    self._id, keys=["device", "lastNotification"])
+            res = self.client.query('{thing(id:"%s"){lastNotification{id}}}' %
+                                    self._id, keys=["thing", "lastNotification"])
 
         def wrapper(res):
             return Notification(self.client, res["id"])
@@ -231,15 +247,15 @@ class Device:
 
     @property
     def values(self):
-        from .value import DeviceValuesList
-        return DeviceValuesList(self.client, self.id)
+        from .value import ThingValuesList
+        return ThingValuesList(self.client, self.id)
 
     async def keepOnline(self):
         async for _ in self.client.subscription_root.keepOnline(self._id):
             pass
 
 
-class EnvironmentDeviceList:
+class EnvironmentThingList:
     def __init__(self, client, environmentId):
         self.client = client
         self.environmentId = environmentId
@@ -252,21 +268,21 @@ class EnvironmentDeviceList:
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){deviceCount(filter:%s)}}' % (self.environmentId, self._filter))
-        return res["environment"]["deviceCount"]
+            '{environment(id:"%s"){thingCount(filter:%s)}}' % (self.environmentId, self._filter))
+        return res["environment"]["thingCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){devices(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
-            if len(res["environment"]["devices"]) != 1:
+                '{environment(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
+            if len(res["environment"]["things"]) != 1:
                 raise IndexError()
-            return Device(self.client, res["environment"]["devices"][0]["id"])
+            return Thing(self.client, res["environment"]["things"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){devices(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
-            return [Device(self.client, device["id"]) for device in res["environment"]["devices"]]
+                '{environment(id:"%s"){things(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
+            return [Thing(self.client, thing["id"]) for thing in res["environment"]["things"]]
         else:
             print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
@@ -276,19 +292,19 @@ class EnvironmentDeviceList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){devices(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
+            '{environment(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
 
-        if len(res["environment", "devices"]) != 1:
+        if len(res["environment", "things"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return Device(self.client, res["environment"]["devices"][0]["id"])
+        return Thing(self.client, res["environment"]["things"][0]["id"])
 
     def next(self):
         return self.__next__()
 
 
-class DeveloperDeviceList:
+class DeveloperThingList:
     def __init__(self, client, userId):
         self.client = client
         self.current = 0
@@ -301,21 +317,21 @@ class DeveloperDeviceList:
 
     def __len__(self):
         res = self.client.query(
-            '{user(id:%s){developerDeviceCount(filter:%s)}}' % (self.userId, self._filter))
-        return res["user"]["developerDeviceCount"]
+            '{user(id:%s){developerThingCount(filter:%s)}}' % (self.userId, self._filter))
+        return res["user"]["developerThingCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{user(id:%s){developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, i, self._filter))
-            if len(res["user"]["developerDevices"]) != 1:
+                '{user(id:%s){developerThings(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, i, self._filter))
+            if len(res["user"]["developerThings"]) != 1:
                 raise IndexError()
-            return Device(self.client, res["user"]["developerDevices"][0]["id"])
+            return Thing(self.client, res["user"]["developerThings"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{user(id:%s){developerDevices(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
-            return [Device(self.client, device["id"]) for device in res["user"]["developerDevices"]]
+                '{user(id:%s){developerThings(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
+            return [Thing(self.client, thing["id"]) for thing in res["user"]["developerThings"]]
         else:
             print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
@@ -325,13 +341,13 @@ class DeveloperDeviceList:
 
     def __next__(self):
         res = self.client.query(
-            '{user(id:%s){developerDevices(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, self.current, self._filter))
+            '{user(id:%s){developerThings(limit:1, offset:%d, filter:%s){id}}}' % (self.userId, self.current, self._filter))
 
-        if len(res["user", "developerDevices"]) != 1:
+        if len(res["user", "developerThings"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return Device(self.client, res["user"]["developerDevices"][0]["id"])
+        return Thing(self.client, res["user"]["developerThings"][0]["id"])
 
     def next(self):
         return self.__next__()
