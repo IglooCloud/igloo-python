@@ -13,7 +13,7 @@ class FloatSeriesNodeLoader(DataLoader):
         res = await self.client.query('{floatSeriesNode(id:"%s"){%s}}' % (self._id, fields), keys=["floatSeriesNode"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
@@ -46,16 +46,16 @@ class FloatSeriesNode:
                 "floatSeriesNode", "updatedAt"])
 
     @property
-    def device(self):
+    def thing(self):
         if self.client.asyncio:
-            res = self.loader.load("device{id}")
+            res = self.loader.load("thing{id}")
         else:
-            res = self.client.query('{floatSeriesNode(id:"%s"){device{id}}}' % self._id, keys=[
-                "floatSeriesNode", "device"])
+            res = self.client.query('{floatSeriesNode(id:"%s"){thing{id}}}' % self._id, keys=[
+                "floatSeriesNode", "thing"])
 
         def wrapper(res):
-            from .device import Device
-            return Device(self.client, res["id"])
+            from .thing import Thing
+            return Thing(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 

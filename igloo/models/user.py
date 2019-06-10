@@ -73,18 +73,6 @@ class User:
             'mutation{user(id:"%s")(quietMode:%s){id}}' % (self._id, "true" if newMode else "false"), asyncio=False)
 
     @property
-    def devMode(self):
-        if self.client.asyncio:
-            return self.loader.load("devMode")
-        else:
-            return self.client.query('{user(id:"%s"){devMode}}' % self._id, keys=["user", "devMode"])
-
-    @devMode.setter
-    def devMode(self, newMode):
-        self.client.mutation(
-            'mutation{user(id:"%s")(devMode:%s){id}}' % (self._id, "true" if newMode else "false"), asyncio=False)
-
-    @property
     def emailIsVerified(self):
         if self.client.asyncio:
             return self.loader.load("emailIsVerified")
@@ -124,9 +112,9 @@ class User:
         return UserPendingOwnerChangeList(self.client, self.id)
 
     @property
-    def developerDevices(self):
-        from .device import DeveloperDeviceList
-        return DeveloperDeviceList(self.client, self.id)
+    def developerThings(self):
+        from .thing import DeveloperThingList
+        return DeveloperThingList(self.client, self.id)
 
     @property
     def permanentTokens(self):

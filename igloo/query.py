@@ -2,7 +2,7 @@ from igloo.models.user import User
 from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
-from igloo.models.device import Device
+from igloo.models.thing import Thing
 from igloo.models.float_value import FloatValue
 from igloo.models.value import Value
 from igloo.models.pending_owner_change import PendingOwnerChange
@@ -27,8 +27,8 @@ class QueryRoot:
     def environment(self, id):
         return Environment(self.client, id)
 
-    def device(self, id):
-        return Device(self.client, id)
+    def thing(self, id):
+        return Thing(self.client, id)
 
     def value(self, id):
         return Value(self.client, id)

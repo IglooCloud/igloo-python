@@ -13,7 +13,7 @@ class FileValueLoader(DataLoader):
         res = await self.client.query('{fileValue(id:"%s"){%s}}' % (self._id, fields), keys=["fileValue"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
@@ -85,19 +85,6 @@ class FileValue:
             'mutation{fileValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def cardSize(self):
-        if self.client.asyncio:
-            return self.loader.load("cardSize")
-        else:
-            return self.client.query('{fileValue(id:"%s"){cardSize}}' % self._id, keys=[
-                "fileValue", "cardSize"])
-
-    @cardSize.setter
-    def cardSize(self, newValue):
-        self.client.mutation(
-            'mutation{fileValue(id:"%s", cardSize:%s){id}}' % (self._id, newValue), asyncio=False)
-
-    @property
     def index(self):
         if self.client.asyncio:
             return self.loader.load("index")
@@ -118,21 +105,21 @@ class FileValue:
             return self.client.query('{fileValue(id:"%s"){myRole}}' % self._id, keys=[
                 "fileValue", "myRole"])
 
-    async def _async_load_device(self):
-        id = await self.loader.load("device{id}")["id"]
+    async def _async_load_thing(self):
+        id = await self.loader.load("thing{id}")["id"]
 
-        from .device import Device
-        return Device(self.client, id)
+        from .thing import Thing
+        return Thing(self.client, id)
 
     @property
-    def device(self):
+    def thing(self):
         if self.client.asyncio:
-            return self._async_load_device()
+            return self._async_load_thing()
         else:
-            id = self.client.query('{fileValue(id:"%s"){device{id}}}' % self._id, keys=[
-                "fileValue", "device", "id"])
+            id = self.client.query('{fileValue(id:"%s"){thing{id}}}' % self._id, keys=[
+                "fileValue", "thing", "id"])
 
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
     @property
     def permission(self):
@@ -170,3 +157,11 @@ class FileValue:
         else:
             return self.client.query('{fileValue(id:"%s"){mimeType}}' % self._id, keys=[
                 "fileValue", "mimeType"])
+
+    @property
+    def size(self):
+        if self.client.asyncio:
+            return self.loader.load("size")
+        else:
+            return self.client.query('{fileValue(id:"%s"){size}}' % self._id, keys=[
+                "fileValue", "size"])

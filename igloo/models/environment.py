@@ -129,9 +129,9 @@ class Environment:
             'mutation{environment(id:"%s", muted:%s){id}}' % (self._id, "true" if newMuted else "false"), asyncio=False)
 
     @property
-    def devices(self):
-        from .device import EnvironmentDeviceList
-        return EnvironmentDeviceList(self.client, self._id)
+    def things(self):
+        from .thing import EnvironmentThingList
+        return EnvironmentThingList(self.client, self._id)
 
     @property
     def admins(self):

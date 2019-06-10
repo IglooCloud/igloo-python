@@ -13,7 +13,7 @@ class BooleanValueLoader(DataLoader):
         res = await self.client.query('{booleanValue(id:"%s"){%s}}' % (self._id, fields), keys=["booleanValue"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
@@ -69,19 +69,6 @@ class BooleanValue:
             'mutation{booleanValue(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def cardSize(self):
-        if self.client.asyncio:
-            return self.loader.load("cardSize")
-        else:
-            return self.client.query('{booleanValue(id:"%s"){cardSize}}' % self._id, keys=[
-                "booleanValue", "cardSize"])
-
-    @cardSize.setter
-    def cardSize(self, newValue):
-        self.client.mutation(
-            'mutation{booleanValue(id:"%s", cardSize:%s){id}}' % (self._id, newValue), asyncio=False)
-
-    @property
     def index(self):
         if self.client.asyncio:
             return self.loader.load("index")
@@ -118,21 +105,21 @@ class BooleanValue:
             return self.client.query('{booleanValue(id:"%s"){updatedAt}}' % self._id, keys=[
                 "booleanValue", "updatedAt"])
 
-    async def _async_load_device(self):
-        id = await self.loader.load("device{id}")["id"]
-        from .device import Device
-        return Device(self.client, id)
+    async def _async_load_thing(self):
+        id = await self.loader.load("thing{id}")["id"]
+        from .thing import Thing
+        return Thing(self.client, id)
 
     @property
-    def device(self):
+    def thing(self):
         if self.client.asyncio:
-            return self._async_load_device()
+            return self._async_load_thing()
         else:
-            id = self.client.query('{booleanValue(id:"%s"){device{id}}}' % self._id, keys=[
-                "booleanValue", "device", "id"])
+            id = self.client.query('{booleanValue(id:"%s"){thing{id}}}' % self._id, keys=[
+                "booleanValue", "thing", "id"])
 
-            from .device import Device
-            return Device(self.client, id)
+            from .thing import Thing
+            return Thing(self.client, id)
 
     @property
     def value(self):

@@ -2,7 +2,7 @@ from igloo.models.user import User
 from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
-from igloo.models.device import Device
+from igloo.models.thing import Thing
 from igloo.models.value import Value
 from igloo.models.float_value import FloatValue
 from igloo.models.pending_owner_change import PendingOwnerChange
@@ -335,45 +335,45 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createDevice(self, deviceType=None, firmware=None):
-        deviceType_arg = parse_arg("deviceType", deviceType)
+    def createThing(self, thingType=None, firmware=None):
+        thingType_arg = parse_arg("thingType", thingType)
         firmware_arg = parse_arg("firmware", firmware)
-        res = self.client.mutation('mutation{createDevice(%s%s){id}}' % (
-            deviceType_arg, firmware_arg))["createDevice"]
+        res = self.client.mutation('mutation{createThing(%s%s){id}}' % (
+            thingType_arg, firmware_arg))["createThing"]
 
         def wrapper(id):
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def claimDevice(self, deviceId, name, environmentId, index=None, muted=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def claimThing(self, claimCode, name, environmentId, index=None, muted=None):
+        claimCode_arg = parse_arg("claimCode", claimCode)
         name_arg = parse_arg("name", name)
         environmentId_arg = parse_arg("environmentId", environmentId)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
-        res = self.client.mutation('mutation{claimDevice(%s%s%s%s%s){id}}' % (
-            deviceId_arg, name_arg, index_arg, environmentId_arg, muted_arg))["claimDevice"]
+        res = self.client.mutation('mutation{claimThing(%s%s%s%s%s){id}}' % (
+            claimCode_arg, name_arg, index_arg, environmentId_arg, muted_arg))["claimThing"]
 
         def wrapper(id):
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createNotification(self, deviceId, content, date=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createNotification(self, thingId, content, date=None):
+        thingId_arg = parse_arg("thingId", thingId)
         content_arg = parse_arg("content", content)
         date_arg = parse_arg("date", date)
         res = self.client.mutation('mutation{createNotification(%s%s%s){id}}' % (
-            deviceId_arg, content_arg, date_arg))["createNotification"]
+            thingId_arg, content_arg, date_arg))["createNotification"]
 
         def wrapper(id):
             return Notification(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatValue(self, deviceId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, cardSize=None, index=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createFloatValue(self, thingId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, index=None):
+        thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
@@ -384,54 +384,54 @@ class MutationRoot:
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (deviceId_arg, permission_arg, private_arg, hidden_arg,
-                                                                                                 unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatValue"]
+        res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (thingId_arg, permission_arg, private_arg, hidden_arg,
+                                                                                               unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatValue"]
 
         def wrapper(id):
             return FloatValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createStringValue(self, deviceId, permission, name, private=None, hidden=None, value=None, maxChars=None, cardSize=None, allowedValues=None, index=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createStringValue(self, thingId, permission, name, private=None, hidden=None, value=None, maxChars=None, allowedValues=None, index=None):
+        thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
         maxChars_arg = parse_arg("maxChars", maxChars)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createStringValue"]
+        res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["createStringValue"]
 
         def wrapper(id):
             return StringValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createBooleanValue(self, deviceId, permission, name, private=None, hidden=None, value=None, cardSize=None, index=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createBooleanValue(self, thingId, permission, name, private=None, hidden=None, value=None, index=None):
+        thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["createBooleanValue"]
+        res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["createBooleanValue"]
 
         def wrapper(id):
             return BooleanValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesValue(self, deviceId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, cardSize=None, index=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createFloatSeriesValue(self, thingId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, index=None):
+        thingId_arg = parse_arg("thingId", thingId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -440,10 +440,10 @@ class MutationRoot:
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["createFloatSeriesValue"]
+        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)
@@ -462,16 +462,16 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createCategorySeriesValue(self, deviceId, name, private=None, hidden=None, cardSize=None, allowedValues=None, index=None):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def createCategorySeriesValue(self, thingId, name, private=None, hidden=None, allowedValues=None, index=None):
+        thingId_arg = parse_arg("thingId", thingId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
-            deviceId_arg, private_arg, hidden_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["createCategorySeriesValue"]
+        res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s){id}}' % (
+            thingId_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["createCategorySeriesValue"]
 
         def wrapper(id):
             return CategorySeriesValue(self.client, id)
@@ -490,15 +490,14 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def user(self, quietMode=None, devMode=None, paymentPlan=None, name=None, profileIcon=None):
+    def user(self, quietMode=None, paymentPlan=None, name=None, profileIcon=None):
 
         quietMode_arg = parse_arg("quietMode", quietMode)
-        devMode_arg = parse_arg("devMode", devMode)
         paymentPlan_arg = parse_arg("paymentPlan", paymentPlan)
         name_arg = parse_arg("name", name)
         profileIcon_arg = parse_arg("profileIcon", profileIcon)
-        res = self.client.mutation('mutation{user(%s%s%s%s%s){id}}' % (
-            quietMode_arg, devMode_arg, paymentPlan_arg, name_arg, profileIcon_arg))["user"]
+        res = self.client.mutation('mutation{user(%s%s%s%s){id}}' % (
+            quietMode_arg, paymentPlan_arg, name_arg, profileIcon_arg))["user"]
 
         def wrapper(id):
             return User(self.client)
@@ -546,9 +545,9 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def device(self, id, deviceType=None, name=None, index=None, signalStatus=None, batteryStatus=None, batteryCharging=None, firmware=None, muted=None, starred=None):
+    def thing(self, id, thingType=None, name=None, index=None, signalStatus=None, batteryStatus=None, batteryCharging=None, firmware=None, muted=None, starred=None):
         id_arg = parse_arg("id", id)
-        deviceType_arg = parse_arg("deviceType", deviceType)
+        thingType_arg = parse_arg("thingType", thingType)
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
         signalStatus_arg = parse_arg("signalStatus", signalStatus)
@@ -557,53 +556,53 @@ class MutationRoot:
         firmware_arg = parse_arg("firmware", firmware)
         muted_arg = parse_arg("muted", muted)
         starred_arg = parse_arg("starred", starred)
-        res = self.client.mutation('mutation{device(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, deviceType_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["device"]
+        res = self.client.mutation('mutation{thing(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, thingType_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["thing"]
 
         def wrapper(id):
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def value(self, id, private=None, hidden=None, cardSize=None, name=None, index=None):
+    def value(self, id, private=None, hidden=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{value(%s%s%s%s%s%s){id __typename}}' % (
-            id_arg, private_arg, hidden_arg, cardSize_arg, name_arg, index_arg))["value"]
+        res = self.client.mutation('mutation{value(%s%s%s%s%s){id __typename}}' % (
+            id_arg, private_arg, hidden_arg, name_arg, index_arg))["value"]
 
         def wrapper(res):
             return Value(self.client, res["id"], res["__typename"])
 
         return wrapWith(res, wrapper)
 
-    def moveDevice(self, deviceId, newEnvironmentId):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def moveThing(self, thingId, newEnvironmentId):
+        thingId_arg = parse_arg("thingId", thingId)
         newEnvironmentId_arg = parse_arg("newEnvironmentId", newEnvironmentId)
 
-        res = self.client.mutation('mutation{moveDevice(%s%s){id}}' % (
-            deviceId_arg, newEnvironmentId_arg))["moveDevice"]
+        res = self.client.mutation('mutation{moveThing(%s%s){id}}' % (
+            thingId_arg, newEnvironmentId_arg))["moveThing"]
 
         def wrapper(id):
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def resetOnlineState(self, deviceId):
-        deviceId_arg = parse_arg("deviceId", deviceId)
+    def resetOnlineState(self, thingId):
+        thingId_arg = parse_arg("thingId", thingId)
 
-        res = self.client.mutation('mutation{resetOnlineState(%s){id}}' % (deviceId_arg))[
+        res = self.client.mutation('mutation{resetOnlineState(%s){id}}' % (thingId_arg))[
             "resetOnlineState"]
 
         def wrapper(id):
-            return Device(self.client, id)
+            return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def floatValue(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
+    def floatValue(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
@@ -615,10 +614,10 @@ class MutationRoot:
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatValue"]
+        res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatValue"]
 
         def wrapper(id):
             return FloatValue(self.client, id)
@@ -637,7 +636,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def stringValue(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, cardSize=None, allowedValues=None, index=None):
+    def stringValue(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, allowedValues=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
@@ -645,35 +644,35 @@ class MutationRoot:
         value_arg = parse_arg("value", value)
         maxChars_arg = parse_arg("maxChars", maxChars)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["stringValue"]
+        res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["stringValue"]
 
         def wrapper(id):
             return StringValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def booleanValue(self, id, permission=None, private=None, hidden=None, value=None, name=None, cardSize=None, index=None):
+    def booleanValue(self, id, permission=None, private=None, hidden=None, value=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         value_arg = parse_arg("value", value)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, cardSize_arg, index_arg))["booleanValue"]
+        res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["booleanValue"]
 
         def wrapper(id):
             return BooleanValue(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, cardSize=None, index=None):
+    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -683,10 +682,10 @@ class MutationRoot:
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, cardSize_arg, index_arg))["floatSeriesValue"]
+        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatSeriesValue"]
 
         def wrapper(id):
             return FloatSeriesValue(self.client, id)
@@ -705,16 +704,16 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def categorySeriesValue(self, id, private=None, hidden=None, name=None, cardSize=None, allowedValues=None, index=None):
+    def categorySeriesValue(self, id, private=None, hidden=None, name=None, allowedValues=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
         name_arg = parse_arg("name", name)
-        cardSize_arg = parse_arg("cardSize", cardSize, is_enum=True)
+
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s%s){id}}' % (
-            id_arg, private_arg, hidden_arg, name_arg, cardSize_arg, allowedValues_arg, index_arg))["categorySeriesValue"]
+        res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["categorySeriesValue"]
 
         def wrapper(id):
             return CategorySeriesValue(self.client, id)
@@ -755,15 +754,15 @@ class MutationRoot:
 
         return self.client.mutation('mutation{deleteValue(%s)}' % (id_arg))["deleteValue"]
 
-    def deleteDevice(self, id):
+    def deleteThing(self, id):
         id_arg = parse_arg("id", id)
 
-        return self.client.mutation('mutation{deleteDevice(%s)}' % (id_arg))["deleteDevice"]
+        return self.client.mutation('mutation{deleteThing(%s)}' % (id_arg))["deleteThing"]
 
-    def unclaimDevice(self, id):
+    def unclaimThing(self, id):
         id_arg = parse_arg("id", id)
 
-        return self.client.mutation('mutation{unclaimDevice(%s){id}}' % (id_arg))["unclaimDevice"]
+        return self.client.mutation('mutation{unclaimThing(%s){id}}' % (id_arg))["unclaimThing"]
 
     def deleteEnvironment(self, id):
         id_arg = parse_arg("id", id)

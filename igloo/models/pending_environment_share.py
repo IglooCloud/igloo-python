@@ -14,7 +14,7 @@ class PendingEnvironmentShareLoader(DataLoader):
         res = await self.client.query('{pendingEnvironmentShare(id:"%s"){%s}}' % (self._id, fields), keys=["pendingEnvironmentShare"])
 
         # if fetching object the key will be the first part of the field
-        # e.g. when fetching device{id} the result is in the device key
+        # e.g. when fetching thing{id} the result is in the thing key
         resolvedValues = [res[key.split("{")[0]] for key in keys]
 
         return resolvedValues
