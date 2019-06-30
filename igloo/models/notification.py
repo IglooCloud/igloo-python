@@ -117,7 +117,6 @@ class ThingNotificationList:
                 '{thing(id:"%s"){notifications(offset:%d, limit:%d, filter:%s){id}}}' % (self.thingId, start, end-start, self._filter))
             return [Notification(self.client, notification["id"]) for notification in res["thing"]["notifications"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

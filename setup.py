@@ -1,8 +1,8 @@
 from distutils.core import setup
 setup(
     name='igloo-python',         # How you named your package folder (MyLib)
-    packages=['igloo'],   # Chose the same as "name"
-    version='0.9.3',
+    packages=['igloo', 'igloo.models'],   # Chose the same as "name"
+    version='0.9.4',
     license='MIT',
     description='Python client for igloo',
     author='Igloo Team',

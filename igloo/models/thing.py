@@ -284,7 +284,6 @@ class EnvironmentThingList:
                 '{environment(id:"%s"){things(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
             return [Thing(self.client, thing["id"]) for thing in res["environment"]["things"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
@@ -333,7 +332,6 @@ class DeveloperThingList:
                 '{user(id:%s){developerThings(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
             return [Thing(self.client, thing["id"]) for thing in res["user"]["developerThings"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

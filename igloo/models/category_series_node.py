@@ -125,7 +125,6 @@ class CategorySeriesNodeList:
                 '{categorySeriesValue(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
             return [CategorySeriesNode(self.client, node["id"]) for node in res["categorySeriesValue"]["nodes"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

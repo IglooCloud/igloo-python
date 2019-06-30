@@ -51,7 +51,6 @@ class ThingValuesList:
                 '{thing(id:"%s"){values(offset:%d, limit:%d, filter:%s){id __typename}}}' % (self.thingId, start, end-start, self._filter))
             return [Value(self.client, value["id"], value["__typename"]) for value in res["thing"]["values"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

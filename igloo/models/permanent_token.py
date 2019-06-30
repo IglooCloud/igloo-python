@@ -78,7 +78,6 @@ class PermanentTokenList:
                 '{user(id:%s){permanentTokens(offset:%d, limit:%d){id}}}' % (self.userId, start, end-start))
             return [PermanentToken(self.client, token["id"]) for token in res["user"]["permanentTokens"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

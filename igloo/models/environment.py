@@ -199,7 +199,6 @@ class EnvironmentList:
                 '{user(id:%s){environments(offset:%d, limit:%d, filter:%s){id}}}' % (self.userId, start, end-start, self._filter))
             return [Environment(self.client, environment["id"]) for environment in res["user"]["environments"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

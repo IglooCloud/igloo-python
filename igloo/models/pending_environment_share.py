@@ -105,7 +105,6 @@ class UserPendingEnvironmentShareList:
                 '{user(id:%s){pendingEnvironmentShares(offset:%d, limit:%d){id}}}' % (self.userId, start, end-start))
             return [PendingEnvironmentShare(self.client, pendingShare["id"]) for pendingShare in res["user"]["pendingEnvironmentShares"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
@@ -154,7 +153,6 @@ class EnvironmentPendingEnvironmentShareList:
                 '{environment(id:"%s"){pendingEnvironmentShares(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
             return [PendingEnvironmentShare(self.client, pendingShare["id"]) for pendingShare in res["environment"]["pendingEnvironmentShares"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
