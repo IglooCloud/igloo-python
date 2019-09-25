@@ -124,7 +124,6 @@ class FloatSeriesNodeList:
                 '{floatSeriesValue(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
             return [FloatSeriesNode(self.client, node["id"]) for node in res["floatSeriesValue"]["nodes"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):

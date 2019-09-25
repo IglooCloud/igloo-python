@@ -146,7 +146,6 @@ class EnvironmentAdminList:
                 '{environment(id:"%s"){admins(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
             return [User(self.client, user["id"]) for user in res["environment"]["admins"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
@@ -190,7 +189,6 @@ class EnvironmentEditorList:
                 '{environment(id:"%s"){editors(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
             return [User(self.client, user["id"]) for user in res["environment"]["editors"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
@@ -234,7 +232,6 @@ class EnvironmentSpectatorList:
                 '{environment(id:"%s"){spectators(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
             return [User(self.client, user["id"]) for user in res["environment"]["spectators"]]
         else:
-            print("i", type(i))
             raise TypeError("Unexpected type {} passed as index".format(i))
 
     def __iter__(self):
