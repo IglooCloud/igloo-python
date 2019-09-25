@@ -2,3 +2,5 @@ __pycache__
 .vscode
 MANIFEST
 dist
+build
+*.egg-info

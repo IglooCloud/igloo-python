@@ -7,7 +7,15 @@
 igloo_python is the official Igloo library for Python.
 
 ## Getting started
+
 TBD
+
+## Publishing the package
+
+```bash
+python3 setup.py sdist bdist_wheel
+twine upload dist/*
+```
 
 ## License
 
