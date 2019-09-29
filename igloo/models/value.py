@@ -1,25 +1,25 @@
-from .float_value import FloatValue
-from .file_value import FileValue
-from .boolean_value import BooleanValue
-from .string_value import StringValue
-from .float_series_value import FloatSeriesValue
-from .category_series_value import CategorySeriesValue
+from .float_value import FloatVariable
+from .file_value import FileVariable
+from .boolean_value import BooleanVariable
+from .string_value import StringVariable
+from .float_series_value import FloatSeriesVariable
+from .category_series_value import CategorySeriesVariable
 from igloo.utils import get_representation
 
 
 def Value(client, id, resolveType):
-    if resolveType == "FloatValue":
-        return FloatValue(client, id)
-    elif resolveType == "FileValue":
-        return FileValue(client, id)
-    elif resolveType == "BooleanValue":
-        return BooleanValue(client, id)
-    elif resolveType == "StringValue":
-        return StringValue(client, id)
-    elif resolveType == "FloatSeriesValue":
-        return FloatSeriesValue(client, id)
-    elif resolveType == "CategorySeriesValue":
-        return CategorySeriesValue(client, id)
+    if resolveType == "FloatVariable":
+        return FloatVariable(client, id)
+    elif resolveType == "FileVariable":
+        return FileVariable(client, id)
+    elif resolveType == "BooleanVariable":
+        return BooleanVariable(client, id)
+    elif resolveType == "StringVariable":
+        return StringVariable(client, id)
+    elif resolveType == "FloatSeriesVariable":
+        return FloatSeriesVariable(client, id)
+    elif resolveType == "CategorySeriesVariable":
+        return CategorySeriesVariable(client, id)
 
 
 class ThingValuesList:

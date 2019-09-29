@@ -1,4 +1,4 @@
-from igloo import Client, User, FloatValue
+from igloo import Client, User, FloatVariable
 import asyncio
 
 

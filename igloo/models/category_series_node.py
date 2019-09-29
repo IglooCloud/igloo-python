@@ -69,8 +69,8 @@ class CategorySeriesNode:
                 "categorySeriesNode", "series"])
 
         def wrapper(res):
-            from .category_series_value import CategorySeriesValue
-            return CategorySeriesValue(self.client, res["id"])
+            from .category_series_value import CategorySeriesVariable
+            return CategorySeriesVariable(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 
@@ -109,21 +109,21 @@ class CategorySeriesNodeList:
 
     def __len__(self):
         res = self.client.query(
-            '{categorySeriesValue(id:"%s"){nodeCount}}' % self.seriesId)
-        return res["categorySeriesValue"]["nodeCount"]
+            '{categorySeriesVariable(id:"%s"){nodeCount}}' % self.seriesId)
+        return res["categorySeriesVariable"]["nodeCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{categorySeriesValue(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, i))
-            if len(res["categorySeriesValue"]["nodes"]) != 1:
+                '{categorySeriesVariable(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, i))
+            if len(res["categorySeriesVariable"]["nodes"]) != 1:
                 raise IndexError()
-            return CategorySeriesNode(self.client, res["categorySeriesValue"]["nodes"][0]["id"])
+            return CategorySeriesNode(self.client, res["categorySeriesVariable"]["nodes"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{categorySeriesValue(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
-            return [CategorySeriesNode(self.client, node["id"]) for node in res["categorySeriesValue"]["nodes"]]
+                '{categorySeriesVariable(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
+            return [CategorySeriesNode(self.client, node["id"]) for node in res["categorySeriesVariable"]["nodes"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -132,13 +132,13 @@ class CategorySeriesNodeList:
 
     def __next__(self):
         res = self.client.query(
-            '{categorySeriesValue(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, self.current))
+            '{categorySeriesVariable(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, self.current))
 
-        if len(res["categorySeriesValue", "nodes"]) != 1:
+        if len(res["categorySeriesVariable", "nodes"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return CategorySeriesNode(self.client, res["categorySeriesValue"]["nodes"][0]["id"])
+        return CategorySeriesNode(self.client, res["categorySeriesVariable"]["nodes"][0]["id"])
 
     def next(self):
         return self.__next__()

@@ -105,15 +105,15 @@ from .models.permanent_token import PermanentToken
 from .models.pending_environment_share import PendingEnvironmentShare
 from .models.environment import Environment
 from .models.thing import Thing
-from .models.float_value import FloatValue
+from .models.float_value import FloatVariable
 from .models.pending_owner_change import PendingOwnerChange
 from .models.notification import Notification
-from .models.boolean_value import BooleanValue
-from .models.string_value import StringValue
-from .models.float_series_value import FloatSeriesValue
-from .models.category_series_value import CategorySeriesValue
+from .models.boolean_value import BooleanVariable
+from .models.string_value import StringVariable
+from .models.float_series_value import FloatSeriesVariable
+from .models.category_series_value import CategorySeriesVariable
 from .models.category_series_node import CategorySeriesNode
-from .models.file_value import FileValue
+from .models.file_value import FileVariable
 from .models.float_series_node import FloatSeriesNode
 
 class SubscriptionRoot:
