@@ -68,8 +68,8 @@ class FloatSeriesNode:
                 "floatSeriesNode", "series"])
 
         def wrapper(res):
-            from .float_series_value import FloatSeriesValue
-            return FloatSeriesValue(self.client, res["id"])
+            from .float_series_value import FloatSeriesVariable
+            return FloatSeriesVariable(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 
@@ -108,21 +108,21 @@ class FloatSeriesNodeList:
 
     def __len__(self):
         res = self.client.query(
-            '{floatSeriesValue(id:"%s"){nodeCount}}' % self.seriesId)
-        return res["floatSeriesValue"]["nodeCount"]
+            '{floatSeriesVariable(id:"%s"){nodeCount}}' % self.seriesId)
+        return res["floatSeriesVariable"]["nodeCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{floatSeriesValue(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, i))
-            if len(res["floatSeriesValue"]["nodes"]) != 1:
+                '{floatSeriesVariable(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, i))
+            if len(res["floatSeriesVariable"]["nodes"]) != 1:
                 raise IndexError()
-            return FloatSeriesNode(self.client, res["floatSeriesValue"]["nodes"][0]["id"])
+            return FloatSeriesNode(self.client, res["floatSeriesVariable"]["nodes"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{floatSeriesValue(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
-            return [FloatSeriesNode(self.client, node["id"]) for node in res["floatSeriesValue"]["nodes"]]
+                '{floatSeriesVariable(id:"%s"){nodes(offset:%d, limit:%d){id}}}' % (self.seriesId, start, end-start))
+            return [FloatSeriesNode(self.client, node["id"]) for node in res["floatSeriesVariable"]["nodes"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -131,13 +131,13 @@ class FloatSeriesNodeList:
 
     def __next__(self):
         res = self.client.query(
-            '{floatSeriesValue(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, self.current))
+            '{floatSeriesVariable(id:"%s"){nodes(limit:1, offset:%d){id}}}' % (self.seriesId, self.current))
 
-        if len(res["floatSeriesValue", "nodes"]) != 1:
+        if len(res["floatSeriesVariable", "nodes"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return FloatSeriesNode(self.client, res["floatSeriesValue"]["nodes"][0]["id"])
+        return FloatSeriesNode(self.client, res["floatSeriesVariable"]["nodes"][0]["id"])
 
     def next(self):
         return self.__next__()

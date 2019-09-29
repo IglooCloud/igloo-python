@@ -3,16 +3,16 @@ from igloo.models.permanent_token import PermanentToken
 from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.thing import Thing
-from igloo.models.float_value import FloatValue
+from igloo.models.float_value import FloatVariable
 from igloo.models.value import Value
 from igloo.models.pending_owner_change import PendingOwnerChange
 from igloo.models.notification import Notification
-from igloo.models.boolean_value import BooleanValue
-from igloo.models.string_value import StringValue
-from igloo.models.float_series_value import FloatSeriesValue
-from igloo.models.category_series_value import CategorySeriesValue
+from igloo.models.boolean_value import BooleanVariable
+from igloo.models.string_value import StringVariable
+from igloo.models.float_series_value import FloatSeriesVariable
+from igloo.models.category_series_value import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
-from igloo.models.file_value import FileValue
+from igloo.models.file_value import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
 
 
@@ -33,23 +33,23 @@ class QueryRoot:
     def value(self, id):
         return Value(self.client, id)
 
-    def floatValue(self, id):
-        return FloatValue(self.client, id)
+    def floatVariable(self, id):
+        return FloatVariable(self.client, id)
 
-    def stringValue(self, id):
-        return StringValue(self.client, id)
+    def stringVariable(self, id):
+        return StringVariable(self.client, id)
 
-    def booleanValue(self, id):
-        return BooleanValue(self.client, id)
+    def booleanVariable(self, id):
+        return BooleanVariable(self.client, id)
 
-    def fileValue(self, id):
-        return FileValue(self.client, id)
+    def fileVariable(self, id):
+        return FileVariable(self.client, id)
 
-    def floatSeriesValue(self, id):
-        return FloatSeriesValue(self.client, id)
+    def floatSeriesVariable(self, id):
+        return FloatSeriesVariable(self.client, id)
 
-    def categorySeriesValue(self, id):
-        return CategorySeriesValue(self.client, id)
+    def categorySeriesVariable(self, id):
+        return CategorySeriesVariable(self.client, id)
 
     def pendingEnvironmentShare(self, id):
         return PendingEnvironmentShare(self.client, id)

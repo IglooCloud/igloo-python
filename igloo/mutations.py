@@ -4,15 +4,15 @@ from igloo.models.pending_environment_share import PendingEnvironmentShare
 from igloo.models.environment import Environment
 from igloo.models.thing import Thing
 from igloo.models.value import Value
-from igloo.models.float_value import FloatValue
+from igloo.models.float_value import FloatVariable
 from igloo.models.pending_owner_change import PendingOwnerChange
 from igloo.models.notification import Notification
-from igloo.models.boolean_value import BooleanValue
-from igloo.models.string_value import StringValue
-from igloo.models.float_series_value import FloatSeriesValue
-from igloo.models.category_series_value import CategorySeriesValue
+from igloo.models.boolean_value import BooleanVariable
+from igloo.models.string_value import StringVariable
+from igloo.models.float_series_value import FloatSeriesVariable
+from igloo.models.category_series_value import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
-from igloo.models.file_value import FileValue
+from igloo.models.file_value import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
 from igloo.utils import parse_arg
 
@@ -372,7 +372,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createFloatValue(self, thingId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, index=None):
+    def createFloatVariable(self, thingId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -386,15 +386,15 @@ class MutationRoot:
         max_arg = parse_arg("max", max)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (thingId_arg, permission_arg, private_arg, hidden_arg,
-                                                                                               unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatValue"]
+        res = self.client.mutation('mutation{createFloatVariable(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (thingId_arg, permission_arg, private_arg, hidden_arg,
+                                                                                                  unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatVariable"]
 
         def wrapper(id):
-            return FloatValue(self.client, id)
+            return FloatVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createStringValue(self, thingId, permission, name, private=None, hidden=None, value=None, maxChars=None, allowedValues=None, index=None):
+    def createStringVariable(self, thingId, permission, name, private=None, hidden=None, value=None, maxChars=None, allowedValues=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -405,15 +405,15 @@ class MutationRoot:
 
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createStringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["createStringValue"]
+        res = self.client.mutation('mutation{createStringVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["createStringVariable"]
 
         def wrapper(id):
-            return StringValue(self.client, id)
+            return StringVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createBooleanValue(self, thingId, permission, name, private=None, hidden=None, value=None, index=None):
+    def createBooleanVariable(self, thingId, permission, name, private=None, hidden=None, value=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -422,15 +422,15 @@ class MutationRoot:
         value_arg = parse_arg("value", value)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createBooleanValue(%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["createBooleanValue"]
+        res = self.client.mutation('mutation{createBooleanVariable(%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["createBooleanVariable"]
 
         def wrapper(id):
-            return BooleanValue(self.client, id)
+            return BooleanVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesValue(self, thingId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, index=None):
+    def createFloatSeriesVariable(self, thingId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
@@ -442,11 +442,11 @@ class MutationRoot:
         max_arg = parse_arg("max", max)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatSeriesValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatSeriesValue"]
+        res = self.client.mutation('mutation{createFloatSeriesVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatSeriesVariable"]
 
         def wrapper(id):
-            return FloatSeriesValue(self.client, id)
+            return FloatSeriesVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -462,7 +462,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createCategorySeriesValue(self, thingId, name, private=None, hidden=None, allowedValues=None, index=None):
+    def createCategorySeriesVariable(self, thingId, name, private=None, hidden=None, allowedValues=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         name_arg = parse_arg("name", name)
         private_arg = parse_arg("private", private)
@@ -470,11 +470,11 @@ class MutationRoot:
 
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createCategorySeriesValue(%s%s%s%s%s%s){id}}' % (
-            thingId_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["createCategorySeriesValue"]
+        res = self.client.mutation('mutation{createCategorySeriesVariable(%s%s%s%s%s%s){id}}' % (
+            thingId_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["createCategorySeriesVariable"]
 
         def wrapper(id):
-            return CategorySeriesValue(self.client, id)
+            return CategorySeriesVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -602,7 +602,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def floatValue(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, index=None):
+    def floatVariable(self, id, permission=None, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
@@ -616,11 +616,11 @@ class MutationRoot:
         name_arg = parse_arg("name", name)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{floatValue(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatValue"]
+        res = self.client.mutation('mutation{floatVariable(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatVariable"]
 
         def wrapper(id):
-            return FloatValue(self.client, id)
+            return FloatVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -632,11 +632,11 @@ class MutationRoot:
             id_arg, incrementBy_arg))["atomicUpdateFloat"]
 
         def wrapper(id):
-            return FloatValue(self.client, id)
+            return FloatVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def stringValue(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, allowedValues=None, index=None):
+    def stringVariable(self, id, permission=None, private=None, hidden=None, value=None, maxChars=None, name=None, allowedValues=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
@@ -647,15 +647,15 @@ class MutationRoot:
 
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{stringValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["stringValue"]
+        res = self.client.mutation('mutation{stringVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["stringVariable"]
 
         def wrapper(id):
-            return StringValue(self.client, id)
+            return StringVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def booleanValue(self, id, permission=None, private=None, hidden=None, value=None, name=None, index=None):
+    def booleanVariable(self, id, permission=None, private=None, hidden=None, value=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("private", private)
@@ -664,15 +664,15 @@ class MutationRoot:
         name_arg = parse_arg("name", name)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{booleanValue(%s%s%s%s%s%s%s){id}}' % (
-            id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["booleanValue"]
+        res = self.client.mutation('mutation{booleanVariable(%s%s%s%s%s%s%s){id}}' % (
+            id_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["booleanVariable"]
 
         def wrapper(id):
-            return BooleanValue(self.client, id)
+            return BooleanVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def floatSeriesValue(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, index=None):
+    def floatSeriesVariable(self, id, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, name=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -684,11 +684,11 @@ class MutationRoot:
         name_arg = parse_arg("name", name)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{floatSeriesValue(%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatSeriesValue"]
+        res = self.client.mutation('mutation{floatSeriesVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["floatSeriesVariable"]
 
         def wrapper(id):
-            return FloatSeriesValue(self.client, id)
+            return FloatSeriesVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -704,7 +704,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def categorySeriesValue(self, id, private=None, hidden=None, name=None, allowedValues=None, index=None):
+    def categorySeriesVariable(self, id, private=None, hidden=None, name=None, allowedValues=None, index=None):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("private", private)
         hidden_arg = parse_arg("hidden", hidden)
@@ -712,11 +712,11 @@ class MutationRoot:
 
         allowedValues_arg = parse_arg("allowedValues", allowedValues)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{categorySeriesValue(%s%s%s%s%s%s){id}}' % (
-            id_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["categorySeriesValue"]
+        res = self.client.mutation('mutation{categorySeriesVariable(%s%s%s%s%s%s){id}}' % (
+            id_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["categorySeriesVariable"]
 
         def wrapper(id):
-            return CategorySeriesValue(self.client, id)
+            return CategorySeriesVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
