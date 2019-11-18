@@ -10,7 +10,7 @@ from aiohttp import ClientSession
 from .query import QueryRoot
 import asyncio
 
-host = "bering.igloo.ooo"
+host = "api.igloo.ooo"
 url = "https://{}/graphql".format(host)
 
 

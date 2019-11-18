@@ -4,7 +4,7 @@ import requests
 with open("introspection.gql") as f:
     query = f.read()
 
-url = "https://bering.igloo.ooo/graphql"
+url = "https://api.igloo.ooo/graphql"
 payload = {"query": query}
 headers = {
     'content-type': "application/json"
@@ -86,7 +86,7 @@ def create_handler(subscription):
 {parsed_optional_args}
 
         async for data in self.client.subscribe({query}):
-            {yieldVal}            
+            {yieldVal}
     """.format(name=subscription["name"],
                parsed_required_args=indent(parsed_required_args, 2),
                parsed_optional_args=indent(parsed_optional_args, 2),
