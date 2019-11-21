@@ -12,6 +12,8 @@ TBD
 
 ## Publishing the package
 
+Update the version in `setup.py`, the rebuild the package and push it to PyPI
+
 ```bash
 python3 setup.py sdist bdist_wheel
 twine upload dist/*

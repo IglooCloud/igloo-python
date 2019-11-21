@@ -4,7 +4,7 @@ import requests
 with open("introspection.gql") as f:
     query = f.read()
 
-url = "https://bering.igloo.ooo/graphql"
+url = "https://api.igloo.ooo/graphql"
 payload = {"query": query}
 headers = {
     'content-type': "application/json"

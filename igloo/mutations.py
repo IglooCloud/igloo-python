@@ -335,11 +335,11 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createThing(self, thingType=None, firmware=None):
-        thingType_arg = parse_arg("thingType", thingType)
+    def createThing(self, type=None, firmware=None):
+        type_arg = parse_arg("type", type)
         firmware_arg = parse_arg("firmware", firmware)
         res = self.client.mutation('mutation{createThing(%s%s){id}}' % (
-            thingType_arg, firmware_arg))["createThing"]
+            type_arg, firmware_arg))["createThing"]
 
         def wrapper(id):
             return Thing(self.client, id)
@@ -545,9 +545,9 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def thing(self, id, thingType=None, name=None, index=None, signalStatus=None, batteryStatus=None, batteryCharging=None, firmware=None, muted=None, starred=None):
+    def thing(self, id, type=None, name=None, index=None, signalStatus=None, batteryStatus=None, batteryCharging=None, firmware=None, muted=None, starred=None):
         id_arg = parse_arg("id", id)
-        thingType_arg = parse_arg("thingType", thingType)
+        type_arg = parse_arg("type", type)
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
         signalStatus_arg = parse_arg("signalStatus", signalStatus)
@@ -557,7 +557,7 @@ class MutationRoot:
         muted_arg = parse_arg("muted", muted)
         starred_arg = parse_arg("starred", starred)
         res = self.client.mutation('mutation{thing(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, thingType_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["thing"]
+            id_arg, type_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["thing"]
 
         def wrapper(id):
             return Thing(self.client, id)

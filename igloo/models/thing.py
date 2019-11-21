@@ -46,17 +46,17 @@ class Thing:
                 "thing", "updatedAt"])
 
     @property
-    def thingType(self):
+    def type(self):
         if self.client.asyncio:
-            return self.loader.load("thingType")
+            return self.loader.load("type")
         else:
-            return self.client.query('{thing(id:"%s"){thingType}}' %
-                                     self._id, keys=["thing", "thingType"])
+            return self.client.query('{thing(id:"%s"){type}}' %
+                                     self._id, keys=["thing", "type"])
 
-    @thingType.setter
-    def thingType(self, newThingType):
+    @type.setter
+    def type(self, newtype):
         self.client.mutation(
-            'mutation{thing(id:"%s", thingType:"%s"){id}}' % (self._id, newThingType), asyncio=False)
+            'mutation{thing(id:"%s", type:"%s"){id}}' % (self._id, newtype), asyncio=False)
 
     @property
     def myRole(self):
