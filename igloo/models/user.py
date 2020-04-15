@@ -17,12 +17,15 @@ class UserLoader(DataLoader):
 
 
 class User:
-    def __init__(self, client, id=None):
+    def __init__(self, client, id=None, email=None):
         self.client = client
 
-        if id is None:
+        if id is None and email is None:
             self._id = self.client.query(
                 '{user{id}}', keys=["user", "id"], asyncio=False)
+        elif id is None:
+            self._id = self.client.query(
+                '{user(email:"%s"){id}}' % email, keys=["user", "id"], asyncio=False)
         else:
             self._id = id
 

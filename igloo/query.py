@@ -1,11 +1,11 @@
 from igloo.models.user import User
-from igloo.models.permanent_token import PermanentToken
-from igloo.models.pending_environment_share import PendingEnvironmentShare
+from igloo.models.access_token import AccessToken
+from igloo.models.pending_share import PendingShare
 from igloo.models.environment import Environment
 from igloo.models.thing import Thing
 from igloo.models.float_value import FloatVariable
-from igloo.models.value import Value
-from igloo.models.pending_owner_change import PendingOwnerChange
+from igloo.models.variable import Variable
+from igloo.models.pending_transfer import PendingTransfer
 from igloo.models.notification import Notification
 from igloo.models.boolean_value import BooleanVariable
 from igloo.models.string_value import StringVariable
@@ -21,8 +21,8 @@ class QueryRoot:
         self.client = client
 
     @property
-    def user(self):
-        return User(self.client)
+    def user(self, id=None, email=None):
+        return User(self.client, id=id, email=email)
 
     def environment(self, id):
         return Environment(self.client, id)
@@ -30,50 +30,69 @@ class QueryRoot:
     def thing(self, id):
         return Thing(self.client, id)
 
-    def value(self, id):
-        return Value(self.client, id)
+    def variable(self, id):
+        return Variable(self.client, id)
 
-    def floatVariable(self, id):
+    def float_variable(self, id):
         return FloatVariable(self.client, id)
 
-    def stringVariable(self, id):
+    def string_variable(self, id):
         return StringVariable(self.client, id)
 
-    def booleanVariable(self, id):
+    def boolean_variable(self, id):
         return BooleanVariable(self.client, id)
 
-    def fileVariable(self, id):
+    def file_variable(self, id):
         return FileVariable(self.client, id)
 
-    def floatSeriesVariable(self, id):
+    def float_series_variable(self, id):
         return FloatSeriesVariable(self.client, id)
 
-    def categorySeriesVariable(self, id):
+    def category_series_variable(self, id):
         return CategorySeriesVariable(self.client, id)
 
-    def pendingEnvironmentShare(self, id):
-        return PendingEnvironmentShare(self.client, id)
+    def pending_share(self, id):
+        return PendingShare(self.client, id)
 
-    def pendingOwnerChange(self, id):
-        return PendingOwnerChange(self.client, id)
+    def pending_transfer(self, id):
+        return PendingTransfer(self.client, id)
 
-    def permanentToken(self, id):
-        return PermanentToken(self.client, id)
+    def access_token(self, id):
+        return AccessToken(self.client, id)
 
     def notification(self, id):
         return Notification(self.client, id)
 
-    def floatSeriesNode(self, id):
+    def float_series_node(self, id):
         return FloatSeriesNode(self.client, id)
 
-    def categorySeriesNode(self, id):
+    def category_series_node(self, id):
         return CategorySeriesNode(self.client, id)
 
-    def getNewTotpSecret(self):
+    def get_new_totp_secret(self):
         return self.client.query("{getNewTotpSecret{secret,qrCode}}", keys=["getNewTotpSecret"])
 
-    def getWebAuthnEnableChallenge(self):
-        return self.client.query("{getWebAuthnEnableChallenge{publicKeyOptions,jwtChallenge}}", keys=["getWebAuthnEnableChallenge"])
+    def verify_password(self, password, email=None):
+        email_arg = ', email:"%s"' % email if email is not None else ""
+        return self.client.query('{verifyPassword(password:"%s" %s)}' % (password, email_arg), keys=["verifyPassword"])
 
-    def getWebAuthnLogInChallenge(self, email):
-        return self.client.query('{getWebAuthnLogInChallenge(email:"%s"){publicKeyOptions,jwtChallenge}}' % email, keys=["getWebAuthnLogInChallenge"])
+    def verify_totp(self, code, email=None):
+        email_arg = ', email:"%s"' % email if email is not None else ""
+        return self.client.query('{verifyTotp(code:"%s" %s)}' % (code, email_arg), keys=["verifyTotp"])
+
+    def metadata(self):
+        return self.client.query(
+            """
+            {
+                metadata{
+                    STANDARD_PLAN_MONTHLY_PRICE
+                    STANDARD_PLAN_YEARLY_PRICE
+                    EXTRA_STORAGE_MONTHLY_PRICE
+                    EXTRA_THROUGHPUT_MONTHLY_PRICE
+                    EXTRA_STORAGE_YEARLY_PRICE
+                    EXTRA_THROUGHPUT_YEARLY_PRICE
+                    CUSTOM_APPS_MONTHLY_PRICE
+                    CUSTOM_APPS_YEARLY_PRICE
+                }
+            }
+            """, keys=["metadata"])
