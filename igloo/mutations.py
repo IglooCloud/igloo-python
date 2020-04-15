@@ -51,11 +51,11 @@ class MutationRoot:
         resDict["user"] = User(self.client)
         return resDict
 
-    def logIn(self, email, password, totp=None, privateCloud=None):
+    def log_in(self, email, password, totp=None, private_cloud=None):
         email_arg = parse_arg("email", email)
         password_arg = parse_arg("password", password)
         totp_arg = parse_arg("totp", totp)
-        privateCloud_arg = parse_arg("privateCloud", privateCloud)
+        privateCloud_arg = parse_arg("privateCloud", private_cloud)
 
         res = self.client.mutation('mutation{logIn(%s%s%s%s){user{id} token}}' % (email_arg,
                                                                                   password_arg,
@@ -69,18 +69,18 @@ class MutationRoot:
         else:
             return self._wrapLogIn(res)
 
-    def createAccessToken(self, name, password):
+    def create_access_token(self, name, password):
         name_arg = parse_arg("name", name)
         password_arg = parse_arg("password", password)
         return self.client.mutation('mutation{createAccessToken(%s%s)}' % (name_arg, password_arg))["createAccessToken"]
 
-    def regenerateAccessToken(self, id, password):
+    def regenerate_access_token(self, id, password):
         id_arg = parse_arg("id", id)
         password_arg = parse_arg("password", password)
 
         return self.client.mutation('mutation{regenerateAccessToken(%s%s)}' % (id_arg, password_arg))["regenerateAccessToken"]
 
-    def deleteAccessToken(self, id, password):
+    def delete_access_token(self, id, password):
         id_arg = parse_arg("id", id)
         password_arg = parse_arg("password", password)
 
@@ -92,14 +92,14 @@ class MutationRoot:
 
         return result
 
-    def signUp(self, email, name, password, acceptPrivacyPolicyAndEULA, companyName=None, privateCloud=None):
+    def sign_up(self, email, name, password, accept_privacy_policy_and_EULA, company_name=None, private_cloud=None):
         email_arg = parse_arg("email", email)
         name_arg = parse_arg("name", name)
         password_arg = parse_arg("password", password)
-        companyName_arg = parse_arg("companyName", companyName)
-        privateCloud_arg = parse_arg("privateCloud", privateCloud)
+        companyName_arg = parse_arg("companyName", company_name)
+        privateCloud_arg = parse_arg("privateCloud", private_cloud)
         acceptPrivacyPolicyAndEULA_arg = parse_arg(
-            "acceptPrivacyPolicyAndEULA", acceptPrivacyPolicyAndEULA)
+            "acceptPrivacyPolicyAndEULA", accept_privacy_policy_and_EULA)
 
         res = self.client.mutation('mutation{signUp(%s%s%s%s%s%s){user{id} token}}' % (
             email_arg,
@@ -115,84 +115,95 @@ class MutationRoot:
         else:
             return self._wrapSignUp(res)
 
-    def initiateBillingSetup(self):
+    def initiate_billing_setup(self):
         res = self.client.mutation("mutation{initiateBillingSetup }")[
             "initiateBillingSetup"]
 
         return res
 
-    def updateBillingInfo(self, stripePaymentMethod):
+    def update_billing_info(self, stripe_payment_method):
         stripePaymentMethod_arg = parse_arg(
-            "stripePaymentMethod", stripePaymentMethod)
+            "stripePaymentMethod", stripe_payment_method)
         res = self.client.mutation("mutation{updateBillingInfo(%s) }" % stripePaymentMethod_arg)[
             "updateBillingInfo"]
 
         return res
 
-    def confirmPaymentExecution(self):
+    def confirm_payment_execution(self):
         res = self.client.mutation("mutation{confirmPaymentExecution }")[
             "confirmPaymentExecution"]
 
         return res
 
-    def setPassword(self, password):
-        password_arg = parse_arg("password", password)
+    def retry_payment(self):
+        res = self.client.mutation("mutation{retryPayment }")[
+            "retryPayment"]
+
+        return res
+
+    def change_billing_plan(self, billing_plan, billing_cycle, extra_storage, extra_throughput, custom_apps):
+        billingPlan_arg = parse_arg("billingPlan", billing_plan, is_enum=True)
+        billingCycle_arg = parse_arg(
+            "billingCycle", billing_cycle, is_enum=True)
+        extraStorage_arg = parse_arg("extraStorage", extra_storage)
+        extraThroughput_arg = parse_arg("extraThroughput", extra_throughput)
+        customApps_arg = parse_arg("customApps", custom_apps)
+
+        res = self.client.mutation("mutation{changeBillingPlan(%s%s%s%s%s) }" % (
+            billingPlan_arg,
+            billingCycle_arg,
+            extraStorage_arg,
+            extraThroughput_arg,
+            customApps_arg
+        ))[
+            "changeBillingPlan"]
+
+        return res
+
+    def change_password(self, new_password, old_password):
+        new_password_arg = parse_arg("newPassword", new_password)
+        old_password_arg = parse_arg("oldPassword", old_password)
 
         res = self.client.mutation(
-            'mutation{setPassword(%s){token user{id}}}' % (password_arg))["setPassword"]
+            'mutation{changePassword(%s%s)}' % (new_password_arg, old_password_arg))["changePassword"]
 
-        def wrapper(res):
-            res["user"] = User(self.client, res["user"]["id"])
+        return res
 
-            return res
-
-        return wrapWith(res, wrapper)
-
-    def setTotp(self, code, secret):
-
+    def set_totp(self, code, secret, password):
         code_arg = parse_arg("code", code)
         secret_arg = parse_arg("secret", secret)
-        return self.client.mutation('mutation{setTotp(%s%s)}' % (code_arg, secret_arg))["setTotp"]
+        password_arg = parse_arg("password", password)
+        return self.client.mutation('mutation{setTotp(%s%s%s)}' % (code_arg, secret_arg, password_arg))["setTotp"]
 
-    def setWebAuthn(self, challengeResponse, jwtChallenge):
+    def disable_totp(self, password):
+        password_arg = parse_arg("password", password)
+        return self.client.mutation('mutation{disableTotp(%s%s%s)}' % password_arg)["disableTotp"]
 
-        challengeResponse_arg = parse_arg(
-            "challengeResponse", challengeResponse)
-        jwtChallenge_arg = parse_arg("jwtChallenge", jwtChallenge)
-        res = self.client.mutation('mutation{setWebAuthn(%s%s){token user{id}}}' % (
-            challengeResponse_arg, jwtChallenge_arg))["setWebAuthn"]
-
-        def wrapper(res):
-            res["user"] = User(self.client, res["user"]["id"])
-
-            return res
-
-        return wrapWith(res, wrapper)
-
-    def changeAuthenticationSettings(self, primaryAuthenticationMethods, secondaryAuthenticationMethods):
-        primaryAuthenticationMethods_arg = parse_arg(
-            "primaryAuthenticationMethods", primaryAuthenticationMethods, is_enum=True)
-        secondaryAuthenticationMethods_arg = parse_arg(
-            "secondaryAuthenticationMethods", secondaryAuthenticationMethods, is_enum=True)
-
-        res = self.client.mutation('mutation{changeAuthenticationSettings(%s%s){id}}' % (
-            primaryAuthenticationMethods_arg, secondaryAuthenticationMethods_arg))["changeAuthenticationSettings"]
-
-        def wrapper(id):
-            return User(self.client)
-
-        return wrapById(res, wrapper)
-
-    def resendVerificationEmail(self, email):
+    def send_disable_totp_email(self, email, redirect_to):
         email_arg = parse_arg("email", email)
+        redirect_to_arg = parse_arg("redirectTo", redirect_to, is_enum=True)
+        return self.client.mutation('mutation{sendDisableTotpEmail(%s%s)}' % (email_arg, redirect_to_arg))["sendDisableTotpEmail"]
 
-        return self.client.mutation('mutation{resendVerificationEmail(%s)}' % (email_arg))["resendVerificationEmail"]
+    def send_verification_email(self, redirect_to):
+        redirect_to_arg = parse_arg("redirectTo", redirect_to, is_enum=True)
 
-    def shareEnvironment(self, environmentId, role, email=None, userId=None):
-        environmentId_arg = parse_arg("environmentId", environmentId)
+        return self.client.mutation('mutation{sendVerificationEmail(%s)}' % (redirect_to_arg))["sendVerificationEmail"]
+
+    def send_password_recovery_email(self, email, redirect_to):
+        email_arg = parse_arg("email", email)
+        redirect_to_arg = parse_arg("redirectTo", redirect_to, is_enum=True)
+        return self.client.mutation('mutation{sendPasswordRecoveryEmail(%s%s)}' % (email_arg, redirect_to_arg))["sendPasswordRecoveryEmail"]
+
+    def reset_password(self, recovery_token, new_password):
+        recovery_token_arg = parse_arg("recoveryToken", recovery_token)
+        new_password_arg = parse_arg("newPassword", new_password)
+        return self.client.mutation('mutation{resetPassword(%s%s)}' % (recovery_token_arg, new_password_arg))["resetPassword"]
+
+    def share_environment(self, environment_id, role, email=None, user_id=None):
+        environmentId_arg = parse_arg("environmentId", environment_id)
         role_arg = parse_arg("role", role, is_enum=True)
         email_arg = parse_arg("email", email)
-        userId_arg = parse_arg("userId", userId)
+        userId_arg = parse_arg("userId", user_id)
         res = self.client.mutation('mutation{shareEnvironment(%s%s%s%s){id}}' % (
             environmentId_arg, email_arg, userId_arg, role_arg))["shareEnvironment"]
 
@@ -201,30 +212,30 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def pendingEnvironmentShare(self, id, role):
+    def pending_share(self, id, role):
         id_arg = parse_arg("id", id)
         role_arg = parse_arg("role", role, is_enum=True)
 
-        res = self.client.mutation('mutation{pendingEnvironmentShare(%s%s){id}}' % (
-            id_arg, role_arg))["pendingEnvironmentShare"]
+        res = self.client.mutation('mutation{pendingShare(%s%s){id}}' % (
+            id_arg, role_arg))["pendingShare"]
 
         def wrapper(id):
             return PendingEnvironmentShare(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def revokePendingEnvironmentShare(self, pendingEnvironmentShareId):
+    def revoke_pending_share(self, pending_share_id):
         pendingEnvironmentShareId_arg = parse_arg(
-            "pendingEnvironmentShareId", pendingEnvironmentShareId)
+            "pendingShareId", pending_share_id)
 
-        return self.client.mutation('mutation{revokePendingEnvironmentShare(%s)}' % (pendingEnvironmentShareId_arg))["revokePendingEnvironmentShare"]
+        return self.client.mutation('mutation{revokePendingShare(%s)}' % (pendingEnvironmentShareId_arg))["revokePendingShare"]
 
-    def acceptPendingEnvironmentShare(self, pendingEnvironmentShareId):
+    def accept_pending_share(self, pending_share_id):
         pendingEnvironmentShareId_arg = parse_arg(
-            "pendingEnvironmentShareId", pendingEnvironmentShareId)
+            "pendingShareId", pending_share_id)
 
-        res = self.client.mutation('mutation{acceptPendingEnvironmentShare(%s){sender{id} receiver{id} role environment{id}}}' % (
-            pendingEnvironmentShareId_arg))["acceptPendingEnvironmentShare"]
+        res = self.client.mutation('mutation{acceptPendingShare(%s){sender{id} receiver{id} role environment{id}}}' % (
+            pendingEnvironmentShareId_arg))["acceptPendingShare"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
@@ -236,16 +247,16 @@ class MutationRoot:
 
         return wrapWith(res, wrapper)
 
-    def declinePendingEnvironmentShare(self, pendingEnvironmentShareId):
+    def decline_pending_share(self, pending_share_id):
         pendingEnvironmentShareId_arg = parse_arg(
-            "pendingEnvironmentShareId", pendingEnvironmentShareId)
+            "pendingShareId", pending_share_id)
 
-        return self.client.mutation('mutation{declinePendingEnvironmentShare(%s)}' % (pendingEnvironmentShareId_arg))["declinePendingEnvironmentShare"]
+        return self.client.mutation('mutation{declinePendingShare(%s)}' % (pendingEnvironmentShareId_arg))["declinePendingShare"]
 
-    def stopSharingEnvironment(self, environmentId, email=None, userId=None):
-        environmentId_arg = parse_arg("environmentId", environmentId)
+    def stop_sharing_environment(self, environment_id, email=None, user_id=None):
+        environmentId_arg = parse_arg("environmentId", environment_id)
         email_arg = parse_arg("email", email)
-        userId_arg = parse_arg("userId", userId)
+        userId_arg = parse_arg("userId", user_id)
         res = self.client.mutation('mutation{stopSharingEnvironment(%s%s%s){id}}' % (
             environmentId_arg, email_arg, userId_arg))["stopSharingEnvironment"]
 
@@ -254,8 +265,8 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def leaveEnvironment(self, environmentId):
-        environmentId_arg = parse_arg("environmentId", environmentId)
+    def leave_environment(self, environment_id):
+        environmentId_arg = parse_arg("environmentId", environment_id)
 
         return self.client.mutation('mutation{leaveEnvironment(%s)}' % (environmentId_arg))["leaveEnvironment"]
 
