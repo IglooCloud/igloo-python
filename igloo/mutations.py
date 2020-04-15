@@ -40,30 +40,6 @@ class MutationRoot:
     def __init__(self, client):
         self.client = client
 
-    def verifyPassword(self, email, password):
-        email_arg = parse_arg("email", email)
-        password_arg = parse_arg("password", password)
-
-        return self.client.mutation('mutation{verifyPassword(%s%s)}' % (email_arg, password_arg))["verifyPassword"]
-
-    def verifyWebAuthn(self, challengeResponse, jwtChallenge):
-        challengeResponse_arg = parse_arg(
-            "challengeResponse", challengeResponse)
-        jwtChallenge_arg = parse_arg("jwtChallenge", jwtChallenge)
-
-        return self.client.mutation('mutation{verifyWebAuthn(%s%s)}' % (challengeResponse_arg, jwtChallenge_arg))["verifyWebAuthn"]
-
-    def verifyTotp(self, email, code):
-        email_arg = parse_arg("email", email)
-        code_arg = parse_arg("code", code)
-
-        return self.client.mutation('mutation{verifyTotp(%s%s)}' % (email_arg, code_arg))["verifyTotp"]
-
-    def verifyEmailToken(self, token):
-        token_arg = parse_arg("token", token)
-
-        return self.client.mutation('mutation{verifyEmailToken(%s)}' % (token_arg))["verifyEmailToken"]
-
     def sendConfirmationEmail(self, email, operation):
         email_arg = parse_arg("email", email)
         operation_arg = parse_arg("operation", operation, is_enum=True)
@@ -72,20 +48,19 @@ class MutationRoot:
 
     async def _wrapLogIn(self, res):
         resDict = await res
-        self.client.set_token(resDict["token"])
         resDict["user"] = User(self.client)
         return resDict
 
-    def logIn(self, passwordCertificate=None, webAuthnCertificate=None, totpCertificate=None, emailCertificate=None):
-        passwordCertificate_arg = parse_arg(
-            "passwordCertificate", passwordCertificate)
-        webAuthnCertificate_arg = parse_arg(
-            "webAuthnCertificate", webAuthnCertificate)
-        totpCertificate_arg = parse_arg("totpCertificate", totpCertificate)
-        emailCertificate_arg = parse_arg("emailCertificate", emailCertificate)
+    def logIn(self, email, password, totp=None, privateCloud=None):
+        email_arg = parse_arg("email", email)
+        password_arg = parse_arg("password", password)
+        totp_arg = parse_arg("totp", totp)
+        privateCloud_arg = parse_arg("privateCloud", privateCloud)
 
-        res = self.client.mutation('mutation{logIn(%s%s%s%s){user{id} token}}' % (
-            passwordCertificate_arg, webAuthnCertificate_arg, totpCertificate_arg, emailCertificate_arg))["logIn"]
+        res = self.client.mutation('mutation{logIn(%s%s%s%s){user{id} token}}' % (email_arg,
+                                                                                  password_arg,
+                                                                                  totp_arg,
+                                                                                  privateCloud_arg))["logIn"]
 
         if isinstance(res, dict):
             self.client.set_token(res["token"])
@@ -94,36 +69,22 @@ class MutationRoot:
         else:
             return self._wrapLogIn(res)
 
-    def createToken(self, tokenType, passwordCertificate=None, webAuthnCertificate=None, totpCertificate=None, emailCertificate=None):
-        tokenType_arg = parse_arg("tokenType", tokenType, is_enum=True)
-        passwordCertificate_arg = parse_arg(
-            "passwordCertificate", passwordCertificate)
-        webAuthnCertificate_arg = parse_arg(
-            "webAuthnCertificate", webAuthnCertificate)
-        totpCertificate_arg = parse_arg("totpCertificate", totpCertificate)
-        emailCertificate_arg = parse_arg("emailCertificate", emailCertificate)
-        return self.client.mutation('mutation{createToken(%s%s%s%s%s)}' % (passwordCertificate_arg, webAuthnCertificate_arg, totpCertificate_arg, emailCertificate_arg, tokenType_arg))["createToken"]
-
-    def createPermanentToken(self, name):
+    def createAccessToken(self, name, password):
         name_arg = parse_arg("name", name)
+        password_arg = parse_arg("password", password)
+        return self.client.mutation('mutation{createAccessToken(%s%s)}' % (name_arg, password_arg))["createAccessToken"]
 
-        res = self.client.mutation('mutation{createPermanentToken(%s){id}}' % (name_arg))[
-            "createPermanentToken"]
-
-        def wrapper(id):
-            return PermanentToken(self.client, id)
-
-        return wrapById(res, wrapper)
-
-    def regeneratePermanentToken(self, id):
+    def regenerateAccessToken(self, id, password):
         id_arg = parse_arg("id", id)
+        password_arg = parse_arg("password", password)
 
-        return self.client.mutation('mutation{regeneratePermanentToken(%s)}' % (id_arg))["regeneratePermanentToken"]
+        return self.client.mutation('mutation{regenerateAccessToken(%s%s)}' % (id_arg, password_arg))["regenerateAccessToken"]
 
-    def deletePermanentToken(self, id):
+    def deleteAccessToken(self, id, password):
         id_arg = parse_arg("id", id)
+        password_arg = parse_arg("password", password)
 
-        return self.client.mutation('mutation{deletePermanentToken(%s)}' % (id_arg))["deletePermanentToken"]
+        return self.client.mutation('mutation{deleteAccessToken(%s%s)}' % (id_arg, password_arg))["deleteAccessToken"]
 
     async def _wrapSignUp(self, res):
         result = await res
@@ -131,18 +92,48 @@ class MutationRoot:
 
         return result
 
-    def signUp(self, email, name):
+    def signUp(self, email, name, password, acceptPrivacyPolicyAndEULA, companyName=None, privateCloud=None):
         email_arg = parse_arg("email", email)
         name_arg = parse_arg("name", name)
+        password_arg = parse_arg("password", password)
+        companyName_arg = parse_arg("companyName", companyName)
+        privateCloud_arg = parse_arg("privateCloud", privateCloud)
+        acceptPrivacyPolicyAndEULA_arg = parse_arg(
+            "acceptPrivacyPolicyAndEULA", acceptPrivacyPolicyAndEULA)
 
-        res = self.client.mutation('mutation{signUp(%s%s){user{id} changeAuthenticationToken}}' % (
-            email_arg, name_arg))["signUp"]
+        res = self.client.mutation('mutation{signUp(%s%s%s%s%s%s){user{id} token}}' % (
+            email_arg,
+            name_arg,
+            password_arg,
+            companyName_arg,
+            privateCloud_arg,
+            acceptPrivacyPolicyAndEULA_arg))["signUp"]
 
         if isinstance(res, dict):
             res["user"] = User(self.client, res["user"]["id"])
             return res
         else:
             return self._wrapSignUp(res)
+
+    def initiateBillingSetup(self):
+        res = self.client.mutation("mutation{initiateBillingSetup }")[
+            "initiateBillingSetup"]
+
+        return res
+
+    def updateBillingInfo(self, stripePaymentMethod):
+        stripePaymentMethod_arg = parse_arg(
+            "stripePaymentMethod", stripePaymentMethod)
+        res = self.client.mutation("mutation{updateBillingInfo(%s) }" % stripePaymentMethod_arg)[
+            "updateBillingInfo"]
+
+        return res
+
+    def confirmPaymentExecution(self):
+        res = self.client.mutation("mutation{confirmPaymentExecution }")[
+            "confirmPaymentExecution"]
+
+        return res
 
     def setPassword(self, password):
         password_arg = parse_arg("password", password)
