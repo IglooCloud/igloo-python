@@ -270,30 +270,30 @@ class MutationRoot:
 
         return self.client.mutation('mutation{leaveEnvironment(%s)}' % (environmentId_arg))["leaveEnvironment"]
 
-    def changeOwner(self, environmentId, email=None, userId=None):
-        environmentId_arg = parse_arg("environmentId", environmentId)
+    def transfer_environment(self, environment_id, email=None, user_id=None):
+        environmentId_arg = parse_arg("environmentId", environment_id)
         email_arg = parse_arg("email", email)
-        userId_arg = parse_arg("userId", userId)
-        res = self.client.mutation('mutation{changeOwner(%s%s%s){id}}' % (
-            environmentId_arg, email_arg, userId_arg))["changeOwner"]
+        userId_arg = parse_arg("userId", user_id)
+        res = self.client.mutation('mutation{transferEnvironment(%s%s%s){id}}' % (
+            environmentId_arg, email_arg, userId_arg))["transferEnvironment"]
 
         def wrapper(id):
             return PendingOwnerChange(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def revokePendingOwnerChange(self, pendingOwnerChangeId):
-        pendingOwnerChangeId_arg = parse_arg(
-            "pendingOwnerChangeId", pendingOwnerChangeId)
+    def revoke_pending_transfer(self, pending_transfer_id):
+        pending_transfer_id_arg = parse_arg(
+            "pendingTransferId", pending_transfer_id)
 
-        return self.client.mutation('mutation{revokePendingOwnerChange(%s)}' % (pendingOwnerChangeId_arg))["revokePendingOwnerChange"]
+        return self.client.mutation('mutation{revokePendingTransfer(%s)}' % (pending_transfer_id_arg))["revokePendingTransfer"]
 
-    def acceptPendingOwnerChange(self, pendingOwnerChangeId):
-        pendingOwnerChangeId_arg = parse_arg(
-            "pendingOwnerChangeId", pendingOwnerChangeId)
+    def accept_pending_transfer(self, pending_transfer_id):
+        pending_transfer_id_arg = parse_arg(
+            "pendingTransferId", pending_transfer_id)
 
-        res = self.client.mutation('mutation{acceptPendingOwnerChange(%s){sender{id} receiver{id} environment{id}}}' % (
-            pendingOwnerChangeId_arg))["acceptPendingOwnerChange"]
+        res = self.client.mutation('mutation{acceptPendingTransfer(%s){id sender{id} receiver{id} environment{id}}}' % (
+            pending_transfer_id_arg))["acceptPendingTransfer"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
@@ -305,16 +305,16 @@ class MutationRoot:
 
         return wrapWith(res, wrapper)
 
-    def declinePendingOwnerChange(self, pendingOwnerChangeId):
-        pendingOwnerChangeId_arg = parse_arg(
-            "pendingOwnerChangeId", pendingOwnerChangeId)
+    def decline_pending_transfer(self, pending_transfer_id):
+        pending_transfer_id_arg = parse_arg(
+            "pendingTransferId", pending_transfer_id)
 
-        return self.client.mutation('mutation{declinePendingOwnerChange(%s)}' % (pendingOwnerChangeId_arg))["declinePendingOwnerChange"]
+        return self.client.mutation('mutation{declinePendingTransfer(%s)}' % (pending_transfer_id_arg))["declinePendingTransfer"]
 
-    def changeRole(self, environmentId, email, newRole):
-        environmentId_arg = parse_arg("environmentId", environmentId)
+    def change_role(self, environment_id, email, new_role):
+        environmentId_arg = parse_arg("environmentId", environment_id)
         email_arg = parse_arg("email", email)
-        newRole_arg = parse_arg("newRole", newRole)
+        newRole_arg = parse_arg("newRole", new_role)
 
         res = self.client.mutation('mutation{changeRole(%s%s%s){id}}' % (
             environmentId_arg, email_arg, newRole_arg))["changeRole"]
@@ -324,7 +324,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createEnvironment(self, name, picture=None, index=None, muted=None):
+    def create_environment(self, name, picture=None, index=None, muted=None):
         name_arg = parse_arg("name", name)
         picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
@@ -337,21 +337,26 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createThing(self, thingType=None, firmware=None):
-        thingType_arg = parse_arg("thingType", thingType)
+    def create_thing(self, type, firmware=None, battery_threshold=None, stored_notifications=None):
+        type_arg = parse_arg("type", type)
         firmware_arg = parse_arg("firmware", firmware)
-        res = self.client.mutation('mutation{createThing(%s%s){id}}' % (
-            thingType_arg, firmware_arg))["createThing"]
+        battery_threshold_arg = parse_arg(
+            "batteryThreshold", battery_threshold)
+        stored_notifications_arg = parse_arg(
+            "storedNotifications", stored_notifications)
+        res = self.client.mutation('mutation{createThing(%s%s%s%s){id}}' % (
+            type_arg, firmware_arg, battery_threshold_arg, stored_notifications_arg))["createThing"]
 
+        # FIXME: if we choose to keep the createThingPayload implement it here
         def wrapper(id):
             return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def claimThing(self, claimCode, name, environmentId, index=None, muted=None):
-        claimCode_arg = parse_arg("claimCode", claimCode)
+    def claim_thing(self, claim_code, name, environment_id, index=None, muted=None):
+        claimCode_arg = parse_arg("claimCode", claim_code)
         name_arg = parse_arg("name", name)
-        environmentId_arg = parse_arg("environmentId", environmentId)
+        environmentId_arg = parse_arg("environmentId", environment_id)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
         res = self.client.mutation('mutation{claimThing(%s%s%s%s%s){id}}' % (
@@ -362,8 +367,8 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createNotification(self, thingId, content, date=None):
-        thingId_arg = parse_arg("thingId", thingId)
+    def create_notification(self, thing_id, content, date=None):
+        thingId_arg = parse_arg("thingId", thing_id)
         content_arg = parse_arg("content", content)
         date_arg = parse_arg("date", date)
         res = self.client.mutation('mutation{createNotification(%s%s%s){id}}' % (
@@ -374,21 +379,21 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createFloatVariable(self, thingId, permission, name, private=None, hidden=None, unitOfMeasurement=None, value=None, precision=None, min=None, max=None, index=None):
-        thingId_arg = parse_arg("thingId", thingId)
+    def create_float_variable(self, permission, name, thing_id=None, developer_only=None, allowed_values=None, unit_of_measurement=None, value=None, precision=None, min=None, max=None, index=None):
+        thingId_arg = parse_arg("thingId", thing_id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
-        private_arg = parse_arg("private", private)
-        hidden_arg = parse_arg("hidden", hidden)
+        developer_only_arg = parse_arg("developerOnly", developer_only)
+        allowed_values_arg = parse_arg("hidden", allowed_values)
         unitOfMeasurement_arg = parse_arg(
-            "unitOfMeasurement", unitOfMeasurement)
+            "unitOfMeasurement", unit_of_measurement)
         value_arg = parse_arg("value", value)
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatVariable(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (thingId_arg, permission_arg, private_arg, hidden_arg,
+        res = self.client.mutation('mutation{createFloatVariable(%s%s%s%s%s%s%s%s%s%s%s){id}}' % (thingId_arg, permission_arg, allowed_values_arg, developer_only_arg,
                                                                                                   unitOfMeasurement_arg, value_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatVariable"]
 
         def wrapper(id):
@@ -396,64 +401,63 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createStringVariable(self, thingId, permission, name, private=None, hidden=None, value=None, maxChars=None, allowedValues=None, index=None):
-        thingId_arg = parse_arg("thingId", thingId)
+    def create_string_variable(self, permission, name, thing_id=None, developer_only=None, value=None, max_characters=None, allowed_values=None, index=None):
+        thingId_arg = parse_arg("thingId", thing_id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
-        private_arg = parse_arg("private", private)
-        hidden_arg = parse_arg("hidden", hidden)
+        developer_only_arg = parse_arg("developerOnly", developer_only)
         value_arg = parse_arg("value", value)
-        maxChars_arg = parse_arg("maxChars", maxChars)
+        maxChars_arg = parse_arg("maxChars", max_characters)
 
-        allowedValues_arg = parse_arg("allowedValues", allowedValues)
+        allowedValues_arg = parse_arg("allowedValues", allowed_values)
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createStringVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["createStringVariable"]
+        res = self.client.mutation('mutation{createStringVariable(%s%s%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, developer_only_arg, value_arg, maxChars_arg, name_arg, allowedValues_arg, index_arg))["createStringVariable"]
 
         def wrapper(id):
             return StringVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createBooleanVariable(self, thingId, permission, name, private=None, hidden=None, value=None, index=None):
+    def create_boolean_variable(self, permission, name, thingId=None, developer_only=None,  value=None, index=None):
         thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
-        private_arg = parse_arg("private", private)
-        hidden_arg = parse_arg("hidden", hidden)
+        developer_only_arg = parse_arg("developerOnly", developer_only)
         value_arg = parse_arg("value", value)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createBooleanVariable(%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, permission_arg, private_arg, hidden_arg, value_arg, name_arg, index_arg))["createBooleanVariable"]
+        res = self.client.mutation('mutation{createBooleanVariable(%s%s%s%s%s%s){id}}' % (
+            thingId_arg, permission_arg, developer_only_arg, value_arg, name_arg, index_arg))["createBooleanVariable"]
 
         def wrapper(id):
             return BooleanVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesVariable(self, thingId, name, private=None, hidden=None, unitOfMeasurement=None, precision=None, min=None, max=None, index=None):
-        thingId_arg = parse_arg("thingId", thingId)
+    def create_float_series_variable(self, name, shown_nodes, thing_id=None, developer_only=None, unit_of_measurement=None, precision=None, min=None, max=None, index=None, stored_nodes=None):
+        thingId_arg = parse_arg("thingId", thing_id)
         name_arg = parse_arg("name", name)
-        private_arg = parse_arg("private", private)
-        hidden_arg = parse_arg("hidden", hidden)
+        developer_only_arg = parse_arg("private", developer_only)
         unitOfMeasurement_arg = parse_arg(
-            "unitOfMeasurement", unitOfMeasurement)
+            "unitOfMeasurement", unit_of_measurement)
         precision_arg = parse_arg("precision", precision)
         min_arg = parse_arg("min", min)
         max_arg = parse_arg("max", max)
+        shown_nodes_arg = parse_arg("max", shown_nodes)
+        stored_nodes_arg = parse_arg("max", stored_nodes)
 
         index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createFloatSeriesVariable(%s%s%s%s%s%s%s%s%s){id}}' % (
-            thingId_arg, private_arg, hidden_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatSeriesVariable"]
+        res = self.client.mutation('mutation{createFloatSeriesVariable(%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            shown_nodes_arg, stored_nodes_arg, thingId_arg, developer_only_arg, unitOfMeasurement_arg, precision_arg, min_arg, max_arg, name_arg, index_arg))["createFloatSeriesVariable"]
 
         def wrapper(id):
             return FloatSeriesVariable(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def createFloatSeriesNode(self, seriesId, value, timestamp=None):
-        seriesId_arg = parse_arg("seriesId", seriesId)
+    def create_float_series_node(self, series_id, value=None, timestamp=None):
+        seriesId_arg = parse_arg("seriesId", series_id)
         value_arg = parse_arg("value", value)
         timestamp_arg = parse_arg("timestamp", timestamp)
         res = self.client.mutation('mutation{createFloatSeriesNode(%s%s%s){id}}' % (
@@ -464,74 +468,66 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def createCategorySeriesVariable(self, thingId, name, private=None, hidden=None, allowedValues=None, index=None):
-        thingId_arg = parse_arg("thingId", thingId)
+    def user(self,
+             company_name=None,
+             quiet_mode=None,
+             name=None,
+             language=None,
+             vat_number=None,
+             lenght_and_mass=None,
+             temperature=None,
+             date_format=None,
+             time_format=None,
+             password_change_email=None,
+             shares_email=None,
+             access_token_created_email=None,
+             address_line1=None,
+             address_line2=None,
+             address_postal_code=None,
+             address_city=None,
+             address_state=None,
+             address_country_or_territory=None
+             ):
+
+        company_name_arg = parse_arg("company_name", company_name)
+        quiet_mode_arg = parse_arg("quiet_mode", quiet_mode)
         name_arg = parse_arg("name", name)
-        private_arg = parse_arg("private", private)
-        hidden_arg = parse_arg("hidden", hidden)
+        language_arg = parse_arg("language", language)
+        vat_number_arg = parse_arg("vat_number", vat_number)
+        lenght_and_mass_arg = parse_arg(
+            "lenght_and_mass", lenght_and_mass)
+        temperature_arg = parse_arg("temperature", temperature)
+        date_format_arg = parse_arg("date_format", date_format)
+        time_format_arg = parse_arg("time_format", time_format)
+        password_change_email_arg = parse_arg(
+            "password_change_email", password_change_email)
+        shares_email_arg = parse_arg("shares_email", shares_email)
+        access_token_created_email_arg = parse_arg(
+            "access_token_created_email", access_token_created_email)
+        address_line1_arg = parse_arg("address_line1", address_line1)
+        address_line2_arg = parse_arg("address_line2", address_line2)
+        address_postal_code_arg = parse_arg(
+            "address_postal_code", address_postal_code)
+        address_city_arg = parse_arg("address_city", address_city)
+        address_state_arg = parse_arg("address_state", address_state)
+        address_country_or_territory_arg = parse_arg(
+            "address_country_or_territory", address_country_or_territory)
 
-        allowedValues_arg = parse_arg("allowedValues", allowedValues)
-        index_arg = parse_arg("index", index)
-        res = self.client.mutation('mutation{createCategorySeriesVariable(%s%s%s%s%s%s){id}}' % (
-            thingId_arg, private_arg, hidden_arg, name_arg, allowedValues_arg, index_arg))["createCategorySeriesVariable"]
-
-        def wrapper(id):
-            return CategorySeriesVariable(self.client, id)
-
-        return wrapById(res, wrapper)
-
-    def createCategorySeriesNode(self, seriesId, value, timestamp=None):
-        seriesId_arg = parse_arg("seriesId", seriesId)
-        value_arg = parse_arg("value", value)
-        timestamp_arg = parse_arg("timestamp", timestamp)
-        res = self.client.mutation('mutation{createCategorySeriesNode(%s%s%s){id}}' % (
-            seriesId_arg, timestamp_arg, value_arg))["createCategorySeriesNode"]
-
-        def wrapper(id):
-            return CategorySeriesNode(self.client, id)
-
-        return wrapById(res, wrapper)
-
-    def user(self, quietMode=None, paymentPlan=None, name=None, profileIcon=None):
-
-        quietMode_arg = parse_arg("quietMode", quietMode)
-        paymentPlan_arg = parse_arg("paymentPlan", paymentPlan)
-        name_arg = parse_arg("name", name)
-        profileIcon_arg = parse_arg("profileIcon", profileIcon)
-        res = self.client.mutation('mutation{user(%s%s%s%s){id}}' % (
-            quietMode_arg, paymentPlan_arg, name_arg, profileIcon_arg))["user"]
+        res = self.client.mutation('mutation{user(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            company_name_arg, quiet_mode_arg, name_arg, language_arg, vat_number_arg, lenght_and_mass_arg, temperature_arg, date_format_arg, time_format_arg, password_change_email_arg, shares_email_arg, access_token_created_email_arg, address_line1_arg, address_line2_arg, address_postal_code_arg, address_city_arg, address_state_arg, address_country_or_territory_arg
+        ))["user"]
 
         def wrapper(id):
             return User(self.client)
 
         return wrapById(res, wrapper)
 
-    def changeEmail(self, newEmail):
+    def change_email(self, newEmail, password, redirect_to):
         newEmail_arg = parse_arg("newEmail", newEmail)
+        password_arg = parse_arg("password", password)
+        redirect_to_arg = parse_arg("redirectTo", redirect_to)
 
-        return self.client.mutation('mutation{changeEmail(%s)}' % (newEmail_arg))["changeEmail"]
-
-    def settings(self, language=None, lengthAndMass=None, temperature=None, dateFormat=None, timeFormat=None, passwordChangeEmail=None, environmentSharesEmail=None, permanentTokenCreatedEmail=None):
-
-        language_arg = parse_arg("language", language)
-        lengthAndMass_arg = parse_arg(
-            "lengthAndMass", lengthAndMass, is_enum=True)
-        temperature_arg = parse_arg("temperature", temperature, is_enum=True)
-        dateFormat_arg = parse_arg("dateFormat", dateFormat, is_enum=True)
-        timeFormat_arg = parse_arg("timeFormat", timeFormat, is_enum=True)
-        passwordChangeEmail_arg = parse_arg(
-            "passwordChangeEmail", passwordChangeEmail)
-        environmentSharesEmail_arg = parse_arg(
-            "environmentSharesEmail", environmentSharesEmail)
-        permanentTokenCreatedEmail_arg = parse_arg(
-            "permanentTokenCreatedEmail", permanentTokenCreatedEmail)
-
-        return self.client.mutation('mutation{settings(%s%s%s%s%s%s%s%s){id lengthAndMass temperature timeFormat dateFormat language passwordChangeEmail environmentSharesEmail permanentTokenCreatedEmail}}' % (language_arg, lengthAndMass_arg, temperature_arg, dateFormat_arg, timeFormat_arg, passwordChangeEmail_arg, environmentSharesEmail_arg, permanentTokenCreatedEmail_arg))["settings"]
-
-    def updatePaymentInfo(self, stripeToken):
-        stripeToken_arg = parse_arg("stripeToken", stripeToken)
-
-        return self.client.mutation('mutation{updatePaymentInfo(%s)}' % (stripeToken_arg))["updatePaymentInfo"]
+        return self.client.mutation('mutation{changeEmail(%s%s%s)}' % (newEmail_arg, password_arg, redirect_to_arg))["changeEmail"]
 
     def environment(self, id, name=None, picture=None, index=None, muted=None):
         id_arg = parse_arg("id", id)
@@ -547,54 +543,59 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def thing(self, id, thingType=None, name=None, index=None, signalStatus=None, batteryStatus=None, batteryCharging=None, firmware=None, muted=None, starred=None):
+    def thing(self, id, type=None, name=None, index=None, signal_status=None, battery_status=None, battery_charging=None, battery_threshold=None, firmware=None, muted=None, starred=None, stored_notifications=None):
         id_arg = parse_arg("id", id)
-        thingType_arg = parse_arg("thingType", thingType)
+        thingType_arg = parse_arg("type", type)
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
-        signalStatus_arg = parse_arg("signalStatus", signalStatus)
-        batteryStatus_arg = parse_arg("batteryStatus", batteryStatus)
-        batteryCharging_arg = parse_arg("batteryCharging", batteryCharging)
+        signalStatus_arg = parse_arg("signalStatus", signal_status)
+        batteryStatus_arg = parse_arg("batteryStatus", battery_status)
+        batteryCharging_arg = parse_arg("batteryCharging", battery_charging)
         firmware_arg = parse_arg("firmware", firmware)
         muted_arg = parse_arg("muted", muted)
         starred_arg = parse_arg("starred", starred)
-        res = self.client.mutation('mutation{thing(%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            id_arg, thingType_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["thing"]
+        battery_threshold_arg = parse_arg(
+            "batteryThreshold", battery_threshold)
+        stored_notifications_arg = parse_arg(
+            "storedNotifications", stored_notifications)
+        res = self.client.mutation('mutation{thing(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            battery_threshold_arg, stored_notifications_arg, id_arg, thingType_arg, name_arg, index_arg, signalStatus_arg, batteryStatus_arg, batteryCharging_arg, firmware_arg, muted_arg, starred_arg))["thing"]
 
         def wrapper(id):
             return Thing(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def value(self, id, private=None, hidden=None, name=None, index=None):
+    def move_thing(self, thing_id, new_environment_id):
+        thing_id_arg = parse_arg("thingId", thing_id)
+        new_environment_id_arg = parse_arg(
+            "newEnvironmentId", new_environment_id)
+
+        res = self.client.mutation('mutation{moveThing(%s%s){id}}' % (
+            thing_id_arg, new_environment_id_arg))["moveThing"]
+
+        def wrapper(id):
+            return Thing(self.client, id)
+
+        return wrapById(res, wrapper)
+
+    def value(self, id, developer_only=None, hidden=None, name=None, index=None):
         id_arg = parse_arg("id", id)
-        private_arg = parse_arg("private", private)
+        developer_only_arg = parse_arg("developerOnly", developer_only)
         hidden_arg = parse_arg("hidden", hidden)
 
         name_arg = parse_arg("name", name)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{value(%s%s%s%s%s){id __typename}}' % (
-            id_arg, private_arg, hidden_arg, name_arg, index_arg))["value"]
+            id_arg, developer_only_arg, hidden_arg, name_arg, index_arg))["value"]
 
         def wrapper(res):
             return Value(self.client, res["id"], res["__typename"])
 
         return wrapWith(res, wrapper)
 
-    def moveThing(self, thingId, newEnvironmentId):
-        thingId_arg = parse_arg("thingId", thingId)
-        newEnvironmentId_arg = parse_arg("newEnvironmentId", newEnvironmentId)
-
-        res = self.client.mutation('mutation{moveThing(%s%s){id}}' % (
-            thingId_arg, newEnvironmentId_arg))["moveThing"]
-
-        def wrapper(id):
-            return Thing(self.client, id)
-
-        return wrapById(res, wrapper)
-
-    def resetOnlineState(self, thingId):
-        thingId_arg = parse_arg("thingId", thingId)
+    def reset_online_state(self, thing_id):
+        thingId_arg = parse_arg("thingId", thing_id)
 
         res = self.client.mutation('mutation{resetOnlineState(%s){id}}' % (thingId_arg))[
             "resetOnlineState"]
