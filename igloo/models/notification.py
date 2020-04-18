@@ -87,6 +87,11 @@ class Notification:
             return self.client.query('{notification(id:"%s"){read}}' %
                                      self._id, keys=["notification", "read"])
 
+    @read.setter
+    def read(self, newContent):
+        self.client.mutation(
+            'mutation{notification(id:"%s", read:"%s"){id}}' % (self._id, newContent), asyncio=False)
+
 
 class ThingNotificationList:
     def __init__(self, client, thingId):

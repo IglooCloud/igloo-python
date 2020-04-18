@@ -69,7 +69,7 @@ class CategorySeriesNode:
                 "categorySeriesNode", "series"])
 
         def wrapper(res):
-            from .category_series_value import CategorySeriesVariable
+            from .category_series_variable import CategorySeriesVariable
             return CategorySeriesVariable(self.client, res["id"])
 
         return wrapWith(res, wrapper)

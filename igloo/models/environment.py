@@ -74,7 +74,7 @@ class Environment:
         return wrapWith(res, wrapper)
 
     @property
-    def myRole(self):
+    def my_role(self):
         if self.client.asyncio:
             return self.loader.load("myRole")
         else:
@@ -95,7 +95,7 @@ class Environment:
             'mutation{environment(id:"%s", picture:"%s"){id}}' % (self._id, newPicture), asyncio=False)
 
     @property
-    def uniqueFirmwares(self):
+    def unique_firmwares(self):
         if self.client.asyncio:
             return self.loader.load("uniqueFirmwares")
         else:
@@ -149,21 +149,21 @@ class Environment:
         return EnvironmentSpectatorList(self.client, self._id)
 
     @property
-    def pendingEnvironmentShares(self):
-        from .pending_environment_share import EnvironmentPendingEnvironmentShareList
-        return EnvironmentPendingEnvironmentShareList(self.client, self._id)
+    def pending_shares(self):
+        from .pending_share import EnvironmentPendingShareList
+        return EnvironmentPendingShareList(self.client, self._id)
 
     @property
-    def pendingOwnerChange(self):
+    def pending_transfer(self):
         if self.client.asyncio:
-            res = self.loader.load("pendingOwnerChange{id}")
+            res = self.loader.load("pendingTransfer{id}")
         else:
-            res = self.client.query('{environment(id:"%s"){pendingOwnerChange{id}}}' % self._id, keys=[
-                "environment", "pendingOwnerChange"])
+            res = self.client.query('{environment(id:"%s"){pendingTransfer{id}}}' % self._id, keys=[
+                "environment", "pendingTransfer"])
 
         def wrapper(res):
-            from .pending_owner_change import PendingOwnerChange
-            res = PendingOwnerChange(self.client, res["id"])
+            from .pending_transfer import PendingTransfer
+            res = PendingTransfer(self.client, res["id"])
 
             return res
 

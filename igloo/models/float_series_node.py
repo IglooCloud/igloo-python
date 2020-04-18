@@ -68,7 +68,7 @@ class FloatSeriesNode:
                 "floatSeriesNode", "series"])
 
         def wrapper(res):
-            from .float_series_value import FloatSeriesVariable
+            from .float_series_variable import FloatSeriesVariable
             return FloatSeriesVariable(self.client, res["id"])
 
         return wrapWith(res, wrapper)

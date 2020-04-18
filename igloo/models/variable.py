@@ -1,9 +1,9 @@
-from .float_value import FloatVariable
-from .file_value import FileVariable
-from .boolean_value import BooleanVariable
-from .string_value import StringVariable
-from .float_series_value import FloatSeriesVariable
-from .category_series_value import CategorySeriesVariable
+from .float_variable import FloatVariable
+from .file_variable import FileVariable
+from .boolean_variable import BooleanVariable
+from .string_variable import StringVariable
+from .float_series_variable import FloatSeriesVariable
+from .category_series_variable import CategorySeriesVariable
 from igloo.utils import get_representation
 
 
@@ -22,7 +22,7 @@ def Value(client, id, resolveType):
         return CategorySeriesVariable(client, id)
 
 
-class ThingValuesList:
+class ThingVariablesList:
     def __init__(self, client, thingId):
         self.client = client
         self.thingId = thingId

@@ -46,20 +46,20 @@ class Thing:
                 "thing", "updatedAt"])
 
     @property
-    def thingType(self):
+    def type(self):
         if self.client.asyncio:
-            return self.loader.load("thingType")
+            return self.loader.load("type")
         else:
-            return self.client.query('{thing(id:"%s"){thingType}}' %
-                                     self._id, keys=["thing", "thingType"])
+            return self.client.query('{thing(id:"%s"){type}}' %
+                                     self._id, keys=["thing", "type"])
 
-    @thingType.setter
-    def thingType(self, newThingType):
+    @type.setter
+    def type(self, newThingType):
         self.client.mutation(
-            'mutation{thing(id:"%s", thingType:"%s"){id}}' % (self._id, newThingType), asyncio=False)
+            'mutation{thing(id:"%s", type:"%s"){id}}' % (self._id, newThingType), asyncio=False)
 
     @property
-    def myRole(self):
+    def my_role(self):
         if self.client.asyncio:
             return self.loader.load("myRole")
         else:
@@ -114,12 +114,20 @@ class Thing:
                                      self._id, keys=["thing", "online"])
 
     @property
-    def storageUsed(self):
+    def token(self):
         if self.client.asyncio:
-            return self.loader.load("storageUsed")
+            return self.loader.load("token")
         else:
-            return self.client.query('{thing(id:"%s"){storageUsed}}' %
-                                     self._id, keys=["thing", "storageUsed"])
+            return self.client.query('{thing(id:"%s"){token}}' %
+                                     self._id, keys=["thing", "token"])
+
+    @property
+    def usedStorage(self):
+        if self.client.asyncio:
+            return self.loader.load("usedStorage")
+        else:
+            return self.client.query('{thing(id:"%s"){usedStorage}}' %
+                                     self._id, keys=["thing", "usedStorage"])
 
     @property
     def signalStatus(self):
@@ -159,6 +167,19 @@ class Thing:
     def batteryCharging(self, newValue):
         self.client.mutation(
             'mutation{thing(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+
+    @property
+    def batteryThreshold(self):
+        if self.client.asyncio:
+            return self.loader.load("batteryThreshold")
+        else:
+            return self.client.query('{thing(id:"%s"){batteryThreshold}}' %
+                                     self._id, keys=["thing", "batteryThreshold"])
+
+    @batteryThreshold.setter
+    def batteryThreshold(self, newValue):
+        self.client.mutation(
+            'mutation{thing(id:"%s", batteryThreshold:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def firmware(self):
@@ -246,9 +267,9 @@ class Thing:
         return wrapWith(res, wrapper)
 
     @property
-    def values(self):
-        from .value import ThingValuesList
-        return ThingValuesList(self.client, self.id)
+    def variables(self):
+        from .variable import ThingVariablesList
+        return ThingVariablesList(self.client, self.id)
 
     async def keepOnline(self):
         async for _ in self.client.subscription_root.keepOnline(self._id):

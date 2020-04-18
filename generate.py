@@ -101,19 +101,19 @@ def create_handler(subscription):
 with open("subscriptions.py", "w") as f:
     f.write("""# programmatically generated file
 from .models.user import User
-from .models.permanent_token import PermanentToken
-from .models.pending_environment_share import PendingEnvironmentShare
+from .models.access_token import AccessToken
+from .models.pending_share import PendingShare
 from .models.environment import Environment
 from .models.thing import Thing
-from .models.float_value import FloatVariable
-from .models.pending_owner_change import PendingOwnerChange
+from .models.float_variable import FloatVariable
+from .models.pending_transfer import PendingTransfer
 from .models.notification import Notification
-from .models.boolean_value import BooleanVariable
-from .models.string_value import StringVariable
-from .models.float_series_value import FloatSeriesVariable
-from .models.category_series_value import CategorySeriesVariable
+from .models.boolean_variable import BooleanVariable
+from .models.string_variable import StringVariable
+from .models.float_series_variable import FloatSeriesVariable
+from .models.category_series_variable import CategorySeriesVariable
 from .models.category_series_node import CategorySeriesNode
-from .models.file_value import FileVariable
+from .models.file_variable import FileVariable
 from .models.float_series_node import FloatSeriesNode
 
 class SubscriptionRoot:

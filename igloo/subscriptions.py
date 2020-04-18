@@ -1,18 +1,18 @@
 # proigloogrammatically generated file
 from igloo.models.user import User
-from igloo.models.permanent_token import PermanentToken
-from igloo.models.pending_environment_share import PendingEnvironmentShare
+from igloo.models.access_token import AccessToken
+from igloo.models.pending_share import PendingShare
 from igloo.models.environment import Environment
 from igloo.models.thing import Thing
-from igloo.models.value import Value
-from igloo.models.float_value import FloatVariable
+from igloo.models.variable import Variable
+from igloo.models.float_variable import FloatVariable
 from igloo.models.notification import Notification
-from igloo.models.boolean_value import BooleanVariable
-from igloo.models.string_value import StringVariable
-from igloo.models.float_series_value import FloatSeriesVariable
-from igloo.models.category_series_value import CategorySeriesVariable
+from igloo.models.boolean_variable import BooleanVariable
+from igloo.models.string_variable import StringVariable
+from igloo.models.float_series_variable import FloatSeriesVariable
+from igloo.models.category_series_variable import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
-from igloo.models.file_value import FileVariable
+from igloo.models.file_variable import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
 from igloo.utils import parse_arg
 
@@ -57,9 +57,9 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{categorySeriesNodeCreated(%s){id}}' % (seriesId_arg)).replace('()', '')):
             yield CategorySeriesNode(self.client, data["categorySeriesNodeCreated"]["id"])
 
-    async def permanentTokenCreated(self, ):
-        async for data in self.client.subscribe(('subscription{permanentTokenCreated(){id}}' % ()).replace('()', '')):
-            yield PermanentToken(self.client, data["permanentTokenCreated"]["id"])
+    async def accessTokenCreated(self, ):
+        async for data in self.client.subscribe(('subscription{accessTokenCreated(){id}}' % ()).replace('()', '')):
+            yield AccessToken(self.client, data["accessTokenCreated"]["id"])
 
     async def notificationCreated(self, ):
         async for data in self.client.subscribe(('subscription{notificationCreated(){id}}' % ()).replace('()', '')):
@@ -72,25 +72,25 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{thingMoved(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
             yield Thing(self.client, data["thingMoved"]["id"])
 
-    async def pendingEnvironmentShareReceived(self, ):
-        async for data in self.client.subscribe(('subscription{pendingEnvironmentShareReceived(){id}}' % ()).replace('()', '')):
-            yield PendingEnvironmentShare(self.client, data["pendingEnvironmentShareReceived"]["id"])
+    async def pendingShareReceived(self, ):
+        async for data in self.client.subscribe(('subscription{pendingShareReceived(){id}}' % ()).replace('()', '')):
+            yield PendingShare(self.client, data["pendingShareReceived"]["id"])
 
-    async def pendingEnvironmentShareUpdated(self, ):
-        async for data in self.client.subscribe(('subscription{pendingEnvironmentShareUpdated(){id}}' % ()).replace('()', '')):
-            yield PendingEnvironmentShare(self.client, data["pendingEnvironmentShareUpdated"]["id"])
+    async def pendingShareUpdated(self, ):
+        async for data in self.client.subscribe(('subscription{pendingShareUpdated(){id}}' % ()).replace('()', '')):
+            yield PendingShare(self.client, data["pendingShareUpdated"]["id"])
 
-    async def pendingEnvironmentShareAccepted(self, ):
-        async for data in self.client.subscribe(('subscription{pendingEnvironmentShareAccepted(){id sender receiver role environment}}' % ()).replace('()', '')):
-            yield data["pendingEnvironmentShareAccepted"]
+    async def pendingShareAccepted(self, ):
+        async for data in self.client.subscribe(('subscription{pendingShareAccepted(){id sender receiver role environment}}' % ()).replace('()', '')):
+            yield data["pendingShareAccepted"]
 
-    async def pendingEnvironmentShareDeclined(self, ):
-        async for data in self.client.subscribe(('subscription{pendingEnvironmentShareDeclined()}' % ()).replace('()', '')):
-            yield data["pendingEnvironmentShareDeclined"]
+    async def pendingShareDeclined(self, ):
+        async for data in self.client.subscribe(('subscription{pendingShareDeclined()}' % ()).replace('()', '')):
+            yield data["pendingShareDeclined"]
 
-    async def pendingEnvironmentShareRevoked(self, ):
-        async for data in self.client.subscribe(('subscription{pendingEnvironmentShareRevoked()}' % ()).replace('()', '')):
-            yield data["pendingEnvironmentShareRevoked"]
+    async def pendingShareRevoked(self, ):
+        async for data in self.client.subscribe(('subscription{pendingShareRevoked()}' % ()).replace('()', '')):
+            yield data["pendingShareRevoked"]
 
     async def environmentShareDeleted(self, environmentId=None, userId=None):
         environmentId_arg = parse_arg("environmentId", environmentId)
@@ -212,9 +212,9 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{userDeleted(%s)}' % (id_arg)).replace('()', '')):
             yield data["userDeleted"]
 
-    async def permanentTokenDeleted(self, ):
-        async for data in self.client.subscribe(('subscription{permanentTokenDeleted()}' % ()).replace('()', '')):
-            yield data["permanentTokenDeleted"]
+    async def accessTokenDeleted(self, ):
+        async for data in self.client.subscribe(('subscription{accessTokenDeleted()}' % ()).replace('()', '')):
+            yield data["accessTokenDeleted"]
 
     async def notificationDeleted(self, thingId=None, id=None):
         thingId_arg = parse_arg("thingId", thingId)
