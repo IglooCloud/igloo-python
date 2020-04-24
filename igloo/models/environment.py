@@ -134,11 +134,6 @@ class Environment:
         return EnvironmentThingList(self.client, self._id)
 
     @property
-    def admins(self):
-        from .user import EnvironmentAdminList
-        return EnvironmentAdminList(self.client, self._id)
-
-    @property
     def editors(self):
         from .user import EnvironmentEditorList
         return EnvironmentEditorList(self.client, self._id)
