@@ -7,7 +7,7 @@ from .category_series_variable import CategorySeriesVariable
 from igloo.utils import get_representation
 
 
-def Value(client, id, resolveType):
+def Variable(client, id, resolveType):
     if resolveType == "FloatVariable":
         return FloatVariable(client, id)
     elif resolveType == "FileVariable":

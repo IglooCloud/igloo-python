@@ -1,4 +1,5 @@
 from igloo.models.user import User
+from igloo.models.variable import Variable
 from igloo.models.access_token import AccessToken
 from igloo.models.pending_share import PendingShare
 from igloo.models.environment import Environment
@@ -13,4 +14,4 @@ from igloo.models.category_series_variable import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
 from igloo.models.file_variable import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
-from igloo.main import NULL, null, GraphQLException, Client
+from igloo.main import _Undefined, UNDEFINED, undefined, GraphQLException, Client

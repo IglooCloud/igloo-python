@@ -5,27 +5,13 @@ import websockets
 import json
 from igloo.mutations import MutationRoot
 from igloo.subscriptions import SubscriptionRoot
-from igloo.utils import get_from_dict
+from igloo.utils import get_from_dict, _Undefined, UNDEFINED, undefined
 from aiohttp import ClientSession
 from .query import QueryRoot
 import asyncio
 
 host = "api.igloo.ooo"
 url = "https://{}/graphql".format(host)
-
-
-class _Null:
-    def __str__(self):
-        return 'null'
-
-    def __unicode__(self):
-        return u'null'
-
-    def __repr__(self):
-        return 'null'
-
-
-NULL = null = _Null()
 
 
 class GraphQLException(Exception):
@@ -122,8 +108,9 @@ class Client:
             if json.loads(res)["type"] != "connection_ack":
                 raise Exception("failed to connect")
 
+            # TODO: escape better the query
             listen_query_message = '{"id":"1","type":"start","payload":{"query":"%s","variables":null}}' % (
-                query.replace('"', '\\"')
+                query.replace('"', '\\"').replace('\n', '\\n')
             )
             await websocket.send(listen_query_message)
             while True:

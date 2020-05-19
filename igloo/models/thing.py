@@ -20,10 +20,16 @@ class ThingLoader(DataLoader):
 
 
 class Thing:
-    def __init__(self, client, id):
+    def __init__(self, client, id=None):
         self.client = client
-        self._id = id
-        self.loader = ThingLoader(client, id)
+
+        if id is None:
+            self._id = self.client.query(
+                '{thing{id}}', keys=["thing", "id"], asyncio=False)
+        else:
+            self._id = id
+
+        self.loader = ThingLoader(client, self._id)
 
     @property
     def id(self):

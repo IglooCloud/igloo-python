@@ -14,7 +14,7 @@ from igloo.models.category_series_variable import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
 from igloo.models.file_variable import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
-from igloo.utils import parse_arg
+from igloo.utils import parse_arg, undefined
 
 
 async def _asyncWrapWith(res, wrapper_fn):
@@ -51,7 +51,7 @@ class MutationRoot:
         resDict["user"] = User(self.client)
         return resDict
 
-    def log_in(self, email, password, totp=None, private_cloud=None):
+    def log_in(self, email, password, totp=undefined, private_cloud=undefined):
         email_arg = parse_arg("email", email)
         password_arg = parse_arg("password", password)
         totp_arg = parse_arg("totp", totp)
@@ -92,7 +92,7 @@ class MutationRoot:
 
         return result
 
-    def sign_up(self, email, name, password, accept_privacy_policy_and_EULA, company_name=None, private_cloud=None):
+    def sign_up(self, email, name, password, accept_privacy_policy_and_EULA, company_name=undefined, private_cloud=undefined):
         email_arg = parse_arg("email", email)
         name_arg = parse_arg("name", name)
         password_arg = parse_arg("password", password)
@@ -199,7 +199,7 @@ class MutationRoot:
         new_password_arg = parse_arg("newPassword", new_password)
         return self.client.mutation('mutation{resetPassword(%s%s)}' % (recovery_token_arg, new_password_arg))["resetPassword"]
 
-    def share_environment(self, environment_id, role, email=None, user_id=None):
+    def share_environment(self, environment_id, role, email=undefined, user_id=undefined):
         environmentId_arg = parse_arg("environmentId", environment_id)
         role_arg = parse_arg("role", role, is_enum=True)
         email_arg = parse_arg("email", email)
@@ -253,7 +253,7 @@ class MutationRoot:
 
         return self.client.mutation('mutation{declinePendingShare(%s)}' % (pendingShareId_arg))["declinePendingShare"]
 
-    def stop_sharing_environment(self, environment_id, email=None, user_id=None):
+    def stop_sharing_environment(self, environment_id, email=undefined, user_id=undefined):
         environmentId_arg = parse_arg("environmentId", environment_id)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", user_id)
@@ -270,7 +270,7 @@ class MutationRoot:
 
         return self.client.mutation('mutation{leaveEnvironment(%s)}' % (environmentId_arg))["leaveEnvironment"]
 
-    def transfer_environment(self, environment_id, email=None, user_id=None):
+    def transfer_environment(self, environment_id, email=undefined, user_id=undefined):
         environmentId_arg = parse_arg("environmentId", environment_id)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", user_id)
@@ -324,7 +324,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_environment(self, name, picture=None, index=None, muted=None):
+    def create_environment(self, name, picture=undefined, index=undefined, muted=undefined):
         name_arg = parse_arg("name", name)
         picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
@@ -337,7 +337,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_thing(self, type, firmware=None, battery_threshold=None, stored_notifications=None):
+    def create_thing(self, type, firmware=undefined, battery_threshold=undefined, stored_notifications=undefined):
         type_arg = parse_arg("type", type)
         firmware_arg = parse_arg("firmware", firmware)
         battery_threshold_arg = parse_arg(
@@ -353,7 +353,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def claim_thing(self, claim_code, name, environment_id, index=None, muted=None):
+    def claim_thing(self, claim_code, name, environment_id, index=undefined, muted=undefined):
         claimCode_arg = parse_arg("claimCode", claim_code)
         name_arg = parse_arg("name", name)
         environmentId_arg = parse_arg("environmentId", environment_id)
@@ -367,7 +367,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_notification(self, thing_id, content, date=None):
+    def create_notification(self, thing_id, content, date=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
         content_arg = parse_arg("content", content)
         date_arg = parse_arg("date", date)
@@ -379,7 +379,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_float_variable(self, permission, name, thing_id=None, developer_only=None, allowed_values=None, unit_of_measurement=None, value=None, precision=None, min=None, max=None, index=None):
+    def create_float_variable(self, permission, name, thing_id=undefined, developer_only=undefined, allowed_values=undefined, unit_of_measurement=undefined, value=undefined, precision=undefined, min=undefined, max=undefined, index=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -401,7 +401,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_string_variable(self, permission, name, thing_id=None, developer_only=None, value=None, max_characters=None, allowed_values=None, index=None):
+    def create_string_variable(self, permission, name, thing_id=undefined, developer_only=undefined, value=undefined, max_characters=undefined, allowed_values=undefined, index=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -419,7 +419,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_boolean_variable(self, permission, name, thingId=None, developer_only=None,  value=None, index=None):
+    def create_boolean_variable(self, permission, name, thingId=undefined, developer_only=undefined,  value=undefined, index=undefined):
         thingId_arg = parse_arg("thingId", thingId)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         name_arg = parse_arg("name", name)
@@ -435,7 +435,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_float_series_variable(self, name, shown_nodes, thing_id=None, developer_only=None, unit_of_measurement=None, precision=None, min=None, max=None, index=None, stored_nodes=None):
+    def create_float_series_variable(self, name, shown_nodes, thing_id=undefined, developer_only=undefined, unit_of_measurement=undefined, precision=undefined, min=undefined, max=undefined, index=undefined, stored_nodes=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
         name_arg = parse_arg("name", name)
         developer_only_arg = parse_arg("private", developer_only)
@@ -456,7 +456,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_float_series_node(self, series_id, value=None, timestamp=None):
+    def create_float_series_node(self, series_id, value=undefined, timestamp=undefined):
         seriesId_arg = parse_arg("seriesId", series_id)
         value_arg = parse_arg("value", value)
         timestamp_arg = parse_arg("timestamp", timestamp)
@@ -469,24 +469,24 @@ class MutationRoot:
         return wrapById(res, wrapper)
 
     def user(self,
-             company_name=None,
-             quiet_mode=None,
-             name=None,
-             language=None,
-             vat_number=None,
-             lenght_and_mass=None,
-             temperature=None,
-             date_format=None,
-             time_format=None,
-             password_change_email=None,
-             shares_email=None,
-             access_token_created_email=None,
-             address_line1=None,
-             address_line2=None,
-             address_postal_code=None,
-             address_city=None,
-             address_state=None,
-             address_country_or_territory=None
+             company_name=undefined,
+             quiet_mode=undefined,
+             name=undefined,
+             language=undefined,
+             vat_number=undefined,
+             lenght_and_mass=undefined,
+             temperature=undefined,
+             date_format=undefined,
+             time_format=undefined,
+             password_change_email=undefined,
+             shares_email=undefined,
+             access_token_created_email=undefined,
+             address_line1=undefined,
+             address_line2=undefined,
+             address_postal_code=undefined,
+             address_city=undefined,
+             address_state=undefined,
+             address_country_or_territory=undefined
              ):
 
         company_name_arg = parse_arg("company_name", company_name)
@@ -529,7 +529,7 @@ class MutationRoot:
 
         return self.client.mutation('mutation{changeEmail(%s%s%s)}' % (newEmail_arg, password_arg, redirect_to_arg))["changeEmail"]
 
-    def environment(self, id, name=None, picture=None, index=None, muted=None):
+    def environment(self, id, name=undefined, picture=undefined, index=undefined, muted=undefined):
         id_arg = parse_arg("id", id)
         name_arg = parse_arg("name", name)
         picture_arg = parse_arg("picture", picture, is_enum=True)
@@ -543,7 +543,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def thing(self, id, type=None, name=None, index=None, signal_status=None, battery_status=None, battery_charging=None, battery_threshold=None, firmware=None, muted=None, starred=None, stored_notifications=None):
+    def thing(self, id, type=undefined, name=undefined, index=undefined, signal_status=undefined, battery_status=undefined, battery_charging=undefined, battery_threshold=undefined, firmware=undefined, muted=undefined, starred=undefined, stored_notifications=undefined):
         id_arg = parse_arg("id", id)
         thingType_arg = parse_arg("type", type)
         name_arg = parse_arg("name", name)
@@ -579,7 +579,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def value(self, id, developer_only=None, hidden=None, name=None, index=None):
+    def value(self, id, developer_only=undefined, hidden=undefined, name=undefined, index=undefined):
         id_arg = parse_arg("id", id)
         developer_only_arg = parse_arg("developerOnly", developer_only)
         hidden_arg = parse_arg("hidden", hidden)
@@ -605,7 +605,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def float_variable(self, id, permission=None, developer_only=None, hidden=None, unit_of_measurement=None, value=None, precision=None, min=None, max=None, name=None, index=None, allowed_values=None):
+    def float_variable(self, id, permission=undefined, developer_only=undefined, hidden=undefined, unit_of_measurement=undefined, value=undefined, precision=undefined, min=undefined, max=undefined, name=undefined, index=undefined, allowed_values=undefined):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         developer_only_arg = parse_arg("developerOnly", developer_only)
@@ -640,7 +640,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def string_variable(self, id, permission=None, developer_only=None, hidden=None, value=None, max_characters=None, name=None, allowed_values=None, index=None):
+    def string_variable(self, id, permission=undefined, developer_only=undefined, hidden=undefined, value=undefined, max_characters=undefined, name=undefined, allowed_values=undefined, index=undefined):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("developerOnly", developer_only)
@@ -659,7 +659,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def boolean_variable(self, id, permission=None, developer_only=None, hidden=None, value=None, name=None, index=None):
+    def boolean_variable(self, id, permission=undefined, developer_only=undefined, hidden=undefined, value=undefined, name=undefined, index=undefined):
         id_arg = parse_arg("id", id)
         permission_arg = parse_arg("permission", permission, is_enum=True)
         private_arg = parse_arg("developerOnly", developer_only)
@@ -676,7 +676,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def float_series_variable(self, id, developer_only=None, hidden=None, unit_of_measurement=None, precision=None, min=None, max=None, name=None, index=None, shown_nodes=None, stored_nodes=None):
+    def float_series_variable(self, id, developer_only=undefined, hidden=undefined, unit_of_measurement=undefined, precision=undefined, min=undefined, max=undefined, name=undefined, index=undefined, shown_nodes=undefined, stored_nodes=undefined):
         id_arg = parse_arg("id", id)
         private_arg = parse_arg("developerOnly", developer_only)
         hidden_arg = parse_arg("hidden", hidden)
@@ -698,7 +698,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def float_series_node(self, id, value=None, timestamp=None):
+    def float_series_node(self, id, value=undefined, timestamp=undefined):
         id_arg = parse_arg("id", id)
         value_arg = parse_arg("value", value)
         timestamp_arg = parse_arg("timestamp", timestamp)
@@ -710,7 +710,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def category_series_variable(self, id, developer_only=None, hidden=None, name=None, allowed_values=None, index=None, shown_nodes=None, stored_nodes=None):
+    def category_series_variable(self, id, developer_only=undefined, hidden=undefined, name=undefined, allowed_values=undefined, index=undefined, shown_nodes=undefined, stored_nodes=undefined):
         id_arg = parse_arg("id", id)
         developer_only_arg = parse_arg("developerOnly", developer_only)
         hidden_arg = parse_arg("hidden", hidden)
@@ -728,7 +728,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def category_series_node(self, id, value=None, timestamp=None):
+    def category_series_node(self, id, value=undefined, timestamp=undefined):
         id_arg = parse_arg("id", id)
         value_arg = parse_arg("value", value)
         timestamp_arg = parse_arg("timestamp", timestamp)
@@ -740,7 +740,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def notification(self, id, content=None, read=None):
+    def notification(self, id, content=undefined, read=undefined):
         id_arg = parse_arg("id", id)
         content_arg = parse_arg("content", content)
         read_arg = parse_arg("read", read)

@@ -1,6 +1,13 @@
 from datetime import datetime
 
 
+class _Undefined:
+    pass
+
+
+UNDEFINED = undefined = _Undefined()
+
+
 def get_from_dict(d, keys):
     if len(keys) == 0:
         return d
@@ -9,15 +16,17 @@ def get_from_dict(d, keys):
 
 
 def parse_arg(arg_name, arg_value, is_enum=False):
-    if arg_value is None:
+    if isinstance(arg_value, _Undefined):
         return ""
     else:
         return "%s:%s," % (arg_name, get_representation(arg_value, is_enum=is_enum))
 
 
 def get_representation(arg_value, is_enum=False):
-    if arg_value is None:
+    if isinstance(arg_value, _Undefined):
         return ""
+    elif arg_value is None:
+        return "null"
     elif isinstance(arg_value, dict):
         parsed_items = []
         for key, value in arg_value.items():

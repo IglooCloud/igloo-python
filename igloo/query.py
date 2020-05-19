@@ -14,6 +14,7 @@ from igloo.models.category_series_variable import CategorySeriesVariable
 from igloo.models.category_series_node import CategorySeriesNode
 from igloo.models.file_variable import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
+from igloo.utils import undefined, parse_arg
 
 
 class QueryRoot:
@@ -72,12 +73,12 @@ class QueryRoot:
     def get_new_totp_secret(self):
         return self.client.query("{getNewTotpSecret{secret,qrCode}}", keys=["getNewTotpSecret"])
 
-    def verify_password(self, password, email=None):
-        email_arg = ', email:"%s"' % email if email is not None else ""
+    def verify_password(self, password, email=undefined):
+        email_arg = parse_arg("email", email)
         return self.client.query('{verifyPassword(password:"%s" %s)}' % (password, email_arg), keys=["verifyPassword"])
 
-    def verify_totp(self, code, email=None):
-        email_arg = ', email:"%s"' % email if email is not None else ""
+    def verify_totp(self, code, email=undefined):
+        email_arg = parse_arg("email", email)
         return self.client.query('{verifyTotp(code:"%s" %s)}' % (code, email_arg), keys=["verifyTotp"])
 
     def metadata(self):
