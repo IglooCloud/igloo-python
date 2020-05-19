@@ -2,9 +2,7 @@
   <img src="https://github.com/IglooCloud/igloo.py/blob/master/IglooLogo.png" alt="Igloo logo" width="128"/>
 </p>
 
-<h1 align="center">igloo_python</h1>
-
-igloo_python is the official Igloo library for Python.
+<h1 align="center">igloo-python</h1>
 
 ## Getting started
 
