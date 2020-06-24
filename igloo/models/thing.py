@@ -240,20 +240,20 @@ class Thing:
                                      self._id, keys=["thing", "qrCode"])
 
     @property
-    def claim_code(self):
+    def pair_code(self):
         if self.client.asyncio:
-            return self.loader.load("claimCode")
+            return self.loader.load("pairCode")
         else:
-            return self.client.query('{thing(id:"%s"){claimCode}}' %
-                                     self._id, keys=["thing", "claimCode"])
+            return self.client.query('{thing(id:"%s"){pairCode}}' %
+                                     self._id, keys=["thing", "pairCode"])
 
     @property
-    def claimed(self):
+    def paired(self):
         if self.client.asyncio:
-            return self.loader.load("claimed")
+            return self.loader.load("paired")
         else:
-            return self.client.query('{thing(id:"%s"){claimed}}' %
-                                     self._id, keys=["thing", "claimed"])
+            return self.client.query('{thing(id:"%s"){paired}}' %
+                                     self._id, keys=["thing", "paired"])
 
     @property
     def environment(self):

@@ -353,14 +353,14 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def claim_thing(self, claim_code, name, environment_id, index=undefined, muted=undefined):
-        claimCode_arg = parse_arg("claimCode", claim_code)
+    def pair_thing(self, pair_code, name, environment_id, index=undefined, muted=undefined):
+        pairCode_arg = parse_arg("pairCode", pair_code)
         name_arg = parse_arg("name", name)
         environmentId_arg = parse_arg("environmentId", environment_id)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
-        res = self.client.mutation('mutation{claimThing(%s%s%s%s%s){id}}' % (
-            claimCode_arg, name_arg, index_arg, environmentId_arg, muted_arg))["claimThing"]
+        res = self.client.mutation('mutation{pairThing(%s%s%s%s%s){id}}' % (
+            pairCode_arg, name_arg, index_arg, environmentId_arg, muted_arg))["pairThing"]
 
         def wrapper(id):
             return Thing(self.client, id)
@@ -767,11 +767,11 @@ class MutationRoot:
 
         return self.client.mutation('mutation{deleteThing(%s)}' % (id_arg))["deleteThing"]
 
-    def unclaimThing(self, id, reset):
+    def unpairThing(self, id, reset):
         id_arg = parse_arg("id", id)
         reset_arg = parse_arg("reset", reset)
 
-        return self.client.mutation('mutation{unclaimThing(%s%s){id}}' % (id_arg, reset_arg))["unclaimThing"]
+        return self.client.mutation('mutation{unpairThing(%s%s){id}}' % (id_arg, reset_arg))["unpairThing"]
 
     def delete_environment(self, id):
         id_arg = parse_arg("id", id)

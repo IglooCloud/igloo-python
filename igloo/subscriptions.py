@@ -28,13 +28,13 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{thingCreated(%s){id}}' % (environmentId_arg)).replace('()', '')):
             yield Thing(self.client, data["thingCreated"]["id"])
 
-    async def thing_claimed(self, environment_id=undefined, id=undefined):
+    async def thing_paired(self, environment_id=undefined, id=undefined):
         environmentId_arg = parse_arg(
             "environmentId", environment_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingClaimed(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield Thing(self.client, data["thingClaimed"]["id"])
+        async for data in self.client.subscribe(('subscription{thingPaired(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield Thing(self.client, data["thingPaired"]["id"])
 
     async def environment_created(self):
         async for data in self.client.subscribe(('subscription{environmentCreated(){id}}' % ()).replace('()', '')):
@@ -208,12 +208,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{thingDeleted(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
             yield data["thingDeleted"]
 
-    async def thing_unclaimed(self, environment_id=undefined, id=undefined):
+    async def thing_unpaired(self, environment_id=undefined, id=undefined):
         environmentId_arg = parse_arg("environmentId", environment_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingUnclaimed(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
-            yield data["thingUnclaimed"]
+        async for data in self.client.subscribe(('subscription{thingUnpaired(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
+            yield data["thingUnpaired"]
 
     async def environment_deleted(self, id=undefined):
         id_arg = parse_arg("id", id)
