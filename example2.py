@@ -1,8 +1,0 @@
-import asyncio
-import igloo
-from igloo import User, Client
-
-client = Client(token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiI0ZDY3MWRkZS0wMjE3LTRlMTYtODQ0MC01MDNkOTcyNTJjYjAiLCJ0b2tlbklkIjoiYjYxNjhhN2QtOTU2YS00N2FhLWJhZTctNGI1MTE1YzE4MDU3IiwiYWNjZXNzTGV2ZWwiOiJERVZJQ0UiLCJ0b2tlblR5cGUiOiJQRVJNQU5FTlQifQ.MCp0qmm0UkwOiNWx2JWXYxhmQ4dOzl3DLiAeIhaGxa9YPNC6MV9jhP0ETcGD_WhEnAldMo-8Qwt0p_UmYl2wdQ")
-
-user = User(client)
-print(user.environments[0].name)

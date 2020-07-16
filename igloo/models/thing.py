@@ -311,7 +311,7 @@ class Thing:
         return ThingVariablesList(self.client, self.id)
 
     async def keep_online(self):
-        async for _ in self.client.subscription_root.keepOnline(self._id):
+        async for _ in self.client.subscription_root.keep_online(self._id):
             pass
 
 

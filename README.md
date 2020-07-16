@@ -6,14 +6,13 @@
 
 ## Getting started
 
-TBD
+Install the library with pip
 
-## Publishing the package
-
-```bash
-python3 setup.py sdist bdist_wheel
-twine upload dist/*
 ```
+pip install igloo-python
+```
+
+You can find detailed documentation and examples on how to use the library on [our official site](http://igloo.ooo/)
 
 ## License
 
