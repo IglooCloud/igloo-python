@@ -6,7 +6,7 @@
 
 ## Getting started
 
-Install the library with pip
+Install the library with pip:
 
 ```
 pip install igloo-python
