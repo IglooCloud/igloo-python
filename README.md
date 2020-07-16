@@ -12,7 +12,7 @@ Install the library with pip:
 pip install igloo-python
 ```
 
-You can find detailed documentation and examples on how to use the library on [our official site](http://igloo.ooo/)
+You can find detailed documentation and examples on how to use the library on [our official site](http://igloo.ooo/).
 
 ## License
 
