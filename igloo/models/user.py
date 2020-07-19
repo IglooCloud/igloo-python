@@ -235,6 +235,13 @@ class User:
             'mutation{user(id:"%s", vatNumber:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
+    def vat_rate(self):
+        if self.client.asyncio:
+            return self.loader.load("vatRate")
+        else:
+            return self.client.query('{user(id:"%s"){vatRate}}' % self._id, keys=[
+                "user", "vatRate"])
+    @property
     def next_billing_date(self):
         if self.client.asyncio:
             return self.loader.load("nextBillingDate")
