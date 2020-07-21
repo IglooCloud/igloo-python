@@ -337,11 +337,9 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_thing(self, type, firmware=undefined, battery_threshold=undefined, stored_notifications=undefined):
+    def create_thing(self, type, firmware=undefined, stored_notifications=undefined):
         type_arg = parse_arg("type", type)
         firmware_arg = parse_arg("firmware", firmware)
-        battery_threshold_arg = parse_arg(
-            "batteryThreshold", battery_threshold)
         stored_notifications_arg = parse_arg(
             "storedNotifications", stored_notifications)
         res = self.client.mutation('mutation{createThing(%s%s%s%s){id}}' % (
@@ -543,7 +541,7 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def thing(self, id, type=undefined, name=undefined, index=undefined, signal_status=undefined, battery_status=undefined, battery_charging=undefined, battery_threshold=undefined, firmware=undefined, muted=undefined, starred=undefined, stored_notifications=undefined):
+    def thing(self, id, type=undefined, name=undefined, index=undefined, signal_status=undefined, battery_status=undefined, battery_charging=undefined, firmware=undefined, muted=undefined, starred=undefined, stored_notifications=undefined):
         id_arg = parse_arg("id", id)
         thingType_arg = parse_arg("type", type)
         name_arg = parse_arg("name", name)
@@ -554,8 +552,6 @@ class MutationRoot:
         firmware_arg = parse_arg("firmware", firmware)
         muted_arg = parse_arg("muted", muted)
         starred_arg = parse_arg("starred", starred)
-        battery_threshold_arg = parse_arg(
-            "batteryThreshold", battery_threshold)
         stored_notifications_arg = parse_arg(
             "storedNotifications", stored_notifications)
         res = self.client.mutation('mutation{thing(%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (

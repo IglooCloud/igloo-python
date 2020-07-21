@@ -193,19 +193,6 @@ class Thing:
             'mutation{thing(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
-    def battery_threshold(self):
-        if self.client.asyncio:
-            return self.loader.load("batteryThreshold")
-        else:
-            return self.client.query('{thing(id:"%s"){batteryThreshold}}' %
-                                     self._id, keys=["thing", "batteryThreshold"])
-
-    @battery_threshold.setter
-    def battery_threshold(self, newValue):
-        self.client.mutation(
-            'mutation{thing(id:"%s", batteryThreshold:%s){id}}' % (self._id, newValue), asyncio=False)
-
-    @property
     def firmware(self):
         if self.client.asyncio:
             return self.loader.load("firmware")
