@@ -141,24 +141,24 @@ class MutationRoot:
 
         return res
 
-    def change_billing_plan(self, billing_plan, billing_cycle, extra_storage, extra_throughput, custom_apps):
-        billingPlan_arg = parse_arg("billingPlan", billing_plan, is_enum=True)
-        billingCycle_arg = parse_arg(
-            "billingCycle", billing_cycle, is_enum=True)
-        extraStorage_arg = parse_arg("extraStorage", extra_storage)
-        extraThroughput_arg = parse_arg("extraThroughput", extra_throughput)
-        customApps_arg = parse_arg("customApps", custom_apps)
+    # def change_billing_plan(self, billing_plan, billing_cycle, extra_storage, extra_throughput, custom_apps):
+    #     billingPlan_arg = parse_arg("billingPlan", billing_plan, is_enum=True)
+    #     billingCycle_arg = parse_arg(
+    #         "billingCycle", billing_cycle, is_enum=True)
+    #     extraStorage_arg = parse_arg("extraStorage", extra_storage)
+    #     extraThroughput_arg = parse_arg("extraThroughput", extra_throughput)
+    #     customApps_arg = parse_arg("customApps", custom_apps)
 
-        res = self.client.mutation("mutation{changeBillingPlan(%s%s%s%s%s) }" % (
-            billingPlan_arg,
-            billingCycle_arg,
-            extraStorage_arg,
-            extraThroughput_arg,
-            customApps_arg
-        ))[
-            "changeBillingPlan"]
+    #     res = self.client.mutation("mutation{changeBillingPlan(%s%s%s%s%s) }" % (
+    #         billingPlan_arg,
+    #         billingCycle_arg,
+    #         extraStorage_arg,
+    #         extraThroughput_arg,
+    #         customApps_arg
+    #     ))[
+    #         "changeBillingPlan"]
 
-        return res
+    #     return res
 
     def change_password(self, new_password, old_password):
         new_password_arg = parse_arg("newPassword", new_password)

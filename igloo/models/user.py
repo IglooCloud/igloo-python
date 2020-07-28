@@ -241,6 +241,7 @@ class User:
         else:
             return self.client.query('{user(id:"%s"){vatRate}}' % self._id, keys=[
                 "user", "vatRate"])
+
     @property
     def next_billing_date(self):
         if self.client.asyncio:
@@ -257,21 +258,21 @@ class User:
             return self.client.query('{user(id:"%s"){billingCredit}}' % self._id, keys=[
                 "user", "billingCredit"])
 
-    @property
-    def extra_storage(self):
-        if self.client.asyncio:
-            return self.loader.load("extraStorage")
-        else:
-            return self.client.query('{user(id:"%s"){extraStorage}}' % self._id, keys=[
-                "user", "extraStorage"])
+    # @property
+    # def extra_storage(self):
+    #     if self.client.asyncio:
+    #         return self.loader.load("extraStorage")
+    #     else:
+    #         return self.client.query('{user(id:"%s"){extraStorage}}' % self._id, keys=[
+    #             "user", "extraStorage"])
 
-    @property
-    def extra_throughput(self):
-        if self.client.asyncio:
-            return self.loader.load("extraThroughput")
-        else:
-            return self.client.query('{user(id:"%s"){extraThroughput}}' % self._id, keys=[
-                "user", "extraThroughput"])
+    # @property
+    # def extra_throughput(self):
+    #     if self.client.asyncio:
+    #         return self.loader.load("extraThroughput")
+    #     else:
+    #         return self.client.query('{user(id:"%s"){extraThroughput}}' % self._id, keys=[
+    #             "user", "extraThroughput"])
 
     @property
     def max_storage(self):

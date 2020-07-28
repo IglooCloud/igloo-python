@@ -80,20 +80,3 @@ class QueryRoot:
     def verify_totp(self, code, email=undefined):
         email_arg = parse_arg("email", email)
         return self.client.query('{verifyTotp(code:"%s" %s)}' % (code, email_arg), keys=["verifyTotp"])
-
-    def metadata(self):
-        return self.client.query(
-            """
-            {
-                metadata{
-                    STANDARD_PLAN_MONTHLY_PRICE
-                    STANDARD_PLAN_YEARLY_PRICE
-                    EXTRA_STORAGE_MONTHLY_PRICE
-                    EXTRA_THROUGHPUT_MONTHLY_PRICE
-                    EXTRA_STORAGE_YEARLY_PRICE
-                    EXTRA_THROUGHPUT_YEARLY_PRICE
-                    CUSTOM_APPS_MONTHLY_PRICE
-                    CUSTOM_APPS_YEARLY_PRICE
-                }
-            }
-            """, keys=["metadata"])
