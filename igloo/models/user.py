@@ -306,13 +306,13 @@ class User:
             return self.client.query('{user(id:"%s"){usedThroughput}}' % self._id, keys=[
                 "user", "usedThroughput"])
 
-    @property
-    def custom_apps(self):
-        if self.client.asyncio:
-            return self.loader.load("customApps")
-        else:
-            return self.client.query('{user(id:"%s"){customApps}}' % self._id, keys=[
-                "user", "customApps"])
+    # @property
+    # def custom_apps(self):
+    #     if self.client.asyncio:
+    #         return self.loader.load("customApps")
+    #     else:
+    #         return self.client.query('{user(id:"%s"){customApps}}' % self._id, keys=[
+    #             "user", "customApps"])
 
     @property
     def email_is_verified(self):
