@@ -74,12 +74,12 @@ class PendingShare:
         return wrapWith(res, wrapper)
 
     @property
-    def receiver(self):
+    def recipient(self):
         if self.client.asyncio:
-            res = self.loader.load("receiver{id}")
+            res = self.loader.load("recipient{id}")
         else:
-            res = self.client.query('{pendingShare(id:"%s"){receiver{id}}}' % self._id, keys=[
-                "pendingShare", "receiver"])
+            res = self.client.query('{pendingShare(id:"%s"){recipient{id}}}' % self._id, keys=[
+                "pendingShare", "recipient"])
 
         def wrapper(res):
             from .user import User

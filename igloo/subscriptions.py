@@ -83,7 +83,7 @@ class SubscriptionRoot:
             yield PendingShare(self.client, data["pendingShareUpdated"]["id"])
 
     async def pending_share_accepted(self, ):
-        async for data in self.client.subscribe(('subscription{pendingShareAccepted(){id sender receiver role environment}}' % ()).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{pendingShareAccepted(){id sender recipient role environment}}' % ()).replace('()', '')):
             yield data["pendingShareAccepted"]
 
     async def pending_share_declined(self, ):
@@ -111,12 +111,12 @@ class SubscriptionRoot:
             yield PendingTransfer(self.client, data["pendingTransferCreated"]["id"])
 
     async def pending_transfer_accepted(self):
-        async for data in self.client.subscribe(('subscription{pendingTransferAccepted(){sender{id} receiver{id} environment{id} id}}').replace('()', '')):
+        async for data in self.client.subscribe(('subscription{pendingTransferAccepted(){sender{id} recipient{id} environment{id} id}}').replace('()', '')):
             res = data["pendingTransferAccepted"]
             res["sender"] = User(
                 self.client, res["sender"]["id"])
-            res["receiver"] = User(
-                self.client, res["receiver"]["id"])
+            res["recipient"] = User(
+                self.client, res["recipient"]["id"])
             res["environment"] = Environment(
                 self.client, res["environment"]["id"])
 

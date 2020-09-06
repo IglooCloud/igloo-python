@@ -234,12 +234,12 @@ class MutationRoot:
         pendingShareId_arg = parse_arg(
             "pendingShareId", pending_share_id)
 
-        res = self.client.mutation('mutation{acceptPendingShare(%s){sender{id} receiver{id} role environment{id}}}' % (
+        res = self.client.mutation('mutation{acceptPendingShare(%s){sender{id} recipient{id} role environment{id}}}' % (
             pendingShareId_arg))["acceptPendingShare"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
-            res["receiver"] = User(self.client, res["receiver"]["id"])
+            res["recipient"] = User(self.client, res["recipient"]["id"])
             res["environment"] = Environment(
                 self.client, res["environment"]["id"])
 
@@ -292,12 +292,12 @@ class MutationRoot:
         pending_transfer_id_arg = parse_arg(
             "pendingTransferId", pending_transfer_id)
 
-        res = self.client.mutation('mutation{acceptPendingTransfer(%s){id sender{id} receiver{id} environment{id}}}' % (
+        res = self.client.mutation('mutation{acceptPendingTransfer(%s){id sender{id} recipient{id} environment{id}}}' % (
             pending_transfer_id_arg))["acceptPendingTransfer"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
-            res["receiver"] = User(self.client, res["receiver"]["id"])
+            res["recipient"] = User(self.client, res["recipient"]["id"])
             res["environment"] = Environment(
                 self.client, res["environment"]["id"])
 
