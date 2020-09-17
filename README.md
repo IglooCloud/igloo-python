@@ -16,4 +16,4 @@ You can find detailed documentation and examples on how to use the library on [o
 
 ## License
 
-See the [license](https://raw.githubusercontent.com/IglooCloud/igloo_python/master/LICENSE) file for license rights and limitations.
+See the [license](https://github.com/IglooCloud/igloo-python/blob/master/LICENSE.txt) file for license rights and limitations.
