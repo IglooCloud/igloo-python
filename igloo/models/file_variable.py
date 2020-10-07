@@ -122,17 +122,17 @@ class FileVariable:
             return Thing(self.client, id)
 
     @property
-    def permission(self):
+    def user_permission(self):
         if self.client.asyncio:
-            return self.loader.load("permission")
+            return self.loader.load("userPermission")
         else:
-            return self.client.query('{fileVariable(id:"%s"){permission}}' % self._id, keys=[
-                "fileVariable", "permission"])
+            return self.client.query('{fileVariable(id:"%s"){userPermission}}' % self._id, keys=[
+                "fileVariable", "userPermission"])
 
-    @permission.setter
-    def permission(self, newValue):
+    @user_permission.setter
+    def user_permission(self, newValue):
         self.client.mutation(
-            'mutation{fileVariable(id:"%s", permission:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{fileVariable(id:"%s", userPermission:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def value(self):

@@ -40,7 +40,7 @@ class FloatVariable:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def private(self):
@@ -53,7 +53,7 @@ class FloatVariable:
     @private.setter
     def private(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", private:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def hidden(self):
@@ -66,7 +66,7 @@ class FloatVariable:
     @hidden.setter
     def hidden(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def index(self):
@@ -79,7 +79,7 @@ class FloatVariable:
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def my_role(self):
@@ -123,17 +123,17 @@ class FloatVariable:
             return Thing(self.client, id)
 
     @property
-    def permission(self):
+    def user_permission(self):
         if self.client.asyncio:
-            return self.loader.load("permission")
+            return self.loader.load("userPermission")
         else:
-            return self.client.query('{floatVariable(id:"%s"){permission}}' % self._id, keys=[
-                "floatVariable", "permission"])
+            return self.client.query('{floatVariable(id:"%s"){userPermission}}' % self._id, keys=[
+                "floatVariable", "userPermission"])
 
-    @permission.setter
-    def permission(self, newValue):
+    @user_permission.setter
+    def user_permission(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", permission:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", userPermission:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def developer_only(self):
@@ -146,7 +146,7 @@ class FloatVariable:
     @developer_only.setter
     def developer_only(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def value(self):
@@ -159,7 +159,7 @@ class FloatVariable:
     @value.setter
     def value(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", value:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", value:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def precision(self):
@@ -172,7 +172,7 @@ class FloatVariable:
     @precision.setter
     def precision(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", precision:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", precision:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def min(self):
@@ -185,7 +185,7 @@ class FloatVariable:
     @min.setter
     def min(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", min:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", min:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def max(self):
@@ -198,7 +198,7 @@ class FloatVariable:
     @max.setter
     def max(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", max:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", max:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def allowed_values(self):
@@ -211,7 +211,7 @@ class FloatVariable:
     @allowed_values.setter
     def allowed_values(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", allowedValues:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", allowedValues:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def unit_of_measurement(self):
@@ -224,4 +224,4 @@ class FloatVariable:
     @unit_of_measurement.setter
     def unit_of_measurement(self, newValue):
         self.client.mutation(
-            'mutation{floatVariable(id:"%s", unitOfMeasurement:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatVariable(id:"%s", unitOfMeasurement:"%s"){id}}' % (self._id, newValue), asyncio=False)

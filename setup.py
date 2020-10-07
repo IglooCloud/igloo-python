@@ -3,7 +3,7 @@ import setuptools
 setuptools.setup(
     name='igloo-python',
     packages=['igloo', 'igloo.models'],
-    version='1.0.6',
+    version='1.0.7',
     license='MIT',
     description='Python client for igloo',
     author='Igloo Team',

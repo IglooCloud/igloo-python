@@ -60,7 +60,7 @@ class FloatSeriesVariable:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def developer_only(self):
@@ -73,7 +73,7 @@ class FloatSeriesVariable:
     @developer_only.setter
     def developer_only(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def hidden(self):
@@ -86,7 +86,7 @@ class FloatSeriesVariable:
     @hidden.setter
     def hidden(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def index(self):
@@ -99,7 +99,7 @@ class FloatSeriesVariable:
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def shown_nodes(self):
@@ -112,7 +112,7 @@ class FloatSeriesVariable:
     @shown_nodes.setter
     def shown_nodes(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", shownNodes:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", shownNodes:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def stored_nodes(self):
@@ -125,7 +125,7 @@ class FloatSeriesVariable:
     @stored_nodes.setter
     def stored_nodes(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", storedNodes:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", storedNodes:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def my_role(self):
@@ -178,7 +178,7 @@ class FloatSeriesVariable:
     @unit_of_measurement.setter
     def unit_of_measurement(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", unitOfMeasurement:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", unitOfMeasurement:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def precision(self):
@@ -191,7 +191,7 @@ class FloatSeriesVariable:
     @precision.setter
     def precision(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", precision:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", precision:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def min(self):
@@ -204,7 +204,7 @@ class FloatSeriesVariable:
     @min.setter
     def min(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", min:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", min:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def max(self):
@@ -217,4 +217,4 @@ class FloatSeriesVariable:
     @max.setter
     def max(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesVariable(id:"%s", max:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesVariable(id:"%s", max:%s){id}}' % (self._id, newValue), asyncio=False)

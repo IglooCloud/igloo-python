@@ -52,7 +52,7 @@ class User:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{user(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateUser(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def company_name(self):
@@ -64,7 +64,7 @@ class User:
     @company_name.setter
     def company_name(self, newName):
         self.client.mutation(
-            'mutation{user(id:"%s", companyName:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateUser(id:"%s", companyName:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def profile_icon_color(self):
@@ -85,7 +85,7 @@ class User:
     @quiet_mode.setter
     def quiet_mode(self, newMode):
         self.client.mutation(
-            'mutation{user(id:"%s",quietMode:%s){id}}' % (self._id, "true" if newMode else "false"), asyncio=False)
+            'mutation{updateUser(id:"%s",quietMode:%s){id}}' % (self._id, "true" if newMode else "false"), asyncio=False)
 
     @property
     def address_line1(self):
@@ -98,7 +98,7 @@ class User:
     @address_line1.setter
     def address_line1(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressLine1:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressLine1:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def address_line2(self):
@@ -111,7 +111,7 @@ class User:
     @address_line2.setter
     def address_line2(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressLine2:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressLine2:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def address_postal_code(self):
@@ -124,7 +124,7 @@ class User:
     @address_postal_code.setter
     def address_postal_code(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressPostalCode:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressPostalCode:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def address_city(self):
@@ -137,7 +137,7 @@ class User:
     @address_city.setter
     def address_city(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressCity:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressCity:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def address_state(self):
@@ -150,7 +150,7 @@ class User:
     @address_state.setter
     def address_state(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressState:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressState:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def address_country_or_territory(self):
@@ -163,7 +163,7 @@ class User:
     @address_country_or_territory.setter
     def address_country_or_territory(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", addressCountryOrTerritory:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", addressCountryOrTerritory:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def billing_plan(self):
@@ -232,7 +232,7 @@ class User:
     @vat_number.setter
     def vat_number(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", vatNumber:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", vatNumber:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def vat_rate(self):
@@ -374,7 +374,7 @@ class User:
     @length_and_mass.setter
     def length_and_mass(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", lengthAndMass:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", lengthAndMass:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def temperature(self):
@@ -387,7 +387,7 @@ class User:
     @temperature.setter
     def temperature(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", temperature:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", temperature:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def time_format(self):
@@ -400,7 +400,7 @@ class User:
     @time_format.setter
     def time_format(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", timeFormat:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", timeFormat:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def date_format(self):
@@ -413,7 +413,7 @@ class User:
     @date_format.setter
     def date_format(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", dateFormat:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", dateFormat:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def language(self):
@@ -426,7 +426,7 @@ class User:
     @language.setter
     def language(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", language:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateUser(id:"%s", language:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def password_change_email(self):
@@ -439,7 +439,7 @@ class User:
     @password_change_email.setter
     def password_change_email(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", passwordChangeEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
+            'mutation{updateUser(id:"%s", passwordChangeEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
 
     @property
     def shares_email(self):
@@ -452,7 +452,7 @@ class User:
     @shares_email.setter
     def shares_email(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", sharesEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
+            'mutation{updateUser(id:"%s", sharesEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
 
     @property
     def access_token_created_email(self):
@@ -465,7 +465,7 @@ class User:
     @access_token_created_email.setter
     def access_token_created_email(self, newValue):
         self.client.mutation(
-            'mutation{user(id:"%s", accessTokenCreatedEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
+            'mutation{updateUser(id:"%s", accessTokenCreatedEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
 
     @property
     def business_pricing(self):

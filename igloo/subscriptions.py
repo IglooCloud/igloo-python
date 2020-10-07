@@ -53,11 +53,11 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{floatSeriesNodeCreated(%s){id}}' % (seriesId_arg)).replace('()', '')):
             yield FloatSeriesNode(self.client, data["floatSeriesNodeCreated"]["id"])
 
-    async def category_series_node_created(self, series_id=undefined):
-        seriesId_arg = parse_arg("seriesId", series_id)
+    # async def category_series_node_created(self, series_id=undefined):
+    #     seriesId_arg = parse_arg("seriesId", series_id)
 
-        async for data in self.client.subscribe(('subscription{categorySeriesNodeCreated(%s){id}}' % (seriesId_arg)).replace('()', '')):
-            yield CategorySeriesNode(self.client, data["categorySeriesNodeCreated"]["id"])
+    #     async for data in self.client.subscribe(('subscription{categorySeriesNodeCreated(%s){id}}' % (seriesId_arg)).replace('()', '')):
+    #         yield CategorySeriesNode(self.client, data["categorySeriesNodeCreated"]["id"])
 
     async def access_token_created(self):
         async for data in self.client.subscribe(('subscription{accessTokenCreated(){id}}' % ()).replace('()', '')):
@@ -165,12 +165,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{floatSeriesNodeUpdated(%s%s){id}}' % (seriesId_arg, id_arg)).replace('()', '')):
             yield FloatSeriesNode(self.client, data["floatSeriesNodeUpdated"]["id"])
 
-    async def category_series_node_updated(self, series_id=undefined, id=undefined):
-        seriesId_arg = parse_arg("seriesId", series_id)
-        id_arg = parse_arg("id", id)
+    # async def category_series_node_updated(self, series_id=undefined, id=undefined):
+    #     seriesId_arg = parse_arg("seriesId", series_id)
+    #     id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{categorySeriesNodeUpdated(%s%s){id}}' % (seriesId_arg, id_arg)).replace('()', '')):
-            yield CategorySeriesNode(self.client, data["categorySeriesNodeUpdated"]["id"])
+    #     async for data in self.client.subscribe(('subscription{categorySeriesNodeUpdated(%s%s){id}}' % (seriesId_arg, id_arg)).replace('()', '')):
+    #         yield CategorySeriesNode(self.client, data["categorySeriesNodeUpdated"]["id"])
 
     async def notification_updated(self, thing_id=undefined, id=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
@@ -194,12 +194,12 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{floatSeriesNodeDeleted(%s%s)}' % (seriesId_arg, id_arg)).replace('()', '')):
             yield data["floatSeriesNodeDeleted"]
 
-    async def category_series_node_deleted(self, series_id=undefined, id=undefined):
-        seriesId_arg = parse_arg("seriesId", series_id)
-        id_arg = parse_arg("id", id)
+    # async def category_series_node_deleted(self, series_id=undefined, id=undefined):
+    #     seriesId_arg = parse_arg("seriesId", series_id)
+    #     id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{categorySeriesNodeDeleted(%s%s)}' % (seriesId_arg, id_arg)).replace('()', '')):
-            yield data["categorySeriesNodeDeleted"]
+    #     async for data in self.client.subscribe(('subscription{categorySeriesNodeDeleted(%s%s)}' % (seriesId_arg, id_arg)).replace('()', '')):
+    #         yield data["categorySeriesNodeDeleted"]
 
     async def thing_deleted(self, environment_id=undefined, id=undefined):
         environmentId_arg = parse_arg("environmentId", environment_id)

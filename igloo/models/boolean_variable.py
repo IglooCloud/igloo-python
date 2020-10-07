@@ -40,7 +40,7 @@ class BooleanVariable:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def developer_only(self):
@@ -53,20 +53,20 @@ class BooleanVariable:
     @developer_only.setter
     def developer_only(self, newValue):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def permission(self):
+    def user_permission(self):
         if self.client.asyncio:
-            return self.loader.load("permission")
+            return self.loader.load("userPermission")
         else:
-            return self.client.query('{booleanVariable(id:"%s"){permission}}' % self._id, keys=[
-                "booleanVariable", "permission"])
+            return self.client.query('{booleanVariable(id:"%s"){userPermission}}' % self._id, keys=[
+                "booleanVariable", "userPermission"])
 
-    @permission.setter
-    def permission(self, newValue):
+    @user_permission.setter
+    def user_permission(self, newValue):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", permission:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", userPermission:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def hidden(self):
@@ -79,7 +79,7 @@ class BooleanVariable:
     @hidden.setter
     def hidden(self, newValue):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def index(self):
@@ -92,7 +92,7 @@ class BooleanVariable:
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def my_role(self):
@@ -145,4 +145,4 @@ class BooleanVariable:
     @value.setter
     def value(self, newValue):
         self.client.mutation(
-            'mutation{booleanVariable(id:"%s", value:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{updateBooleanVariable(id:"%s", value:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)

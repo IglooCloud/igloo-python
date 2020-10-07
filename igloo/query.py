@@ -43,14 +43,14 @@ class QueryRoot:
     def boolean_variable(self, id):
         return BooleanVariable(self.client, id)
 
-    def file_variable(self, id):
-        return FileVariable(self.client, id)
+    # def file_variable(self, id):
+    #     return FileVariable(self.client, id)
 
     def float_series_variable(self, id):
         return FloatSeriesVariable(self.client, id)
 
-    def category_series_variable(self, id):
-        return CategorySeriesVariable(self.client, id)
+    # def category_series_variable(self, id):
+    #     return CategorySeriesVariable(self.client, id)
 
     def pending_share(self, id):
         return PendingShare(self.client, id)
@@ -67,11 +67,11 @@ class QueryRoot:
     def float_series_node(self, id):
         return FloatSeriesNode(self.client, id)
 
-    def category_series_node(self, id):
-        return CategorySeriesNode(self.client, id)
+    # def category_series_node(self, id):
+    #     return CategorySeriesNode(self.client, id)
 
     def get_new_totp_secret(self):
-        return self.client.query("{getNewTotpSecret{secret,qrCode}}", keys=["getNewTotpSecret"])
+        return self.client.query("{totpSecret{secret,qrCode}}", keys=["totpSecret"])
 
     def verify_password(self, password, email=undefined):
         email_arg = parse_arg("email", email)

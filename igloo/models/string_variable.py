@@ -40,7 +40,7 @@ class StringVariable:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def developer_only(self):
@@ -53,7 +53,7 @@ class StringVariable:
     @developer_only.setter
     def developer_only(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", developerOnly:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def hidden(self):
@@ -66,7 +66,7 @@ class StringVariable:
     @hidden.setter
     def hidden(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", hidden:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def index(self):
@@ -79,7 +79,7 @@ class StringVariable:
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def my_role(self):
@@ -123,17 +123,17 @@ class StringVariable:
             return Thing(self.client, id)
 
     @property
-    def permission(self):
+    def user_permission(self):
         if self.client.asyncio:
-            return self.loader.load("permission")
+            return self.loader.load("userPermission")
         else:
-            return self.client.query('{stringVariable(id:"%s"){permission}}' % self._id, keys=[
-                "stringVariable", "permission"])
+            return self.client.query('{stringVariable(id:"%s"){userPermission}}' % self._id, keys=[
+                "stringVariable", "userPermission"])
 
-    @permission.setter
-    def permission(self, newValue):
+    @user_permission.setter
+    def user_permission(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", permission:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", userPermission:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def value(self):
@@ -146,7 +146,7 @@ class StringVariable:
     @value.setter
     def value(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", value:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", value:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def max_characters(self):
@@ -159,7 +159,7 @@ class StringVariable:
     @max_characters.setter
     def max_characters(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", maxCharacters:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", maxCharacters:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def allowedValues(self):
@@ -172,4 +172,4 @@ class StringVariable:
     @allowedValues.setter
     def allowedValues(self, newValue):
         self.client.mutation(
-            'mutation{stringVariable(id:"%s", allowedValues:%s){id}}' % (self._id, str(newValue)), asyncio=False)
+            'mutation{updateStringVariable(id:"%s", allowedValues:%s){id}}' % (self._id, str(newValue)), asyncio=False)

@@ -55,7 +55,7 @@ class Environment:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{environment(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateEnvironment(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def owner(self):
@@ -92,7 +92,7 @@ class Environment:
     @picture.setter
     def picture(self, newPicture):
         self.client.mutation(
-            'mutation{environment(id:"%s", picture:"%s"){id}}' % (self._id, newPicture), asyncio=False)
+            'mutation{updateEnvironment(id:"%s", picture:"%s"){id}}' % (self._id, newPicture), asyncio=False)
 
     @property
     def unique_firmwares(self):
@@ -113,7 +113,7 @@ class Environment:
     @index.setter
     def index(self, newIndex):
         self.client.mutation(
-            'mutation{environment(id:"%s", index:%s){id}}' % (self._id, newIndex), asyncio=False)
+            'mutation{updateEnvironment(id:"%s", index:%s){id}}' % (self._id, newIndex), asyncio=False)
 
     @property
     def muted(self):
@@ -126,7 +126,7 @@ class Environment:
     @muted.setter
     def muted(self, newMuted):
         self.client.mutation(
-            'mutation{environment(id:"%s", muted:%s){id}}' % (self._id, "true" if newMuted else "false"), asyncio=False)
+            'mutation{updateEnvironment(id:"%s", muted:%s){id}}' % (self._id, "true" if newMuted else "false"), asyncio=False)
 
     @property
     def things(self):

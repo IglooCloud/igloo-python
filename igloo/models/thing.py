@@ -62,7 +62,7 @@ class Thing:
     @type.setter
     def type(self, newThingType):
         self.client.mutation(
-            'mutation{thing(id:"%s", type:"%s"){id}}' % (self._id, newThingType), asyncio=False)
+            'mutation{updateThing(id:"%s", type:"%s"){id}}' % (self._id, newThingType), asyncio=False)
 
     @property
     def my_role(self):
@@ -83,7 +83,7 @@ class Thing:
     @starred.setter
     def starred(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", starred:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{updateThing(id:"%s", starred:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def name(self):
@@ -96,7 +96,7 @@ class Thing:
     @name.setter
     def name(self, newName):
         self.client.mutation(
-            'mutation{thing(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
+            'mutation{updateThing(id:"%s", name:"%s"){id}}' % (self._id, newName), asyncio=False)
 
     @property
     def index(self):
@@ -109,7 +109,7 @@ class Thing:
     @index.setter
     def index(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateThing(id:"%s", index:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def online(self):
@@ -151,33 +151,33 @@ class Thing:
     @stored_notifications.setter
     def stored_notifications(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", storedNotifications:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateThing(id:"%s", storedNotifications:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def signal_status(self):
+    def signal(self):
         if self.client.asyncio:
-            return self.loader.load("signalStatus")
+            return self.loader.load("signal")
         else:
-            return self.client.query('{thing(id:"%s"){signalStatus}}' %
-                                     self._id, keys=["thing", "signalStatus"])
+            return self.client.query('{thing(id:"%s"){signal}}' %
+                                     self._id, keys=["thing", "signal"])
 
-    @signal_status.setter
-    def signal_status(self, newValue):
+    @signal.setter
+    def signal(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", signalStatus:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateThing(id:"%s", signal:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def battery_status(self):
+    def battery(self):
         if self.client.asyncio:
-            return self.loader.load("batteryStatus")
+            return self.loader.load("battery")
         else:
-            return self.client.query('{thing(id:"%s"){batteryStatus}}' %
-                                     self._id, keys=["thing", "batteryStatus"])
+            return self.client.query('{thing(id:"%s"){battery}}' %
+                                     self._id, keys=["thing", "battery"])
 
-    @battery_status.setter
-    def battery_status(self, newValue):
+    @battery.setter
+    def battery(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", batteryStatus:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateThing(id:"%s", battery:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def battery_charging(self):
@@ -190,7 +190,7 @@ class Thing:
     @battery_charging.setter
     def battery_charging(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{updateThing(id:"%s", batteryCharging:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def firmware(self):
@@ -203,7 +203,7 @@ class Thing:
     @firmware.setter
     def firmware(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", firmware:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateThing(id:"%s", firmware:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def muted(self):
@@ -216,7 +216,7 @@ class Thing:
     @muted.setter
     def muted(self, newValue):
         self.client.mutation(
-            'mutation{thing(id:"%s", muted:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
+            'mutation{updateThing(id:"%s", muted:%s){id}}' % (self._id, "true" if newValue else "false"), asyncio=False)
 
     @property
     def qr_code(self):

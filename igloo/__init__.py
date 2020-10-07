@@ -10,8 +10,8 @@ from igloo.models.notification import Notification
 from igloo.models.boolean_variable import BooleanVariable
 from igloo.models.string_variable import StringVariable
 from igloo.models.float_series_variable import FloatSeriesVariable
-from igloo.models.category_series_variable import CategorySeriesVariable
-from igloo.models.category_series_node import CategorySeriesNode
+# from igloo.models.category_series_variable import CategorySeriesVariable
+# from igloo.models.category_series_node import CategorySeriesNode
 from igloo.models.file_variable import FileVariable
 from igloo.models.float_series_node import FloatSeriesNode
 from igloo.main import _Undefined, UNDEFINED, undefined, GraphQLException, Client

@@ -44,12 +44,12 @@ class ThingVariablesList:
                 '{thing(id:"%s"){values(limit:1, offset:%d, filter:%s){id __typename}}}' % (self.thingId, i, self._filter))
             if len(res["thing"]["values"]) != 1:
                 raise IndexError()
-            return Value(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
+            return Variable(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
                 '{thing(id:"%s"){values(offset:%d, limit:%d, filter:%s){id __typename}}}' % (self.thingId, start, end-start, self._filter))
-            return [Value(self.client, value["id"], value["__typename"]) for value in res["thing"]["values"]]
+            return [Variable(self.client, value["id"], value["__typename"]) for value in res["thing"]["values"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -64,7 +64,7 @@ class ThingVariablesList:
             raise StopIteration
 
         self.current += 1
-        return Value(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
+        return Variable(self.client, res["thing"]["values"][0]["id"], res["thing"]["values"][0]["__typename"])
 
     def next(self):
         return self.__next__()

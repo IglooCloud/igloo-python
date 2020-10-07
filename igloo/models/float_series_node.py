@@ -84,7 +84,7 @@ class FloatSeriesNode:
     @timestamp.setter
     def timestamp(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesNode(id:"%s", timestamp:"%s"){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesNode(id:"%s", timestamp:"%s"){id}}' % (self._id, newValue), asyncio=False)
 
     @property
     def value(self):
@@ -97,7 +97,7 @@ class FloatSeriesNode:
     @value.setter
     def value(self, newValue):
         self.client.mutation(
-            'mutation{floatSeriesNode(id:"%s", value:%s){id}}' % (self._id, newValue), asyncio=False)
+            'mutation{updateFloatSeriesNode(id:"%s", value:%s){id}}' % (self._id, newValue), asyncio=False)
 
 
 class FloatSeriesNodeList:

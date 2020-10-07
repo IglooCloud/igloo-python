@@ -69,15 +69,15 @@ class Notification:
     @content.setter
     def content(self, newContent):
         self.client.mutation(
-            'mutation{notification(id:"%s", content:"%s"){id}}' % (self._id, newContent), asyncio=False)
+            'mutation{updateNotification(id:"%s", content:"%s"){id}}' % (self._id, newContent), asyncio=False)
 
     @property
-    def date(self):
+    def timestamp(self):
         if self.client.asyncio:
-            return self.loader.load("date")
+            return self.loader.load("timestamp")
         else:
-            return self.client.query('{notification(id:"%s"){date}}' %
-                                     self._id, keys=["notification", "date"])
+            return self.client.query('{notification(id:"%s"){timestamp}}' %
+                                     self._id, keys=["notification", "timestamp"])
 
     @property
     def read(self):
@@ -90,7 +90,7 @@ class Notification:
     @read.setter
     def read(self, newContent):
         self.client.mutation(
-            'mutation{notification(id:"%s", read:"%s"){id}}' % (self._id, newContent), asyncio=False)
+            'mutation{updateNotification(id:"%s", read:"%s"){id}}' % (self._id, newContent), asyncio=False)
 
 
 class ThingNotificationList:
