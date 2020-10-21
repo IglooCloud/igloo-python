@@ -27,10 +27,10 @@ def exponential_backoff():
 
 
 class Client:
-    def __init__(self, token, asyncio=False):
+    def __init__(self, token, asynchronous=False):
         self.token = token
         self.session = ClientSession()
-        self.asyncio = asyncio
+        self.asyncio = asynchronous
 
     def set_token(self, newToken):
         self.token = newToken

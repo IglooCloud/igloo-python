@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://github.com/IglooCloud/igloo.py/blob/master/IglooLogo.png" alt="Igloo logo" width="128"/>
+  <img src="https://github.com/IglooCloud/igloo-python/raw/master/IglooLogo.png" alt="Igloo logo" width="128"/>
 </p>
 
-<h1 align="center">igloo-python</h1>
+<h1 align="center">Python SDK for Igloo</h1>
 
 ## Getting started
 
