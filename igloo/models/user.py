@@ -442,19 +442,6 @@ class User:
             'mutation{updateUser(id:"%s", passwordChangeEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
 
     @property
-    def shares_email(self):
-        if self.client.asyncio:
-            return self.loader.load("sharesEmail")
-        else:
-            return self.client.query('{user(id:"%s"){sharesEmail}}' % self._id, keys=[
-                "user", "sharesEmail"])
-
-    @shares_email.setter
-    def shares_email(self, newValue):
-        self.client.mutation(
-            'mutation{updateUser(id:"%s", sharesEmail:%s){id}}' % (self._id, "true" if newValue == True else "false"), asyncio=False)
-
-    @property
     def access_token_created_email(self):
         if self.client.asyncio:
             return self.loader.load("accessTokenCreatedEmail")
