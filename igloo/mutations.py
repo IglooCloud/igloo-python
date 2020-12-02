@@ -341,8 +341,8 @@ class MutationRoot:
         firmware_arg = parse_arg("firmware", firmware)
         stored_notifications_arg = parse_arg(
             "storedNotifications", stored_notifications)
-        res = self.client.mutation('mutation{createThing(%s%s%s%s){id}}' % (
-            type_arg, firmware_arg, battery_threshold_arg, stored_notifications_arg))["createThing"]
+        res = self.client.mutation('mutation{createThing(%s%s%s){id}}' % (
+            type_arg, firmware_arg, stored_notifications_arg))["createThing"]
 
         # FIXME: if we choose to keep the createThingPayload implement it here
         def wrapper(id):
@@ -417,8 +417,8 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def create_boolean_variable(self, user_permission, name, thingId=undefined, developer_only=undefined,  value=undefined, index=undefined):
-        thingId_arg = parse_arg("thingId", thingId)
+    def create_boolean_variable(self, user_permission, name, thing_id=undefined, developer_only=undefined,  value=undefined, index=undefined):
+        thingId_arg = parse_arg("thingId", thing_id)
         user_permission_arg = parse_arg(
             "userPermission", user_permission, is_enum=True)
         name_arg = parse_arg("name", name)
