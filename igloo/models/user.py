@@ -416,19 +416,6 @@ class User:
             'mutation{updateUser(id:"%s", dateFormat:%s){id}}' % (self._id, newValue), asyncio=False)
 
     @property
-    def language(self):
-        if self.client.asyncio:
-            return self.loader.load("language")
-        else:
-            return self.client.query('{user(id:"%s"){language}}' % self._id, keys=[
-                "user", "language"])
-
-    @language.setter
-    def language(self, newValue):
-        self.client.mutation(
-            'mutation{updateUser(id:"%s", language:"%s"){id}}' % (self._id, newValue), asyncio=False)
-
-    @property
     def password_change_email(self):
         if self.client.asyncio:
             return self.loader.load("passwordChangeEmail")

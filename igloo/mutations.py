@@ -471,7 +471,6 @@ class MutationRoot:
                     company_name=undefined,
                     quiet_mode=undefined,
                     name=undefined,
-                    language=undefined,
                     vat_number=undefined,
                     lenght_and_mass=undefined,
                     temperature=undefined,
@@ -491,7 +490,6 @@ class MutationRoot:
         company_name_arg = parse_arg("company_name", company_name)
         quiet_mode_arg = parse_arg("quiet_mode", quiet_mode)
         name_arg = parse_arg("name", name)
-        language_arg = parse_arg("language", language)
         vat_number_arg = parse_arg("vat_number", vat_number)
         lenght_and_mass_arg = parse_arg(
             "lenght_and_mass", lenght_and_mass)
@@ -512,8 +510,8 @@ class MutationRoot:
         address_country_or_territory_arg = parse_arg(
             "address_country_or_territory", address_country_or_territory)
 
-        res = self.client.mutation('mutation{updateUser(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            company_name_arg, quiet_mode_arg, name_arg, language_arg, vat_number_arg, lenght_and_mass_arg, temperature_arg, date_format_arg, time_format_arg, password_change_email_arg, shares_email_arg, access_token_created_email_arg, address_line1_arg, address_line2_arg, address_postal_code_arg, address_city_arg, address_state_arg, address_country_or_territory_arg
+        res = self.client.mutation('mutation{updateUser(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            company_name_arg, quiet_mode_arg, name_arg, vat_number_arg, lenght_and_mass_arg, temperature_arg, date_format_arg, time_format_arg, password_change_email_arg, shares_email_arg, access_token_created_email_arg, address_line1_arg, address_line2_arg, address_postal_code_arg, address_city_arg, address_state_arg, address_country_or_territory_arg
         ))["updateUser"]
 
         def wrapper(id):
