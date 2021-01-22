@@ -92,26 +92,34 @@ class MutationRoot:
 
         return result
 
-    def sign_up(self, email, name, password, accept_privacy_policy_and_EULA, private_cloud=undefined):
+    def sign_up(self, email, name, password, accept_privacy_policy, private_cloud=undefined):
         email_arg = parse_arg("email", email)
         name_arg = parse_arg("name", name)
         password_arg = parse_arg("password", password)
         privateCloud_arg = parse_arg("privateCloud", private_cloud)
-        acceptPrivacyPolicyAndEULA_arg = parse_arg(
-            "acceptPrivacyPolicyAndEULA", accept_privacy_policy_and_EULA)
+        acceptPrivacyPolicy_arg = parse_arg(
+            "acceptPrivacyPolicy", accept_privacy_policy)
 
         res = self.client.mutation('mutation{signUp(%s%s%s%s%s){user{id} token}}' % (
             email_arg,
             name_arg,
             password_arg,
             privateCloud_arg,
-            acceptPrivacyPolicyAndEULA_arg))["signUp"]
+            acceptPrivacyPolicy_arg))["signUp"]
 
         if isinstance(res, dict):
             res["user"] = User(self.client, res["user"]["id"])
             return res
         else:
             return self._wrapSignUp(res)
+
+    def accept_legal_documents(self, privacy_policy=undefined):
+        privacy_policy_arg = parse_arg(
+            "privacyPolicy", privacy_policy)
+        res = self.client.mutation("mutation{acceptLegalDocuments(%s) }" % privacy_policy_arg)[
+            "acceptLegalDocuments"]
+
+        return res
 
     def initiate_billing_setup(self):
         res = self.client.mutation("mutation{initiateBillingSetup }")[

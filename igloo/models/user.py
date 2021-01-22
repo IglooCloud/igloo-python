@@ -446,6 +446,11 @@ class User:
         return self.client.query('{user(id:"%s"){businessPricing{id maxStorage maxThroughput price}}}' % self._id, keys=[
             "user", "businessPricing"])
 
+    @property
+    def privacy_policy_accepted(self):
+        return self.client.query('{user(id:"%s"){privacyPolicyAccepted}}' % self._id, keys=[
+            "user", "privacyPolicyAccepted"])
+
 
 class EnvironmentEditorList:
     def __init__(self, client, environmentId):
