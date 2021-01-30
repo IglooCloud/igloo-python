@@ -495,7 +495,7 @@ class EnvironmentEditorList:
         return self.__next__()
 
 
-class EnvironmentSpectatorList:
+class EnvironmentViewerList:
     def __init__(self, client, environmentId):
         self.client = client
         self.environmentId = environmentId
@@ -503,21 +503,21 @@ class EnvironmentSpectatorList:
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){spectatorCount}}' % self.environmentId)
-        return res["environment"]["spectatorCount"]
+            '{environment(id:"%s"){viewerCount}}' % self.environmentId)
+        return res["environment"]["viewerCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){spectators(limit:1, offset:%d){id}}}' % (self.environmentId, i))
-            if len(res["environment"]["spectators"]) != 1:
+                '{environment(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.environmentId, i))
+            if len(res["environment"]["viewers"]) != 1:
                 raise IndexError()
-            return User(self.client, res["environment"]["spectators"][0]["id"])
+            return User(self.client, res["environment"]["viewers"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){spectators(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
-            return [User(self.client, user["id"]) for user in res["environment"]["spectators"]]
+                '{environment(id:"%s"){viewers(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
+            return [User(self.client, user["id"]) for user in res["environment"]["viewers"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -526,13 +526,13 @@ class EnvironmentSpectatorList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){spectators(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
+            '{environment(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
 
-        if len(res["environment", "spectators"]) != 1:
+        if len(res["environment", "viewers"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return User(self.client, res["environment"]["spectators"][0]["id"])
+        return User(self.client, res["environment"]["viewers"][0]["id"])
 
     def next(self):
         return self.__next__()

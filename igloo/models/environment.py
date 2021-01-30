@@ -139,9 +139,9 @@ class Environment:
         return EnvironmentEditorList(self.client, self._id)
 
     @property
-    def spectators(self):
-        from .user import EnvironmentSpectatorList
-        return EnvironmentSpectatorList(self.client, self._id)
+    def viewers(self):
+        from .user import EnvironmentViewerList
+        return EnvironmentViewerList(self.client, self._id)
 
     @property
     def pending_shares(self):

@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setuptools.setup(
     name='igloo-python',
     packages=['igloo', 'igloo.models'],
-    version='1.0.14',
+    version='1.0.15',
     license='MIT',
     description='Python SDK for Igloo',
     long_description=long_description,
