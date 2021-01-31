@@ -2,7 +2,7 @@ from igloo.models.user import User
 from igloo.models.variable import Variable
 from igloo.models.access_token import AccessToken
 from igloo.models.pending_share import PendingShare
-from igloo.models.environment import Environment
+from igloo.models.collection import Collection
 from igloo.models.thing import Thing
 from igloo.models.float_variable import FloatVariable
 from igloo.models.pending_transfer import PendingTransfer

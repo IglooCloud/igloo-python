@@ -59,16 +59,16 @@ class PendingTransfer:
         return wrapWith(res, wrapper)
 
     @property
-    def environment(self):
+    def collection(self):
         if self.client.asyncio:
-            res = self.loader.load("environment{id}")
+            res = self.loader.load("collection{id}")
         else:
-            res = self.client.query('{pendingTransfer(id:"%s"){environment{id}}}' % self._id, keys=[
-                "pendingTransfer", "environment"])
+            res = self.client.query('{pendingTransfer(id:"%s"){collection{id}}}' % self._id, keys=[
+                "pendingTransfer", "collection"])
 
         def wrapper(res):
-            from .environment import Environment
-            return Environment(self.client, res["id"])
+            from .collection import Collection
+            return Collection(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 

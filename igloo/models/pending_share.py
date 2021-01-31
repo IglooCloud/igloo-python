@@ -88,16 +88,16 @@ class PendingShare:
         return wrapWith(res, wrapper)
 
     @property
-    def environment(self):
+    def collection(self):
         if self.client.asyncio:
-            res = self.loader.load("environment{id}")
+            res = self.loader.load("collection{id}")
         else:
-            res = self.client.query('{pendingShare(id:"%s"){environment{id}}}' % self._id, keys=[
-                "pendingShare", "environment"])
+            res = self.client.query('{pendingShare(id:"%s"){collection{id}}}' % self._id, keys=[
+                "pendingShare", "collection"])
 
         def wrapper(res):
-            from .environment import Environment
-            return Environment(self.client, res["id"])
+            from .collection import Collection
+            return Collection(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 
@@ -145,11 +145,11 @@ class UserPendingShareList:
         return self.__next__()
 
 
-class EnvironmentPendingShareList:
-    def __init__(self, client, environmentId):
+class CollectionPendingShareList:
+    def __init__(self, client, collectionId):
         self.client = client
         self.current = 0
-        self.environmentId = environmentId
+        self.collectionId = collectionId
         self._filter = "{}"
 
     def filter(self, _filter):
@@ -157,22 +157,22 @@ class EnvironmentPendingShareList:
         return self
 
     def __len__(self):
-        res = self.client.query('{environment(id:"%s"){pendingShareCount(filter:%s)}}' % (self.environmentId, self._filter), keys=[
-                                "environment", "pendingShareCount"])
+        res = self.client.query('{collection(id:"%s"){pendingShareCount(filter:%s)}}' % (self.collectionId, self._filter), keys=[
+                                "collection", "pendingShareCount"])
         return res
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){pendingShares(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
-            if len(res["environment"]["pendingShares"]) != 1:
+                '{collection(id:"%s"){pendingShares(limit:1, offset:%d, filter:%s){id}}}' % (self.collectionId, i, self._filter))
+            if len(res["collection"]["pendingShares"]) != 1:
                 raise IndexError()
-            return PendingShare(self.client, res["environment"]["pendingShares"][0]["id"])
+            return PendingShare(self.client, res["collection"]["pendingShares"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){pendingShares(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
-            return [PendingShare(self.client, pendingShare["id"]) for pendingShare in res["environment"]["pendingShares"]]
+                '{collection(id:"%s"){pendingShares(offset:%d, limit:%d, filter:%s){id}}}' % (self.collectionId, start, end-start, self._filter))
+            return [PendingShare(self.client, pendingShare["id"]) for pendingShare in res["collection"]["pendingShares"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -181,13 +181,13 @@ class EnvironmentPendingShareList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){pendingShares(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
+            '{collection(id:"%s"){pendingShares(limit:1, offset:%d, filter:%s){id}}}' % (self.collectionId, self.current, self._filter))
 
-        if len(res["environment"]["pendingShares"]) != 1:
+        if len(res["collection"]["pendingShares"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return PendingShare(self.client, res["environment"]["pendingShares"][0]["id"])
+        return PendingShare(self.client, res["collection"]["pendingShares"][0]["id"])
 
     def next(self):
         return self.__next__()

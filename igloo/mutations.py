@@ -1,7 +1,7 @@
 from igloo.models.user import User
 from igloo.models.access_token import AccessToken
 from igloo.models.pending_share import PendingShare
-from igloo.models.environment import Environment
+from igloo.models.collection import Collection
 from igloo.models.thing import Thing
 from igloo.models.variable import Variable
 from igloo.models.float_variable import FloatVariable
@@ -205,13 +205,13 @@ class MutationRoot:
         new_password_arg = parse_arg("newPassword", new_password)
         return self.client.mutation('mutation{resetPassword(%s%s)}' % (recovery_token_arg, new_password_arg))["resetPassword"]
 
-    def share_environment(self, environment_id, role, email=undefined, user_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    def share_collection(self, collection_id, role, email=undefined, user_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         role_arg = parse_arg("role", role, is_enum=True)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", user_id)
-        res = self.client.mutation('mutation{shareEnvironment(%s%s%s%s){id}}' % (
-            environmentId_arg, email_arg, userId_arg, role_arg))["shareEnvironment"]
+        res = self.client.mutation('mutation{shareCollection(%s%s%s%s){id}}' % (
+            collectionId_arg, email_arg, userId_arg, role_arg))["shareCollection"]
 
         def wrapper(id):
             return PendingShare(self.client, id)
@@ -240,14 +240,14 @@ class MutationRoot:
         id_arg = parse_arg(
             "pendingShareId", id)
 
-        res = self.client.mutation('mutation{acceptPendingShare(%s){sender{id} recipient{id} role environment{id}}}' % (
+        res = self.client.mutation('mutation{acceptPendingShare(%s){sender{id} recipient{id} role collection{id}}}' % (
             id_arg))["acceptPendingShare"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
             res["recipient"] = User(self.client, res["recipient"]["id"])
-            res["environment"] = Environment(
-                self.client, res["environment"]["id"])
+            res["collection"] = Collection(
+                self.client, res["collection"]["id"])
 
             return res
 
@@ -259,29 +259,29 @@ class MutationRoot:
 
         return self.client.mutation('mutation{declinePendingShare(%s)}' % (id_arg))["declinePendingShare"]
 
-    def stop_sharing_environment(self, environment_id, email=undefined, user_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    def stop_sharing_collection(self, collection_id, email=undefined, user_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", user_id)
-        res = self.client.mutation('mutation{stopSharingEnvironment(%s%s%s){id}}' % (
-            environmentId_arg, email_arg, userId_arg))["stopSharingEnvironment"]
+        res = self.client.mutation('mutation{stopSharingCollection(%s%s%s){id}}' % (
+            collectionId_arg, email_arg, userId_arg))["stopSharingCollection"]
 
         def wrapper(id):
-            return Environment(self.client, id)
+            return Collection(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def leave_environment(self, id):
+    def leave_collection(self, id):
         id_arg = parse_arg("id", id)
 
-        return self.client.mutation('mutation{leaveEnvironment(%s)}' % (id_arg))["leaveEnvironment"]
+        return self.client.mutation('mutation{leaveCollection(%s)}' % (id_arg))["leaveCollection"]
 
-    def transfer_environment(self, environment_id, email=undefined, user_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    def transfer_collection(self, collection_id, email=undefined, user_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         email_arg = parse_arg("email", email)
         userId_arg = parse_arg("userId", user_id)
-        res = self.client.mutation('mutation{transferEnvironment(%s%s%s){id}}' % (
-            environmentId_arg, email_arg, userId_arg))["transferEnvironment"]
+        res = self.client.mutation('mutation{transferCollection(%s%s%s){id}}' % (
+            collectionId_arg, email_arg, userId_arg))["transferCollection"]
 
         def wrapper(id):
             return PendingTransfer(self.client, id)
@@ -298,14 +298,14 @@ class MutationRoot:
         id_arg = parse_arg(
             "id", id)
 
-        res = self.client.mutation('mutation{acceptPendingTransfer(%s){id sender{id} recipient{id} environment{id}}}' % (
+        res = self.client.mutation('mutation{acceptPendingTransfer(%s){id sender{id} recipient{id} collection{id}}}' % (
             id_arg))["acceptPendingTransfer"]
 
         def wrapper(res):
             res["sender"] = User(self.client, res["sender"]["id"])
             res["recipient"] = User(self.client, res["recipient"]["id"])
-            res["environment"] = Environment(
-                self.client, res["environment"]["id"])
+            res["collection"] = Collection(
+                self.client, res["collection"]["id"])
 
             return res
 
@@ -317,30 +317,30 @@ class MutationRoot:
 
         return self.client.mutation('mutation{declinePendingTransfer(%s)}' % (id_arg))["declinePendingTransfer"]
 
-    def change_role(self, environment_id, new_role, email=undefined, user_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    def change_role(self, collection_id, new_role, email=undefined, user_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         email_arg = parse_arg("email", email)
         user_id_arg = parse_arg("userId", user_id)
         newRole_arg = parse_arg("newRole", new_role)
 
         res = self.client.mutation('mutation{changeRole(%s%s%s%s){id}}' % (
-            environmentId_arg, newRole_arg, user_id_arg, email_arg))["changeRole"]
+            collectionId_arg, newRole_arg, user_id_arg, email_arg))["changeRole"]
 
         def wrapper(id):
-            return Environment(self.client, id)
+            return Collection(self.client, id)
 
         return wrapById(res, wrapper)
 
-    def create_environment(self, name, picture=undefined, index=undefined, muted=undefined):
+    def create_collection(self, name, picture=undefined, index=undefined, muted=undefined):
         name_arg = parse_arg("name", name)
         picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
-        res = self.client.mutation('mutation{createEnvironment(%s%s%s%s){id}}' % (
-            name_arg, picture_arg, index_arg, muted_arg))["createEnvironment"]
+        res = self.client.mutation('mutation{createCollection(%s%s%s%s){id}}' % (
+            name_arg, picture_arg, index_arg, muted_arg))["createCollection"]
 
         def wrapper(id):
-            return Environment(self.client, id)
+            return Collection(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -358,13 +358,13 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def pair_thing(self, pair_code, name, environment_id, index=undefined):
+    def pair_thing(self, pair_code, name, collection_id, index=undefined):
         pairCode_arg = parse_arg("pairCode", pair_code)
         name_arg = parse_arg("name", name)
-        environmentId_arg = parse_arg("environmentId", environment_id)
+        collectionId_arg = parse_arg("collectionId", collection_id)
         index_arg = parse_arg("index", index)
         res = self.client.mutation('mutation{pairThing(%s%s%s%s){id}}' % (
-            pairCode_arg, name_arg, index_arg, environmentId_arg))["pairThing"]
+            pairCode_arg, name_arg, index_arg, collectionId_arg))["pairThing"]
 
         def wrapper(id):
             return Thing(self.client, id)
@@ -534,17 +534,17 @@ class MutationRoot:
 
         return self.client.mutation('mutation{changeEmail(%s%s%s)}' % (newEmail_arg, password_arg, redirect_to_arg))["changeEmail"]
 
-    def update_environment(self, id, name=undefined, picture=undefined, index=undefined, muted=undefined):
+    def update_collection(self, id, name=undefined, picture=undefined, index=undefined, muted=undefined):
         id_arg = parse_arg("id", id)
         name_arg = parse_arg("name", name)
         picture_arg = parse_arg("picture", picture, is_enum=True)
         index_arg = parse_arg("index", index)
         muted_arg = parse_arg("muted", muted)
-        res = self.client.mutation('mutation{updateEnvironment(%s%s%s%s%s){id}}' % (
-            id_arg, name_arg, picture_arg, index_arg, muted_arg))["updateEnvironment"]
+        res = self.client.mutation('mutation{updateCollection(%s%s%s%s%s){id}}' % (
+            id_arg, name_arg, picture_arg, index_arg, muted_arg))["updateCollection"]
 
         def wrapper(id):
-            return Environment(self.client, id)
+            return Collection(self.client, id)
 
         return wrapById(res, wrapper)
 
@@ -570,13 +570,13 @@ class MutationRoot:
 
         return wrapById(res, wrapper)
 
-    def move_thing(self, thing_id, new_environment_id):
+    def move_thing(self, thing_id, new_collection_id):
         thing_id_arg = parse_arg("thingId", thing_id)
-        new_environment_id_arg = parse_arg(
-            "newEnvironmentId", new_environment_id)
+        new_collection_id_arg = parse_arg(
+            "newCollectionId", new_collection_id)
 
         res = self.client.mutation('mutation{moveThing(%s%s){id}}' % (
-            thing_id_arg, new_environment_id_arg))["moveThing"]
+            thing_id_arg, new_collection_id_arg))["moveThing"]
 
         def wrapper(id):
             return Thing(self.client, id)
@@ -769,10 +769,10 @@ class MutationRoot:
 
         return self.client.mutation('mutation{unpairThing(%s%s){id}}' % (id_arg, reset_arg))["unpairThing"]
 
-    def delete_environment(self, id):
+    def delete_collection(self, id):
         id_arg = parse_arg("id", id)
 
-        return self.client.mutation('mutation{deleteEnvironment(%s)}' % (id_arg))["deleteEnvironment"]
+        return self.client.mutation('mutation{deleteCollection(%s)}' % (id_arg))["deleteCollection"]
 
     def delete_user(self, ):
 

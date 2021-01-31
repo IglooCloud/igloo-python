@@ -243,17 +243,17 @@ class Thing:
                                      self._id, keys=["thing", "paired"])
 
     @property
-    def environment(self):
-        from .environment import Environment
+    def collection(self):
+        from .collection import Collection
 
         if self.client.asyncio:
-            res = self.loader.load("environment{id}")
+            res = self.loader.load("collection{id}")
         else:
-            res = self.client.query('{thing(id:"%s"){environment{id}}}' %
-                                    self._id, keys=["thing", "environment"])
+            res = self.client.query('{thing(id:"%s"){collection{id}}}' %
+                                    self._id, keys=["thing", "collection"])
 
         def wrapper(res):
-            return Environment(self.client, res["id"])
+            return Collection(self.client, res["id"])
 
         return wrapWith(res, wrapper)
 
@@ -302,10 +302,10 @@ class Thing:
             pass
 
 
-class EnvironmentThingList:
-    def __init__(self, client, environmentId):
+class CollectionThingList:
+    def __init__(self, client, collectionId):
         self.client = client
-        self.environmentId = environmentId
+        self.collectionId = collectionId
         self.current = 0
         self._filter = "{}"
 
@@ -315,21 +315,21 @@ class EnvironmentThingList:
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){thingCount(filter:%s)}}' % (self.environmentId, self._filter))
-        return res["environment"]["thingCount"]
+            '{collection(id:"%s"){thingCount(filter:%s)}}' % (self.collectionId, self._filter))
+        return res["collection"]["thingCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, i, self._filter))
-            if len(res["environment"]["things"]) != 1:
+                '{collection(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.collectionId, i, self._filter))
+            if len(res["collection"]["things"]) != 1:
                 raise IndexError()
-            return Thing(self.client, res["environment"]["things"][0]["id"])
+            return Thing(self.client, res["collection"]["things"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){things(offset:%d, limit:%d, filter:%s){id}}}' % (self.environmentId, start, end-start, self._filter))
-            return [Thing(self.client, thing["id"]) for thing in res["environment"]["things"]]
+                '{collection(id:"%s"){things(offset:%d, limit:%d, filter:%s){id}}}' % (self.collectionId, start, end-start, self._filter))
+            return [Thing(self.client, thing["id"]) for thing in res["collection"]["things"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -338,13 +338,13 @@ class EnvironmentThingList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.environmentId, self.current, self._filter))
+            '{collection(id:"%s"){things(limit:1, offset:%d, filter:%s){id}}}' % (self.collectionId, self.current, self._filter))
 
-        if len(res["environment", "things"]) != 1:
+        if len(res["collection", "things"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return Thing(self.client, res["environment"]["things"][0]["id"])
+        return Thing(self.client, res["collection"]["things"][0]["id"])
 
     def next(self):
         return self.__next__()

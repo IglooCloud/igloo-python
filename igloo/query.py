@@ -1,7 +1,7 @@
 from igloo.models.user import User
 from igloo.models.access_token import AccessToken
 from igloo.models.pending_share import PendingShare
-from igloo.models.environment import Environment
+from igloo.models.collection import Collection
 from igloo.models.thing import Thing
 from igloo.models.float_variable import FloatVariable
 from igloo.models.variable import Variable
@@ -25,8 +25,8 @@ class QueryRoot:
     def user(self, id=None, email=None):
         return User(self.client, id=id, email=email)
 
-    def environment(self, id):
-        return Environment(self.client, id)
+    def collection(self, id):
+        return Collection(self.client, id)
 
     def thing(self, id):
         return Thing(self.client, id)

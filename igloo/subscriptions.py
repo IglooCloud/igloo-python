@@ -3,7 +3,7 @@ from igloo.models.user import User
 from igloo.models.access_token import AccessToken
 from igloo.models.pending_share import PendingShare
 from igloo.models.pending_transfer import PendingTransfer
-from igloo.models.environment import Environment
+from igloo.models.collection import Collection
 from igloo.models.thing import Thing
 from igloo.models.variable import Variable
 from igloo.models.float_variable import FloatVariable
@@ -22,23 +22,23 @@ class SubscriptionRoot:
     def __init__(self, client):
         self.client = client
 
-    async def thing_created(self, environment_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def thing_created(self, collection_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
 
-        async for data in self.client.subscribe(('subscription{thingCreated(%s){id}}' % (environmentId_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingCreated(%s){id}}' % (collectionId_arg)).replace('()', '')):
             yield Thing(self.client, data["thingCreated"]["id"])
 
-    async def thing_paired(self, environment_id=undefined, id=undefined):
-        environmentId_arg = parse_arg(
-            "environmentId", environment_id)
+    async def thing_paired(self, collection_id=undefined, id=undefined):
+        collectionId_arg = parse_arg(
+            "collectionId", collection_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingPaired(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingPaired(%s%s){id}}' % (collectionId_arg, id_arg)).replace('()', '')):
             yield Thing(self.client, data["thingPaired"]["id"])
 
-    async def environment_created(self):
-        async for data in self.client.subscribe(('subscription{environmentCreated(){id}}' % ()).replace('()', '')):
-            yield Environment(self.client, data["environmentCreated"]["id"])
+    async def collection_created(self):
+        async for data in self.client.subscribe(('subscription{collectionCreated(){id}}' % ()).replace('()', '')):
+            yield Collection(self.client, data["collectionCreated"]["id"])
 
     async def variable_created(self, thing_id=undefined, hidden=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
@@ -67,11 +67,11 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{notificationCreated(){id}}' % ()).replace('()', '')):
             yield Notification(self.client, data["notificationCreated"]["id"])
 
-    async def thing_moved(self, environment_id=undefined, id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def thing_moved(self, collection_id=undefined, id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingMoved(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingMoved(%s%s){id}}' % (collectionId_arg, id_arg)).replace('()', '')):
             yield Thing(self.client, data["thingMoved"]["id"])
 
     async def pending_share_created(self, ):
@@ -83,7 +83,7 @@ class SubscriptionRoot:
             yield PendingShare(self.client, data["pendingShareUpdated"]["id"])
 
     async def pending_share_accepted(self, ):
-        async for data in self.client.subscribe(('subscription{pendingShareAccepted(){id sender recipient role environment}}' % ()).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{pendingShareAccepted(){id sender recipient role collection}}' % ()).replace('()', '')):
             yield data["pendingShareAccepted"]
 
     async def pending_share_declined(self, ):
@@ -94,13 +94,13 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{pendingShareRevoked()}' % ()).replace('()', '')):
             yield data["pendingShareRevoked"]
 
-    async def user_left_environment(self, environment_id=undefined, user_id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def user_left_collection(self, collection_id=undefined, user_id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         userId_arg = parse_arg("userId", user_id)
-        async for data in self.client.subscribe(('subscription{userLeftEnvironment(%s%s){environment{id} user{id}}}' % (environmentId_arg, userId_arg)).replace('()', '')):
-            res = data["userLeftEnvironment"]
-            res["environment"] = Environment(
-                self.client, res["environment"]["id"])
+        async for data in self.client.subscribe(('subscription{userLeftCollection(%s%s){collection{id} user{id}}}' % (collectionId_arg, userId_arg)).replace('()', '')):
+            res = data["userLeftCollection"]
+            res["collection"] = Collection(
+                self.client, res["collection"]["id"])
             res["user"] = User(
                 self.client, res["user"]["id"])
 
@@ -111,14 +111,14 @@ class SubscriptionRoot:
             yield PendingTransfer(self.client, data["pendingTransferCreated"]["id"])
 
     async def pending_transfer_accepted(self):
-        async for data in self.client.subscribe(('subscription{pendingTransferAccepted(){sender{id} recipient{id} environment{id} id}}').replace('()', '')):
+        async for data in self.client.subscribe(('subscription{pendingTransferAccepted(){sender{id} recipient{id} collection{id} id}}').replace('()', '')):
             res = data["pendingTransferAccepted"]
             res["sender"] = User(
                 self.client, res["sender"]["id"])
             res["recipient"] = User(
                 self.client, res["recipient"]["id"])
-            res["environment"] = Environment(
-                self.client, res["environment"]["id"])
+            res["collection"] = Collection(
+                self.client, res["collection"]["id"])
 
             yield res
 
@@ -137,18 +137,18 @@ class SubscriptionRoot:
         async for data in self.client.subscribe(('subscription{userUpdated(%s%s){id}}' % (id_arg, email_arg)).replace('()', '')):
             yield User(self.client, data["userUpdated"]["id"])
 
-    async def thing_updated(self, environment_id=undefined, id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def thing_updated(self, collection_id=undefined, id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingUpdated(%s%s){id}}' % (environmentId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingUpdated(%s%s){id}}' % (collectionId_arg, id_arg)).replace('()', '')):
             yield Thing(self.client, data["thingUpdated"]["id"])
 
-    async def environment_updated(self, id=undefined):
+    async def collection_updated(self, id=undefined):
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{environmentUpdated(%s){id}}' % (id_arg)).replace('()', '')):
-            yield Environment(self.client, data["environmentUpdated"]["id"])
+        async for data in self.client.subscribe(('subscription{collectionUpdated(%s){id}}' % (id_arg)).replace('()', '')):
+            yield Collection(self.client, data["collectionUpdated"]["id"])
 
     async def variable_updated(self, thing_id=undefined, id=undefined, hidden=undefined):
         thingId_arg = parse_arg("thingId", thing_id)
@@ -201,25 +201,25 @@ class SubscriptionRoot:
     #     async for data in self.client.subscribe(('subscription{categorySeriesNodeDeleted(%s%s)}' % (seriesId_arg, id_arg)).replace('()', '')):
     #         yield data["categorySeriesNodeDeleted"]
 
-    async def thing_deleted(self, environment_id=undefined, id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def thing_deleted(self, collection_id=undefined, id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingDeleted(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingDeleted(%s%s)}' % (collectionId_arg, id_arg)).replace('()', '')):
             yield data["thingDeleted"]
 
-    async def thing_unpaired(self, environment_id=undefined, id=undefined):
-        environmentId_arg = parse_arg("environmentId", environment_id)
+    async def thing_unpaired(self, collection_id=undefined, id=undefined):
+        collectionId_arg = parse_arg("collectionId", collection_id)
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{thingUnpaired(%s%s)}' % (environmentId_arg, id_arg)).replace('()', '')):
+        async for data in self.client.subscribe(('subscription{thingUnpaired(%s%s)}' % (collectionId_arg, id_arg)).replace('()', '')):
             yield data["thingUnpaired"]
 
-    async def environment_deleted(self, id=undefined):
+    async def collection_deleted(self, id=undefined):
         id_arg = parse_arg("id", id)
 
-        async for data in self.client.subscribe(('subscription{environmentDeleted(%s)}' % (id_arg)).replace('()', '')):
-            yield data["environmentDeleted"]
+        async for data in self.client.subscribe(('subscription{collectionDeleted(%s)}' % (id_arg)).replace('()', '')):
+            yield data["collectionDeleted"]
 
     async def user_deleted(self, id=undefined, email=undefined):
         id_arg = parse_arg("id", id)

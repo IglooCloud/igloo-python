@@ -331,9 +331,9 @@ class User:
                 "user", "uniqueDeveloperFirmwares"])
 
     @property
-    def environments(self):
-        from .environment import EnvironmentList
-        return EnvironmentList(self.client, self.id)
+    def collections(self):
+        from .collection import CollectionList
+        return CollectionList(self.client, self.id)
 
     @property
     def pendingShares(self):
@@ -452,29 +452,29 @@ class User:
             "user", "privacyPolicyAccepted"])
 
 
-class EnvironmentEditorList:
-    def __init__(self, client, environmentId):
+class CollectionEditorList:
+    def __init__(self, client, collectionId):
         self.client = client
-        self.environmentId = environmentId
+        self.collectionId = collectionId
         self.current = 0
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){editorCount}}' % self.environmentId)
-        return res["environment"]["editorCount"]
+            '{collection(id:"%s"){editorCount}}' % self.collectionId)
+        return res["collection"]["editorCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){editors(limit:1, offset:%d){id}}}' % (self.environmentId, i))
-            if len(res["environment"]["editors"]) != 1:
+                '{collection(id:"%s"){editors(limit:1, offset:%d){id}}}' % (self.collectionId, i))
+            if len(res["collection"]["editors"]) != 1:
                 raise IndexError()
-            return User(self.client, res["environment"]["editors"][0]["id"])
+            return User(self.client, res["collection"]["editors"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){editors(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
-            return [User(self.client, user["id"]) for user in res["environment"]["editors"]]
+                '{collection(id:"%s"){editors(offset:%d, limit:%d){id}}}' % (self.collectionId, start, end-start))
+            return [User(self.client, user["id"]) for user in res["collection"]["editors"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -483,41 +483,41 @@ class EnvironmentEditorList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){editors(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
+            '{collection(id:"%s"){editors(limit:1, offset:%d){id}}}' % (self.collectionId, self.current))
 
-        if len(res["environment", "editors"]) != 1:
+        if len(res["collection", "editors"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return User(self.client, res["environment"]["editors"][0]["id"])
+        return User(self.client, res["collection"]["editors"][0]["id"])
 
     def next(self):
         return self.__next__()
 
 
-class EnvironmentViewerList:
-    def __init__(self, client, environmentId):
+class CollectionViewerList:
+    def __init__(self, client, collectionId):
         self.client = client
-        self.environmentId = environmentId
+        self.collectionId = collectionId
         self.current = 0
 
     def __len__(self):
         res = self.client.query(
-            '{environment(id:"%s"){viewerCount}}' % self.environmentId)
-        return res["environment"]["viewerCount"]
+            '{collection(id:"%s"){viewerCount}}' % self.collectionId)
+        return res["collection"]["viewerCount"]
 
     def __getitem__(self, i):
         if isinstance(i, int):
             res = self.client.query(
-                '{environment(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.environmentId, i))
-            if len(res["environment"]["viewers"]) != 1:
+                '{collection(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.collectionId, i))
+            if len(res["collection"]["viewers"]) != 1:
                 raise IndexError()
-            return User(self.client, res["environment"]["viewers"][0]["id"])
+            return User(self.client, res["collection"]["viewers"][0]["id"])
         elif isinstance(i, slice):
             start, end, _ = i.indices(len(self))
             res = self.client.query(
-                '{environment(id:"%s"){viewers(offset:%d, limit:%d){id}}}' % (self.environmentId, start, end-start))
-            return [User(self.client, user["id"]) for user in res["environment"]["viewers"]]
+                '{collection(id:"%s"){viewers(offset:%d, limit:%d){id}}}' % (self.collectionId, start, end-start))
+            return [User(self.client, user["id"]) for user in res["collection"]["viewers"]]
         else:
             raise TypeError("Unexpected type {} passed as index".format(i))
 
@@ -526,13 +526,13 @@ class EnvironmentViewerList:
 
     def __next__(self):
         res = self.client.query(
-            '{environment(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.environmentId, self.current))
+            '{collection(id:"%s"){viewers(limit:1, offset:%d){id}}}' % (self.collectionId, self.current))
 
-        if len(res["environment", "viewers"]) != 1:
+        if len(res["collection", "viewers"]) != 1:
             raise StopIteration
 
         self.current += 1
-        return User(self.client, res["environment"]["viewers"][0]["id"])
+        return User(self.client, res["collection"]["viewers"][0]["id"])
 
     def next(self):
         return self.__next__()
