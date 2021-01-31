@@ -364,6 +364,19 @@ class User:
                 "user", "totpEnabled"])
 
     @property
+    def language(self):
+        if self.client.asyncio:
+            return self.loader.load("language")
+        else:
+            return self.client.query('{user(id:"%s"){language}}' % self._id, keys=[
+                "user", "language"])
+
+    @language.setter
+    def language(self, newValue):
+        self.client.mutation(
+            'mutation{updateUser(id:"%s", language:%s){id}}' % (self._id, newValue), asyncio=False)
+
+    @property
     def length_and_mass(self):
         if self.client.asyncio:
             return self.loader.load("lengthAndMass")

@@ -492,34 +492,36 @@ class MutationRoot:
                     address_postal_code=undefined,
                     address_city=undefined,
                     address_state=undefined,
-                    address_country_or_territory=undefined
+                    address_country_or_territory=undefined,
+                    language=undefined
                     ):
 
-        company_name_arg = parse_arg("company_name", company_name)
-        quiet_mode_arg = parse_arg("quiet_mode", quiet_mode)
+        company_name_arg = parse_arg("companyName", company_name)
+        language_arg = parse_arg("language", language)
+        quiet_mode_arg = parse_arg("quietMode", quiet_mode)
         name_arg = parse_arg("name", name)
-        vat_number_arg = parse_arg("vat_number", vat_number)
+        vat_number_arg = parse_arg("vatNumber", vat_number)
         lenght_and_mass_arg = parse_arg(
-            "lenght_and_mass", lenght_and_mass)
+            "lenghtAndMass", lenght_and_mass)
         temperature_arg = parse_arg("temperature", temperature)
-        date_format_arg = parse_arg("date_format", date_format)
-        time_format_arg = parse_arg("time_format", time_format)
+        date_format_arg = parse_arg("dateFormat", date_format)
+        time_format_arg = parse_arg("timeFormat", time_format)
         password_change_email_arg = parse_arg(
-            "password_change_email", password_change_email)
-        shares_email_arg = parse_arg("shares_email", shares_email)
+            "passwordChangeEmail", password_change_email)
+        shares_email_arg = parse_arg("sharesEmail", shares_email)
         access_token_created_email_arg = parse_arg(
-            "access_token_created_email", access_token_created_email)
-        address_line1_arg = parse_arg("address_line1", address_line1)
-        address_line2_arg = parse_arg("address_line2", address_line2)
+            "accessTokenCreatedEmail", access_token_created_email)
+        address_line1_arg = parse_arg("addressLine1", address_line1)
+        address_line2_arg = parse_arg("addressLine2", address_line2)
         address_postal_code_arg = parse_arg(
-            "address_postal_code", address_postal_code)
-        address_city_arg = parse_arg("address_city", address_city)
-        address_state_arg = parse_arg("address_state", address_state)
+            "addressPostalCode", address_postal_code)
+        address_city_arg = parse_arg("addressCity", address_city)
+        address_state_arg = parse_arg("addressState", address_state)
         address_country_or_territory_arg = parse_arg(
-            "address_country_or_territory", address_country_or_territory)
+            "addressCountryOrTerritory", address_country_or_territory)
 
-        res = self.client.mutation('mutation{updateUser(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
-            company_name_arg, quiet_mode_arg, name_arg, vat_number_arg, lenght_and_mass_arg, temperature_arg, date_format_arg, time_format_arg, password_change_email_arg, shares_email_arg, access_token_created_email_arg, address_line1_arg, address_line2_arg, address_postal_code_arg, address_city_arg, address_state_arg, address_country_or_territory_arg
+        res = self.client.mutation('mutation{updateUser(%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s){id}}' % (
+            company_name_arg, quiet_mode_arg, name_arg, vat_number_arg, lenght_and_mass_arg, temperature_arg, date_format_arg, time_format_arg, password_change_email_arg, shares_email_arg, access_token_created_email_arg, address_line1_arg, address_line2_arg, address_postal_code_arg, address_city_arg, address_state_arg, address_country_or_territory_arg, language_arg
         ))["updateUser"]
 
         def wrapper(id):
